@@ -15,7 +15,6 @@
 	<name>ESBD Lib : DAO</name>
 
 	<modules>
-		<module>client</module>
 		<module>beans</module>
 		<module>app</module>
 	</modules>
@@ -26,12 +25,9 @@
 		<java-commons.version>1.2-SNAPSHOT</java-commons.version>
 		<!-- tech -->
 		<lapsa-arquillian-test.version>1.1</lapsa-arquillian-test.version>
+		<!-- EJB clients -->
 		<esbd-connection.version>1.2.1</esbd-connection.version>
-		<patterns-domain.version>1.0</patterns-domain.version>
-		<!-- oldies -->
-		<insurance-lib.version>2.4</insurance-lib.version>
-		<kz-lib.version>3.2.1</kz-lib.version>
-		<international-lib.version>3.3</international-lib.version>
+		<esbd-dao-client.version>2.2-SNAPSHOT</esbd-dao-client.version>
 		<!-- ASB -->
 		<asb.keystore.path>${env.ASB_PATH}</asb.keystore.path>
 	</properties>
@@ -62,21 +58,16 @@
 			</dependency>
 			<!-- tech -->
 			<dependency>
+				<groupId>tech.lapsa.esbd</groupId>
+				<artifactId>esbd-dao-client</artifactId>
+				<version>${esbd-dao-client.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>tech.lapsa.lapsa</groupId>
 				<artifactId>lapsa-arquillian-test</artifactId>
 				<version>${lapsa-arquillian-test.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>tech.lapsa.patterns</groupId>
-				<artifactId>patterns-domain</artifactId>
-				<version>${patterns-domain.version}</version>
-			</dependency>
 			<!-- own -->
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>esbd-dao-client</artifactId>
-				<version>${project.version}</version>
-			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>esbd-dao</artifactId>
@@ -88,28 +79,6 @@
 				<artifactId>esbd-dao-app</artifactId>
 				<version>${project.version}</version>
 				<type>ear</type>
-			</dependency>
-			<!-- oldies -->
-			<dependency>
-				<groupId>com.lapsa.kz-lib</groupId>
-				<artifactId>kz-root</artifactId>
-				<version>${kz-lib.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.lapsa.international-lib</groupId>
-				<artifactId>international-root</artifactId>
-				<version>${international-lib.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.lapsa.insurance-lib</groupId>
-				<artifactId>insurance-root</artifactId>
-				<version>${insurance-lib.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
