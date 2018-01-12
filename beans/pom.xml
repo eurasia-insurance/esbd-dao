@@ -38,9 +38,8 @@
 			<artifactId>lapsa-arquillian-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- own -->
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>tech.lapsa.esbd</groupId>
 			<artifactId>esbd-dao-client</artifactId>
 			<scope>compile</scope>
 			<optional>false</optional>
