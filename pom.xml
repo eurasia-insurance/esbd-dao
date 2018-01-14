@@ -9,7 +9,7 @@
 
 	<groupId>tech.lapsa.esbd</groupId>
 	<artifactId>esbd-dao-root</artifactId>
-	<version>2.2-SNAPSHOT</version>
+	<version>2.2</version>
 	<packaging>pom</packaging>
 
 	<name>ESBD Lib : DAO</name>
@@ -86,7 +86,7 @@
 	<scm>
 		<connection>scm:git:https://gitlab.lapsa.tech/lapsa/esbd/dao.git</connection>
 		<developerConnection>scm:git:https://gitlab.lapsa.tech/lapsa/esbd/dao.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>v2.2</tag>
 	</scm>
 
 	<issueManagement>
