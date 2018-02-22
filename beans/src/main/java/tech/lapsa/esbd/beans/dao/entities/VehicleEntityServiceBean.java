@@ -98,7 +98,6 @@ public class VehicleEntityServiceBean
 
     private List<VehicleEntity> _getByRegNumber(final VehicleRegNumber regNumber) throws IllegalArgumentException {
 	MyObjects.requireNonNull(regNumber, "regNumber"); //
-	VehicleRegNumber.requireValid(regNumber);
 
 	final ArrayOfTF vehicles;
 	try (Connection con = pool.getConnection()) {
