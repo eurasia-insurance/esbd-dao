@@ -15,6 +15,7 @@ import com.lapsa.insurance.elements.VehicleClass;
 
 import tech.lapsa.esbd.beans.dao.ESBDDates;
 import tech.lapsa.esbd.connection.Connection;
+import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.elements.VehicleClassService.VehicleClassServiceLocal;
@@ -102,7 +103,8 @@ public class VehicleEntityServiceBean
 	final ArrayOfTF vehicles;
 	try (Connection con = pool.getConnection()) {
 	    vehicles = con.getTFByNumber(regNumber.getNumber());
-
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
 	}
 	return MyOptionals.of(vehicles) //
 		.map(ArrayOfTF::getTF) //
@@ -121,6 +123,8 @@ public class VehicleEntityServiceBean
 	    final TF search = new TF();
 	    search.setTFID(id.intValue());
 	    vehicles = con.getTFByKeyFields(search);
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
 	}
 	final List<TF> list = MyOptionals.of(vehicles) //
 		.map(ArrayOfTF::getTF) //
@@ -136,6 +140,8 @@ public class VehicleEntityServiceBean
 	final ArrayOfTF vehicles;
 	try (Connection con = pool.getConnection()) {
 	    vehicles = con.getTFByVIN(vinCode);
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
 	}
 	return MyOptionals.of(vehicles) //
 		.map(ArrayOfTF::getTF) //

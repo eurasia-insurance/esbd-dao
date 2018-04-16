@@ -11,6 +11,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 import tech.lapsa.esbd.connection.Connection;
+import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.entities.VehicleManufacturerEntity;
@@ -75,6 +76,8 @@ public class VehicleManufacturerEntityServiceBean
 	    final VOITUREMARK search = new VOITUREMARK();
 	    search.setID(id.intValue());
 	    manufacturers = con.getVoitureMarks(search);
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
 	}
 	final List<VOITUREMARK> list = MyOptionals.of(manufacturers) //
 		.map(ArrayOfVOITUREMARK::getVOITUREMARK) //
@@ -93,6 +96,8 @@ public class VehicleManufacturerEntityServiceBean
 	    final VOITUREMARK search = new VOITUREMARK();
 	    search.setNAME(name);
 	    manufacturers = con.getVoitureMarks(search);
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
 	}
 	return MyOptionals.of(manufacturers) //
 		.map(ArrayOfVOITUREMARK::getVOITUREMARK) //

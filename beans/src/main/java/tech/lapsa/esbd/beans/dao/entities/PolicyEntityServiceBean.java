@@ -21,6 +21,7 @@ import com.lapsa.kz.country.KZArea;
 
 import tech.lapsa.esbd.beans.dao.ESBDDates;
 import tech.lapsa.esbd.connection.Connection;
+import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.dict.BranchEntity;
@@ -168,6 +169,8 @@ public class PolicyEntityServiceBean
 	final Policy source;
 	try (Connection con = pool.getConnection()) {
 	    source = con.getPolicyByID(id);
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
 	}
 	if (source == null)
 	    throw new NotFound(PolicyEntity.class.getSimpleName() + " not found with ID = '" + id + "'");
@@ -180,6 +183,8 @@ public class PolicyEntityServiceBean
 	final Policy source;
 	try (Connection con = pool.getConnection()) {
 	    source = con.getPolicyByGlobalID(number);
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
 	}
 	if (MyObjects.isNull(source))
 	    throw new NotFound(PolicyEntity.class.getSimpleName() + " not found with NUMBER = '" + number + "'");
@@ -192,6 +197,8 @@ public class PolicyEntityServiceBean
 	final ArrayOfPolicy policies;
 	try (Connection con = pool.getConnection()) {
 	    policies = con.getPoliciesByNumber(internalNumber);
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
 	}
 
 	return MyOptionals.of(policies) //
