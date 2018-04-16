@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>tech.lapsa.esbd</groupId>
 		<artifactId>esbd-dao-root</artifactId>
-		<version>2.2.3-SNAPSHOT</version>
+		<version>2.2.3</version>
 	</parent>
 
 	<artifactId>esbd-dao</artifactId>
@@ -89,7 +89,7 @@
 	<scm>
 		<connection>scm:git:https://gitlab.lapsa.tech/lapsa/insurance/dao.git</connection>
 		<developerConnection>scm:git:https://gitlab.lapsa.tech/lapsa/insurance/dao.git</developerConnection>
-		<tag>v2.2.2</tag>
+		<tag>v2.2.3</tag>
 	</scm>
 
 	<issueManagement>
