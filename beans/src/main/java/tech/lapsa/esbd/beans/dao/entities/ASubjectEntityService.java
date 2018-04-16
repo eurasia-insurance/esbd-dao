@@ -18,6 +18,7 @@ import com.lapsa.kz.country.KZCity;
 import com.lapsa.kz.economic.KZEconomicSector;
 
 import tech.lapsa.esbd.connection.Connection;
+import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.dict.CompanyActivityKindEntity;
 import tech.lapsa.esbd.dao.dict.CompanyActivityKindEntityService.CompanyActivityKindEntityServiceLocal;
@@ -103,6 +104,8 @@ public abstract class ASubjectEntityService<T extends SubjectEntity>
 				    .map(List::stream)
 				    .orElseGet(Stream::empty));
 		}
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
 	}
 	return resStream.map(this::convert)
 		.collect(MyCollectors.unmodifiableList());
