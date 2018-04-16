@@ -10,6 +10,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 import tech.lapsa.esbd.connection.Connection;
+import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.entities.SubjectCompanyEntity;
 import tech.lapsa.esbd.dao.entities.SubjectEntity;
@@ -92,6 +93,8 @@ public class SubjectEntityServiceBean
 	    if (source == null)
 		throw new NotFound(SubjectEntity.class.getSimpleName() + " not found with ID = '" + id + "'");
 	    return convert(source);
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
 	}
     }
 

@@ -13,6 +13,7 @@ import com.lapsa.insurance.elements.InsuranceClassType;
 import tech.lapsa.esbd.beans.dao.ESBDDates;
 import tech.lapsa.esbd.beans.dao.elements.mapping.InsuranceClassTypeMapping;
 import tech.lapsa.esbd.connection.Connection;
+import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.elements.InsuranceClassTypeService;
@@ -98,6 +99,8 @@ public class InsuranceClassTypeServiceBean
 	    if (classCode == null || classCode.trim().equals(""))
 		throw new NotFound(InsuranceClassType.class.getSimpleName() + " not found with ID = '" + id + "'");
 	    return _getByCode(classCode);
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
 	}
     }
 
@@ -133,6 +136,8 @@ public class InsuranceClassTypeServiceBean
 		// it should not happens
 		throw new EJBException(e.getMessage());
 	    }
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
 	}
     }
 

@@ -11,6 +11,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 import tech.lapsa.esbd.connection.Connection;
+import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.entities.VehicleManufacturerEntity;
@@ -95,6 +96,8 @@ public class VehicleModelEntityServiceBean
 	    final VOITUREMODEL search = new VOITUREMODEL();
 	    search.setID(id.intValue());
 	    models = con.getVoitureModels(search);
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
 	}
 
 	final List<VOITUREMODEL> list = MyOptionals.of(models) //
@@ -113,6 +116,8 @@ public class VehicleModelEntityServiceBean
 	    final VOITUREMODEL search = new VOITUREMODEL();
 	    search.setNAME(name);
 	    models = con.getVoitureModels(search);
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
 	}
 	return MyOptionals.of(models) //
 		.map(ArrayOfVOITUREMODEL::getVOITUREMODEL) //
@@ -130,6 +135,8 @@ public class VehicleModelEntityServiceBean
 	    final VOITUREMODEL search = new VOITUREMODEL();
 	    search.setVOITUREMARKID(manufacturer.getId().intValue());
 	    models = con.getVoitureModels(search);
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
 	}
 	return MyOptionals.of(models) //
 		.map(ArrayOfVOITUREMODEL::getVOITUREMODEL) //

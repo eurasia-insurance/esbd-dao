@@ -13,6 +13,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 import tech.lapsa.esbd.connection.Connection;
+import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.dict.DictionaryEntity;
@@ -55,6 +56,8 @@ public abstract class ADictionaryEntityService<T extends DictionaryEntity>
 	final ArrayOfItem items;
 	try (Connection con = pool.getConnection()) {
 	    items = con.getItems(dictionaryName);
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
 	}
 	this.allMap = MyOptionals.of(items) //
 		.map(ArrayOfItem::getItem) //
