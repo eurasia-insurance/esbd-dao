@@ -3,20 +3,21 @@ package tech.lapsa.esbd.beans.dao.entities;
 import java.util.List;
 import java.util.stream.Stream;
 
+import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+import tech.lapsa.esbd.beans.dao.entities.converter.SubjectCompanyEntityConverter;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.entities.SubjectCompanyEntity;
 import tech.lapsa.esbd.dao.entities.SubjectCompanyEntityService;
-import tech.lapsa.esbd.dao.entities.SubjectPersonEntity;
-import tech.lapsa.esbd.dao.entities.SubjectCompanyEntity.SubjectCompanyEntityBuilder;
 import tech.lapsa.esbd.dao.entities.SubjectCompanyEntityService.SubjectCompanyEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.SubjectCompanyEntityService.SubjectCompanyEntityServiceRemote;
+import tech.lapsa.esbd.dao.entities.SubjectPersonEntity;
 import tech.lapsa.esbd.jaxws.wsimport.Client;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyExceptions;
@@ -77,6 +78,9 @@ public class SubjectCompanyEntityServiceBean
 
     // PRIVATE
 
+    @EJB
+    private SubjectCompanyEntityConverter converter;
+
     private SubjectCompanyEntity _getById(final Integer id) throws IllegalArgumentException, NotFound {
 	MyNumbers.requireNonZero(id, "id");
 	try (Connection con = pool.getConnection()) {
@@ -87,7 +91,7 @@ public class SubjectCompanyEntityServiceBean
 	    if (!isLegal)
 		throw new NotFound(SubjectCompanyEntity.class.getSimpleName() + " not found with ID = '" + id
 			+ "'. It was a " + SubjectPersonEntity.class.getName());
-	    return convert(source);
+	    return converter.convertToEntityAttribute(source);
 	} catch (ConnectionException e) {
 	    throw new IllegalStateException(e.getMessage());
 	}
@@ -110,11 +114,8 @@ public class SubjectCompanyEntityServiceBean
     }
 
     @Override
-    SubjectCompanyEntity convert(final Client source) {
-	if (source.getNaturalPersonBool() != 0)
-	    throw MyExceptions.format(EJBException::new, "Client is not a legal person");
-	final SubjectCompanyEntityBuilder builder = SubjectCompanyEntity.builder();
-	fillValues(source, builder);
-	return builder.build();
+    EsbdAttributeConverter<SubjectCompanyEntity, Client> getConverter() {
+	return converter;
     }
+
 }

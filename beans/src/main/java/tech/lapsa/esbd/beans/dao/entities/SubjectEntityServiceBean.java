@@ -9,19 +9,14 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+import tech.lapsa.esbd.beans.dao.entities.converter.SubjectEntityEsbdConverter;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.entities.SubjectCompanyEntity;
 import tech.lapsa.esbd.dao.entities.SubjectEntity;
 import tech.lapsa.esbd.dao.entities.SubjectEntityService;
-import tech.lapsa.esbd.dao.entities.SubjectPersonEntity;
-import tech.lapsa.esbd.dao.entities.SubjectCompanyEntity.SubjectCompanyEntityBuilder;
-import tech.lapsa.esbd.dao.entities.SubjectCompanyEntityService.SubjectCompanyEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.SubjectEntityService.SubjectEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.SubjectEntityService.SubjectEntityServiceRemote;
-import tech.lapsa.esbd.dao.entities.SubjectPersonEntity.SubjectPersonEntityBuilder;
-import tech.lapsa.esbd.dao.entities.SubjectPersonEntityService.SubjectPersonEntityServiceLocal;
 import tech.lapsa.esbd.jaxws.wsimport.Client;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyExceptions;
@@ -81,10 +76,7 @@ public class SubjectEntityServiceBean
     // PRIVATE
 
     @EJB
-    private SubjectPersonEntityServiceLocal subjectPersonService;
-
-    @EJB
-    private SubjectCompanyEntityServiceLocal subjectCompanyService;
+    private SubjectEntityEsbdConverter converter;
 
     private SubjectEntity _getById(final Integer id) throws IllegalArgumentException, NotFound {
 	MyNumbers.requireNonZero(id, "id");
@@ -92,7 +84,7 @@ public class SubjectEntityServiceBean
 	    final Client source = con.getClientByID(id.intValue());
 	    if (source == null)
 		throw new NotFound(SubjectEntity.class.getSimpleName() + " not found with ID = '" + id + "'");
-	    return convert(source);
+	    return converter.convertToEntityAttribute(source);
 	} catch (ConnectionException e) {
 	    throw new IllegalStateException(e.getMessage());
 	}
@@ -112,15 +104,7 @@ public class SubjectEntityServiceBean
     }
 
     @Override
-    SubjectEntity convert(final Client source) {
-	if (source.getNaturalPersonBool() == 1) {
-	    final SubjectPersonEntityBuilder builder = SubjectPersonEntity.builder();
-	    fillValues(source, builder);
-	    return builder.build();
-	} else {
-	    final SubjectCompanyEntityBuilder builder = SubjectCompanyEntity.builder();
-	    fillValues(source, builder);
-	    return builder.build();
-	}
+    EsbdAttributeConverter<SubjectEntity, Client> getConverter() {
+	return converter;
     }
 }

@@ -78,7 +78,7 @@ public class PolicyEntityServiceBean
     // PRIVATE
 
     @EJB
-    private PolicyEntityEsbdConverter policyEsbdConverter;
+    private PolicyEntityEsbdConverter converter;
 
     @EJB
     private ConnectionPool pool;
@@ -93,7 +93,7 @@ public class PolicyEntityServiceBean
 	}
 	if (source == null)
 	    throw new NotFound(PolicyEntity.class.getSimpleName() + " not found with ID = '" + id + "'");
-	return policyEsbdConverter.convertToEntityAttribute(source);
+	return converter.convertToEntityAttribute(source);
     }
 
     private PolicyEntity _getByNumber(final String number) throws IllegalArgumentException, NotFound {
@@ -107,7 +107,7 @@ public class PolicyEntityServiceBean
 	}
 	if (MyObjects.isNull(source))
 	    throw new NotFound(PolicyEntity.class.getSimpleName() + " not found with NUMBER = '" + number + "'");
-	return policyEsbdConverter.convertToEntityAttribute(source);
+	return converter.convertToEntityAttribute(source);
     }
 
     private List<PolicyEntity> _getByInternalNumber(final String internalNumber) throws IllegalArgumentException {
@@ -124,7 +124,7 @@ public class PolicyEntityServiceBean
 		.map(ArrayOfPolicy::getPolicy) //
 		.map(List::stream) //
 		.orElseGet(Stream::empty) //
-		.map(policyEsbdConverter::convertToEntityAttribute) //
+		.map(converter::convertToEntityAttribute) //
 		.collect(MyCollectors.unmodifiableList());
     }
 }
