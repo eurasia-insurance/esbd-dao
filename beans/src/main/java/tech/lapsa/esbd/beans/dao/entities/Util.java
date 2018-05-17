@@ -12,6 +12,7 @@ import tech.lapsa.java.commons.function.MyExceptions;
 import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.function.MyStrings;
 
+@Deprecated
 final class Util {
 
     private Util() {
