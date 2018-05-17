@@ -52,7 +52,7 @@ public class PolicyVehicleEntityEsbdConverter implements EsbdAttributeConverter<
     private InsuranceCompanyEntityServiceLocal insuranceCompanyService;
 
     @Override
-    public PoliciesTF convertToEsbdValue(InsuredVehicleEntity entityAttribute) throws EsbdConversionException {
+    public PoliciesTF convertToEsbdValue(InsuredVehicleEntity source) throws EsbdConversionException {
 	// TODO Auto-generated method stub
 	return null;
     }

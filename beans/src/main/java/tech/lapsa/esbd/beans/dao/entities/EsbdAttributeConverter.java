@@ -24,7 +24,7 @@ public interface EsbdAttributeConverter<X, Y> {
 
     }
 
-    public Y convertToEsbdValue(X entityAttribute) throws EsbdConversionException;
+    Y convertToEsbdValue(X source) throws EsbdConversionException;
 
-    public X convertToEntityAttribute(Y esbdValue) throws EsbdConversionException;
+    X convertToEntityAttribute(Y source) throws EsbdConversionException;
 }

@@ -19,7 +19,7 @@ public class SubjectEntityEsbdConverter implements EsbdAttributeConverter<Subjec
     private SubjectCompanyEntityConverter subjectCompanyEntityConveter;
 
     @Override
-    public Client convertToEsbdValue(SubjectEntity entityAttribute) throws EsbdConversionException {
+    public Client convertToEsbdValue(SubjectEntity source) throws EsbdConversionException {
 	// TODO Auto-generated method stub
 	return null;
     }

@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter.EsbdConversionException;
 import tech.lapsa.esbd.beans.dao.entities.converter.PolicyEntityEsbdConverter;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
@@ -93,7 +94,13 @@ public class PolicyEntityServiceBean
 	}
 	if (source == null)
 	    throw new NotFound(PolicyEntity.class.getSimpleName() + " not found with ID = '" + id + "'");
-	return converter.convertToEntityAttribute(source);
+
+	try {
+	    return converter.convertToEntityAttribute(source);
+	} catch (EsbdConversionException e) {
+	    // it should not happens
+	    throw new EJBException(e.getMessage());
+	}
     }
 
     private PolicyEntity _getByNumber(final String number) throws IllegalArgumentException, NotFound {
@@ -107,7 +114,13 @@ public class PolicyEntityServiceBean
 	}
 	if (MyObjects.isNull(source))
 	    throw new NotFound(PolicyEntity.class.getSimpleName() + " not found with NUMBER = '" + number + "'");
-	return converter.convertToEntityAttribute(source);
+
+	try {
+	    return converter.convertToEntityAttribute(source);
+	} catch (EsbdConversionException e) {
+	    // it should not happens
+	    throw new EJBException(e.getMessage());
+	}
     }
 
     private List<PolicyEntity> _getByInternalNumber(final String internalNumber) throws IllegalArgumentException {
@@ -120,11 +133,16 @@ public class PolicyEntityServiceBean
 	    throw new IllegalStateException(e.getMessage());
 	}
 
-	return MyOptionals.of(policies) //
-		.map(ArrayOfPolicy::getPolicy) //
-		.map(List::stream) //
-		.orElseGet(Stream::empty) //
-		.map(converter::convertToEntityAttribute) //
-		.collect(MyCollectors.unmodifiableList());
+	try {
+	    return MyOptionals.of(policies) //
+		    .map(ArrayOfPolicy::getPolicy) //
+		    .map(List::stream) //
+		    .orElseGet(Stream::empty) //
+		    .map(converter::convertToEntityAttribute) //
+		    .collect(MyCollectors.unmodifiableList());
+	} catch (EsbdConversionException e) {
+	    // it should not happens
+	    throw new EJBException(e.getMessage());
+	}
     }
 }

@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter.EsbdConversionException;
 import tech.lapsa.esbd.beans.dao.entities.converter.SubjectCompanyEntityConverter;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
@@ -91,7 +92,13 @@ public class SubjectCompanyEntityServiceBean
 	    if (!isLegal)
 		throw new NotFound(SubjectCompanyEntity.class.getSimpleName() + " not found with ID = '" + id
 			+ "'. It was a " + SubjectPersonEntity.class.getName());
-	    return converter.convertToEntityAttribute(source);
+
+	    try {
+		return converter.convertToEntityAttribute(source);
+	    } catch (EsbdConversionException e) {
+		// it should not happens
+		throw new EJBException(e.getMessage());
+	    }
 	} catch (ConnectionException e) {
 	    throw new IllegalStateException(e.getMessage());
 	}

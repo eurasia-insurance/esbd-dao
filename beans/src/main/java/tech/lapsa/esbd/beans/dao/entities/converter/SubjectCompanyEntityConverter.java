@@ -25,7 +25,7 @@ public class SubjectCompanyEntityConverter
     private CompanyActivityKindEntityServiceLocal companyActivityKinds;
 
     @Override
-    public Client convertToEsbdValue(SubjectCompanyEntity entityAttribute) throws EsbdConversionException {
+    public Client convertToEsbdValue(SubjectCompanyEntity source) throws EsbdConversionException {
 	// TODO Auto-generated method stub
 	return null;
     }

@@ -35,7 +35,7 @@ public class SubjectPersonEntityConverter
     private IdentityCardTypeServiceLocal identityCardTypes;
 
     @Override
-    public Client convertToEsbdValue(SubjectPersonEntity entityAttribute) throws EsbdConversionException {
+    public Client convertToEsbdValue(SubjectPersonEntity source) throws EsbdConversionException {
 	// TODO Auto-generated method stub
 	return null;
     }
