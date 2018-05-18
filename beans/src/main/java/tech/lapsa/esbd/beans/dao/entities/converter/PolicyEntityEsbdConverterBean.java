@@ -40,43 +40,6 @@ import tech.lapsa.java.commons.function.MyStrings;
 @LocalBean
 public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<PolicyEntity, Policy> {
 
-    @EJB
-    private InsuranceCompanyEntityServiceLocal insuranceCompanyService;
-
-    @EJB
-    private SubjectEntityServiceLocal subjectService;
-
-    @EJB
-    private CancelationReasonServiceLocal cancelationReasonTypeService;
-
-    @EJB
-    private BranchEntityServiceLocal branchService;
-
-    @EJB
-    private UserEntityServiceLocal userService;
-
-    @EJB
-    private PolicyDriverEntityEsbdConverterBean policyDriverEntityConverter;
-
-    private InsuredDriverEntity _convertPolicyVehicle(Driver source) {
-	try {
-	    return policyDriverEntityConverter.convertToEntityAttribute(source);
-	} catch (EsbdConversionException e) {
-	    throw Util.esbdConversionExceptionToEJBException(e);
-	}
-    }
-
-    @EJB
-    private PolicyVehicleEntityEsbdConverterBean policyVehicleEntityConverter;
-
-    private InsuredVehicleEntity _convertPolicyVehicle(PoliciesTF source) {
-	try {
-	    return policyVehicleEntityConverter.convertToEntityAttribute(source);
-	} catch (EsbdConversionException e) {
-	    throw Util.esbdConversionExceptionToEJBException(e);
-	}
-    }
-
     @Override
     public Policy convertToEsbdValue(PolicyEntity source) throws EsbdConversionException {
 	// TODO Auto-generated method stub
@@ -278,6 +241,45 @@ public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<Pol
 	} catch (final IllegalArgumentException e) {
 	    // it should not happens
 	    throw new EsbdConversionException(e.getMessage());
+	}
+    }
+
+    // private
+
+    @EJB
+    private InsuranceCompanyEntityServiceLocal insuranceCompanyService;
+
+    @EJB
+    private SubjectEntityServiceLocal subjectService;
+
+    @EJB
+    private CancelationReasonServiceLocal cancelationReasonTypeService;
+
+    @EJB
+    private BranchEntityServiceLocal branchService;
+
+    @EJB
+    private UserEntityServiceLocal userService;
+
+    @EJB
+    private PolicyDriverEntityEsbdConverterBean policyDriverEntityConverter;
+
+    private InsuredDriverEntity _convertPolicyVehicle(Driver source) {
+	try {
+	    return policyDriverEntityConverter.convertToEntityAttribute(source);
+	} catch (EsbdConversionException e) {
+	    throw Util.esbdConversionExceptionToEJBException(e);
+	}
+    }
+
+    @EJB
+    private PolicyVehicleEntityEsbdConverterBean policyVehicleEntityConverter;
+
+    private InsuredVehicleEntity _convertPolicyVehicle(PoliciesTF source) {
+	try {
+	    return policyVehicleEntityConverter.convertToEntityAttribute(source);
+	} catch (EsbdConversionException e) {
+	    throw Util.esbdConversionExceptionToEJBException(e);
 	}
     }
 
