@@ -9,6 +9,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
 import com.lapsa.insurance.elements.CancelationReason;
+import com.lapsa.insurance.elements.PaymentType;
 import com.lapsa.insurance.elements.PersonType;
 
 import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter;
@@ -18,6 +19,7 @@ import tech.lapsa.esbd.dao.dict.BranchEntityService.BranchEntityServiceLocal;
 import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
 import tech.lapsa.esbd.dao.elements.CancelationReasonService.CancelationReasonServiceLocal;
+import tech.lapsa.esbd.dao.elements.PaymentTypeService.PaymentTypeServiceLocal;
 import tech.lapsa.esbd.dao.elements.PersonTypeService.PersonTypeServiceLocal;
 import tech.lapsa.esbd.dao.entities.CancelationInfo;
 import tech.lapsa.esbd.dao.entities.InsuredDriverEntity;
@@ -114,6 +116,7 @@ public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<Pol
 	    }
 
 	    {
+		// CLIENT_FORM_ID s:int Форма клиента (справочник CLIENT_FORMS)
 		if (MyNumbers.nonZero(source.getCLIENTFORMID())) {
 		    builder.withInsurantPersonType(Util.reqField(PolicyEntity.class,
 			    id,
@@ -244,14 +247,28 @@ public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<Pol
 	    // платежи
 	    // по
 	    // полису
-	    // PAYMENT_ORDER_TYPE_ID s:int Порядок оплаты (Идентификатор)
-	    // PAYMENT_ORDER_TYPE s:string Порядок оплаты
-	    // PAYMENT_DATE s:string Дата оплаты
 	    // MIDDLEMAN_ID s:int Посредник (Идентификатор)
 	    // MIDDLEMAN_CONTRACT_NUMBER s:string Номер договора посредника
-	    // CLIENT_FORM_ID s:int Форма клиента (справочник CLIENT_FORMS)
 
-	    return builder.build();
+	    {
+		// PAYMENT_ORDER_TYPE_ID s:int Порядок оплаты (Идентификатор)
+		// PAYMENT_ORDER_TYPE s:string Порядок оплаты
+		builder.withPaymentType(Util.reqField(PolicyEntity.class,
+			id,
+			paymentTypeService::getById,
+			"paymentType",
+			PaymentType.class,
+			source.getPAYMENTORDERTYPEID()));
+	    }
+
+	    {
+		// PAYMENT_DATE s:string Дата оплаты
+		if (MyStrings.nonEmpty(source.getPAYMENTDATE()))
+		    builder.withDateOfPayment(dateToLocalDate(source.getPAYMENTDATE()));
+	    }
+
+	    final PolicyEntity res = builder.build();
+	    return res;
 
 	} catch (final IllegalArgumentException e) {
 	    // it should not happens
@@ -278,6 +295,9 @@ public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<Pol
 
     @EJB
     private UserEntityServiceLocal userService;
+
+    @EJB
+    private PaymentTypeServiceLocal paymentTypeService;
 
     @EJB
     private PolicyDriverEntityEsbdConverterBean policyDriverEntityConverter;
