@@ -1,8 +1,8 @@
-package test.entities;
+package test.entities.complex;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static test.entities.TestConstants.*;
+import static test.entities.complex.TestConstants.*;
 
 import javax.inject.Inject;
 

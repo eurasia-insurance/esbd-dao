@@ -1,4 +1,4 @@
-package test.elements;
+package test.elements.dict;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;

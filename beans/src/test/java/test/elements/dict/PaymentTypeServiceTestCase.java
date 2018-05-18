@@ -1,4 +1,4 @@
-package test.elements;
+package test.elements.dict;
 
 import javax.inject.Inject;
 

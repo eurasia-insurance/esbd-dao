@@ -1,4 +1,4 @@
-package test.entities;
+package test.entities.complex;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;

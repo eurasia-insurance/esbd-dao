@@ -1,4 +1,4 @@
-package test.entities;
+package test.entities.complex;
 
 import com.lapsa.insurance.elements.SubjectType;
 
