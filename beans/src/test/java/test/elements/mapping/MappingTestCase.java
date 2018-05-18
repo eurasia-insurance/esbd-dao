@@ -11,7 +11,6 @@ import com.lapsa.insurance.elements.CancelationReason;
 import com.lapsa.insurance.elements.IdentityCardType;
 import com.lapsa.insurance.elements.InsuredAgeAndExpirienceClass;
 import com.lapsa.insurance.elements.MaritalStatus;
-import com.lapsa.insurance.elements.Sex;
 import com.lapsa.insurance.elements.VehicleAgeClass;
 import com.lapsa.insurance.elements.VehicleClass;
 import com.lapsa.international.country.Country;
@@ -27,7 +26,6 @@ import tech.lapsa.esbd.beans.dao.elements.mapping.KZAreaMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.KZCityMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.KZEconomicSectorMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.MaritalStatusMapping;
-import tech.lapsa.esbd.beans.dao.elements.mapping.SexMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.VehicleAgeClassMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.VehicleClassMapping;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfItem;
@@ -211,27 +209,6 @@ public class MappingTestCase extends BaseTestCase {
 		    item.getCode(), // 3
 		    item.getID(), // 4
 		    MaritalStatus.class.getSimpleName() // 5
-	    ), dict, not(nullValue()));
-	}
-    }
-
-    private static final String DICT_SEX = "SEX";
-
-    @Test
-    public void testSexMapping() {
-	final ArrayOfItem items = getSoap().getItems(getSessionId(), DICT_SEX);
-	assertThat(items, not(nullValue()));
-	final Iterator<Item> i = items.getItem().iterator();
-	while (i.hasNext()) {
-	    final Item item = i.next();
-	    final Sex dict = SexMapping.getInstance().forId(item.getID());
-	    assertThat(String.format(
-		    "ESBD  dictionary '%1$s' name = '%2$s' with code = '%3$s' and id = '%4$s' present, but %5$s enum variable is missing",
-		    DICT_SEX, // 1
-		    item.getName(), // 2
-		    item.getCode(), // 3
-		    item.getID(), // 4
-		    Sex.class.getSimpleName() // 5
 	    ), dict, not(nullValue()));
 	}
     }
