@@ -2,7 +2,6 @@ package test.entities.dict;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static test.entities.complex.TestConstants.*;
 
 import java.util.List;
 
@@ -42,9 +41,11 @@ public class InsuranceCompanyServiceTestCase extends ArquillianBaseTestCase {
 	    }
     }
 
+    private static final int INVALID_ID = 999999999;
+
     @Test(expected = NotFound.class)
     public void testGetById_NotFound() throws NotFound, IllegalArgument {
-	service.getById(INVALID_INSURANCE_COMPANY_ID);
+	service.getById(INVALID_ID);
     }
 
 }

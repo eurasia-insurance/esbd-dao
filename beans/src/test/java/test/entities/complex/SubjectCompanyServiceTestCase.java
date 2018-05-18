@@ -2,7 +2,6 @@ package test.entities.complex;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static test.entities.complex.TestConstants.*;
 
 import javax.inject.Inject;
 
@@ -20,10 +19,12 @@ public class SubjectCompanyServiceTestCase extends ArquillianBaseTestCase {
     @Inject
     private SubjectCompanyEntityServiceLocal service;
 
+    private static final int[] VALID_IDS = new int[] { 1, 2 };
+
     @Test
     public void testGetById() throws IllegalArgument {
 	try {
-	    for (final int valid : VALID_SUBJECT_COMPANY_IDS) {
+	    for (final int valid : VALID_IDS) {
 		final SubjectCompanyEntity res = service.getById(valid);
 		assertThat(res, not(nullValue()));
 	    }
@@ -32,9 +33,11 @@ public class SubjectCompanyServiceTestCase extends ArquillianBaseTestCase {
 	}
     }
 
+    private static final int[] INVALID_IDS = new int[] { 100, -1 };
+
     @Test
     public void testGetById_NotFound() throws IllegalArgument {
-	for (final int invalid : INVALID_SUBJECT_COMPANY_IDS)
+	for (final int invalid : INVALID_IDS)
 	    try {
 		service.getById(invalid);
 		fail("Not found exception Expected");
@@ -42,13 +45,13 @@ public class SubjectCompanyServiceTestCase extends ArquillianBaseTestCase {
 	    }
     }
 
-    public static final TaxpayerNumber[] VALID_SUBJECT_COMPANY_BINS = new TaxpayerNumber[] {
+    public static final TaxpayerNumber[] VALID_BINS = new TaxpayerNumber[] {
 	    TaxpayerNumber.of("930840000071") };
 
     @Test
     public void testGetByBIN() throws IllegalArgument {
 	try {
-	    for (final TaxpayerNumber valid : VALID_SUBJECT_COMPANY_BINS) {
+	    for (final TaxpayerNumber valid : VALID_BINS) {
 		final SubjectCompanyEntity res = service.getFirstByIdNumber(valid);
 		assertThat(res, not(nullValue()));
 	    }
@@ -57,12 +60,12 @@ public class SubjectCompanyServiceTestCase extends ArquillianBaseTestCase {
 	}
     }
 
-    public static final TaxpayerNumber[] INVALID_SUBJECT_COMPANY_BINS = new TaxpayerNumber[] {
+    public static final TaxpayerNumber[] INVALID_BINS = new TaxpayerNumber[] {
 	    TaxpayerNumber.of("581114350286") };
 
     @Test
     public void testGetByBIN_NotFound() throws IllegalArgument {
-	for (final TaxpayerNumber invalid : INVALID_SUBJECT_COMPANY_BINS)
+	for (final TaxpayerNumber invalid : INVALID_BINS)
 	    try {
 		service.getFirstByIdNumber(invalid);
 		fail("Not found exception Expected");

@@ -2,7 +2,6 @@ package test.entities.complex;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static test.entities.complex.TestConstants.*;
 
 import java.util.List;
 
@@ -21,32 +20,40 @@ public class VehicleManufacturerServiceTestCase extends ArquillianBaseTestCase {
     @Inject
     private VehicleManufacturerEntityServiceLocal service;
 
+    private static final int VALID_ID = 45755; // INFINTI
+
     @Test
     public void testGetById() throws IllegalArgument {
 	try {
-	    final VehicleManufacturerEntity res = service.getById(VALID_VEHICLE_MANUFACTURER_ID);
+	    final VehicleManufacturerEntity res = service.getById(VALID_ID);
 	    assertThat(res, not(nullValue()));
 	} catch (final NotFound e) {
 	    fail(e.getMessage());
 	}
     }
 
+    private static final int ININVALID_ID = 999999999;
+
     @Test(expected = NotFound.class)
     public void testGetById_NotFound() throws NotFound, IllegalArgument {
-	service.getById(ININVALID_VEHICLE_MANUFACTURER_ID);
+	service.getById(ININVALID_ID);
     }
+
+    private static final String VALID_NAME = "INFINITI FX";
 
     @Test
     public void testGetByName() throws IllegalArgument {
-	final List<VehicleManufacturerEntity> list = service.getByName("INFINITI FX");
+	final List<VehicleManufacturerEntity> list = service.getByName(VALID_NAME);
 	assertThat(list, allOf(not(nullValue()), not(empty())));
 	for (final VehicleManufacturerEntity e : list)
 	    assertThat(e, not(nullValue()));
     }
 
+    private static final String INVALID_NAME = "QQQ";
+
     @Test
     public void testGetByName_empty() throws IllegalArgument {
-	final List<VehicleManufacturerEntity> list = service.getByName(INVALID_VEHICLE_MANUFACTURER_NAME);
+	final List<VehicleManufacturerEntity> list = service.getByName(INVALID_NAME);
 	// TODO DEBUG : Need to debug
 	assertThat(list, allOf(not(nullValue()), not(empty())));
 	for (final VehicleManufacturerEntity e : list)

@@ -2,7 +2,6 @@ package test.entities.complex;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static test.entities.complex.TestConstants.*;
 
 import javax.inject.Inject;
 
@@ -20,10 +19,12 @@ public class SubjectPersonServiceTestCase extends ArquillianBaseTestCase {
     @Inject
     private SubjectPersonEntityServiceLocal service;
 
+    private static final int[] VALID_IDS = new int[] { 100, 14132412 };
+
     @Test
     public void testGetById() throws IllegalArgument {
 	try {
-	    for (final int valid : VALID_SUBJECT_PERSON_IDS) {
+	    for (final int valid : VALID_IDS) {
 		final SubjectPersonEntity res = service.getById(valid);
 		assertThat(res, not(nullValue()));
 	    }
@@ -32,9 +33,11 @@ public class SubjectPersonServiceTestCase extends ArquillianBaseTestCase {
 	}
     }
 
+    private static final int[] INVALID_IDS = new int[] { 1, 2, -1 };
+
     @Test
     public void testGetById_NotFound() throws IllegalArgument {
-	for (final int invalid : INVALID_SUBJECT_PERSON_IDS)
+	for (final int invalid : INVALID_IDS)
 	    try {
 		service.getById(invalid);
 		fail("Not found exception Expected");
@@ -42,13 +45,13 @@ public class SubjectPersonServiceTestCase extends ArquillianBaseTestCase {
 	    }
     }
 
-    public static final TaxpayerNumber[] VALID_SUBJECT_PERSON_IINS = new TaxpayerNumber[] {
+    private static final TaxpayerNumber[] VALID_IINS = new TaxpayerNumber[] {
 	    TaxpayerNumber.of("581114350286"), TaxpayerNumber.of("870622300359") };
 
     @Test
     public void testGetByIIN() throws IllegalArgument {
 	try {
-	    for (final TaxpayerNumber valid : VALID_SUBJECT_PERSON_IINS) {
+	    for (final TaxpayerNumber valid : VALID_IINS) {
 		final SubjectPersonEntity res = service.getFirstByIdNumber(valid);
 		assertThat(res, not(nullValue()));
 	    }
@@ -57,12 +60,12 @@ public class SubjectPersonServiceTestCase extends ArquillianBaseTestCase {
 	}
     }
 
-    public static final TaxpayerNumber[] INVALID_SUBJECT_PERSON_IINS = new TaxpayerNumber[] {
+    private static final TaxpayerNumber[] INVALID_IINS = new TaxpayerNumber[] {
 	    TaxpayerNumber.of("930840000071") };
 
     @Test
     public void testGetByIIN_NotFound() throws IllegalArgument {
-	for (final TaxpayerNumber invalid : INVALID_SUBJECT_PERSON_IINS)
+	for (final TaxpayerNumber invalid : INVALID_IINS)
 	    try {
 		service.getFirstByIdNumber(invalid);
 		fail("Not found exception Expected");
