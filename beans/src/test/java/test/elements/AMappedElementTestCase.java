@@ -64,6 +64,7 @@ public abstract class AMappedElementTestCase<T extends Enum<T>> extends Arquilli
 	}
 
 	assertThat(items, not(nullValue()));
+	items.getItem().stream().map(i -> i.getID() + " '" + i.getName() + "'").forEach(System.out::println);
 	final Iterator<Item> i = items.getItem().iterator();
 	while (i.hasNext()) {
 	    final Item item = i.next();
