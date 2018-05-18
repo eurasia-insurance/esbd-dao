@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
-import tech.lapsa.esbd.beans.dao.elements.mapping.AbsMapping;
+import tech.lapsa.esbd.beans.dao.elements.dict.mapping.AMapping;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.connection.ConnectionPool;
@@ -23,13 +23,13 @@ import test.ArquillianBaseTestCase;
 public abstract class AMappedElementTestCase<T extends Enum<T>> extends ArquillianBaseTestCase {
 
     final Class<T> clazz;
-    final AbsMapping<Integer, T> mapper;
+    final AMapping<Integer, T> mapper;
     final String dictionaryName;
     final int invalidId;
 
     abstract ElementsService<T> service();
 
-    public AMappedElementTestCase(final Class<T> clazz, AbsMapping<Integer, T> mapper, String dictionaryName,
+    public AMappedElementTestCase(final Class<T> clazz, AMapping<Integer, T> mapper, String dictionaryName,
 	    int invalidId) {
 	this.clazz = clazz;
 	this.mapper = mapper;

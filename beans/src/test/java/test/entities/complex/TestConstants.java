@@ -2,8 +2,8 @@ package test.entities.complex;
 
 import com.lapsa.insurance.elements.SubjectType;
 
-import tech.lapsa.esbd.dao.entities.SubjectCompanyEntity;
-import tech.lapsa.esbd.dao.entities.SubjectPersonEntity;
+import tech.lapsa.esbd.dao.entities.complex.SubjectCompanyEntity;
+import tech.lapsa.esbd.dao.entities.complex.SubjectPersonEntity;
 
 public final class TestConstants {
     // Branch
