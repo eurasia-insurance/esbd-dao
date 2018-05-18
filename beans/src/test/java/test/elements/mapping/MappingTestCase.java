@@ -36,16 +36,6 @@ import tech.lapsa.esbd.jaxws.wsimport.Item;
 public class MappingTestCase extends BaseTestCase {
 
     private static final String DICT_CANCELATION_REASON = "RESCINDING_REASONS";
-    private static final String DICT_COUNTRY = "COUNTRIES";
-    private static final String DICT_IDENTITY_CARD_TYPE = "DOCUMENTS_TYPES";
-    private static final String DICT_AGE_AND_EXPIRIENCE_CLASS = "AGE_EXPERIENCE";
-    private static final String DICT_KZ_AREA = "REGIONS";
-    private static final String DICT_KZ_CITY = "SETTLEMENTS";
-    private static final String DICT_KZ_ECONOMIC_SECTOR = "ECONOMICS_SECTORS";
-    private static final String DICT_MARITAL_STATUS = "HOUSEHOLD_POSITION";
-    private static final String DICT_SEX = "SEX";
-    private static final String DICT_VEHICLE_AGE_CLASS = "TF_AGE";
-    private static final String DICT_VEHICLE_CLASS = "TF_TYPES";
 
     @Test
     public void testCancelationReasonMapping() {
@@ -66,6 +56,8 @@ public class MappingTestCase extends BaseTestCase {
 	}
     }
 
+    private static final String DICT_COUNTRY = "COUNTRIES";
+
     @Test
     public void testCountryMapping() {
 	final ArrayOfItem items = getSoap().getItems(getSessionId(), DICT_COUNTRY);
@@ -85,6 +77,8 @@ public class MappingTestCase extends BaseTestCase {
 	}
     }
 
+    private static final String DICT_IDENTITY_CARD_TYPE = "DOCUMENTS_TYPES";
+
     @Test
     public void testIdentityCardTypeMapping() {
 	final ArrayOfItem items = getSoap().getItems(getSessionId(), DICT_IDENTITY_CARD_TYPE);
@@ -103,6 +97,8 @@ public class MappingTestCase extends BaseTestCase {
 	    ), dict, not(nullValue()));
 	}
     }
+
+    private static final String DICT_AGE_AND_EXPIRIENCE_CLASS = "AGE_EXPERIENCE";
 
     @Test
     public void testInsuredAgeAndExpirienceClassMapping() {
@@ -124,6 +120,8 @@ public class MappingTestCase extends BaseTestCase {
 	}
     }
 
+    private static final String DICT_KZ_AREA = "REGIONS";
+
     @Test
     public void testKZAreaMapping() {
 	final ArrayOfItem items = getSoap().getItems(getSessionId(), DICT_KZ_AREA);
@@ -142,6 +140,8 @@ public class MappingTestCase extends BaseTestCase {
 	    ), dict, not(nullValue()));
 	}
     }
+
+    private static final String DICT_KZ_CITY = "SETTLEMENTS";
 
     @Test
     public void testKZCityMapping() {
@@ -173,6 +173,8 @@ public class MappingTestCase extends BaseTestCase {
 	}
     }
 
+    private static final String DICT_KZ_ECONOMIC_SECTOR = "ECONOMICS_SECTORS";
+
     @Test
     public void testKZEconomicsSectorMapping() {
 	final ArrayOfItem items = getSoap().getItems(getSessionId(), DICT_KZ_ECONOMIC_SECTOR);
@@ -191,6 +193,8 @@ public class MappingTestCase extends BaseTestCase {
 	    ), dict, not(nullValue()));
 	}
     }
+
+    private static final String DICT_MARITAL_STATUS = "HOUSEHOLD_POSITION";
 
     @Test
     public void testMaritalStatusMapping() {
@@ -211,6 +215,8 @@ public class MappingTestCase extends BaseTestCase {
 	}
     }
 
+    private static final String DICT_SEX = "SEX";
+
     @Test
     public void testSexMapping() {
 	final ArrayOfItem items = getSoap().getItems(getSessionId(), DICT_SEX);
@@ -230,6 +236,8 @@ public class MappingTestCase extends BaseTestCase {
 	}
     }
 
+    private static final String DICT_VEHICLE_AGE_CLASS = "TF_AGE";
+
     @Test
     public void testVehicleAgeClassMapping() {
 	final ArrayOfItem items = getSoap().getItems(getSessionId(), DICT_VEHICLE_AGE_CLASS);
@@ -248,6 +256,8 @@ public class MappingTestCase extends BaseTestCase {
 	    ), dict, not(nullValue()));
 	}
     }
+
+    private static final String DICT_VEHICLE_CLASS = "TF_TYPES";
 
     @Test
     public void testVehicleClassMapping() {
