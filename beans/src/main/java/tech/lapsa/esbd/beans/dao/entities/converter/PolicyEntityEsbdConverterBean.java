@@ -1,6 +1,6 @@
 package tech.lapsa.esbd.beans.dao.entities.converter;
 
-import static tech.lapsa.esbd.beans.dao.ESBDDates.*;
+import static tech.lapsa.esbd.beans.dao.TemporalUtil.*;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import javax.ejb.Stateless;
 
 import com.lapsa.insurance.elements.CancelationReason;
 
-import tech.lapsa.esbd.beans.dao.ESBDDates;
+import tech.lapsa.esbd.beans.dao.TemporalUtil;
 import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter;
 import tech.lapsa.esbd.beans.dao.entities.Util;
 import tech.lapsa.esbd.dao.dict.BranchEntity;
@@ -71,13 +71,13 @@ public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<Pol
 
 	    {
 		// DATE_BEG s:string Дата начала действия полиса (обязательно)
-		builder.withValidFrom(convertESBDDateToLocalDate(source.getDATEBEG()));
+		builder.withValidFrom(dateToLocalDate(source.getDATEBEG()));
 	    }
 
 	    {
 		// DATE_END s:string Дата окончания действия полиса
 		// (обязательно)
-		builder.withValidTill(convertESBDDateToLocalDate(source.getDATEEND()));
+		builder.withValidTill(dateToLocalDate(source.getDATEEND()));
 	    }
 
 	    {
@@ -113,7 +113,7 @@ public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<Pol
 
 	    {
 		// POLICY_DATE s:string Дата полиса
-		builder.withDateOfIssue(convertESBDDateToLocalDate(source.getPOLICYDATE()));
+		builder.withDateOfIssue(dateToLocalDate(source.getPOLICYDATE()));
 	    }
 
 	    {
@@ -122,7 +122,7 @@ public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<Pol
 		if (MyStrings.nonEmpty(source.getRESCINDINGDATE())
 			|| MyNumbers.positive(source.getRESCINDINGREASONID()))
 		    builder.withCancelation(
-			    ESBDDates.convertESBDDateToLocalDate(source.getRESCINDINGDATE()),
+			    TemporalUtil.dateToLocalDate(source.getRESCINDINGDATE()),
 			    Util.reqField(PolicyEntity.class,
 				    id,
 				    cancelationReasonTypeService::getById,
@@ -195,8 +195,9 @@ public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<Pol
 		// создавшего
 		// полис
 		// INPUT_DATE s:string Дата\время ввода полиса в систему
+		// INPUT_DATE_TIME s:string Дата\время ввода полиса в систему
 		RecordOperationInfo.builder()
-			.withDate(convertESBDDateToLocalDate(source.getINPUTDATE()))
+			.withInstant(datetimeToInstant(source.getINPUTDATETIME()))
 			.withAuthor(Util.reqField(PolicyEntity.class,
 				id,
 				userService::getById,
@@ -213,9 +214,9 @@ public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<Pol
 		// CHANGED_BY_USER_ID s:int Идентификатор пользователя,
 		// изменившего
 		// полис
-		if (MyStrings.nonEmpty(source.getRECORDCHANGEDAT()))
+		if (MyStrings.nonEmpty(source.getRECORDCHANGEDATDATETIME()))
 		    RecordOperationInfo.builder()
-			    .withDate(convertESBDDateToLocalDate(source.getRECORDCHANGEDAT()))
+			    .withInstant(datetimeToInstant(source.getRECORDCHANGEDATDATETIME()))
 			    .withAuthor(Util.reqField(PolicyEntity.class,
 				    id,
 				    userService::getById,

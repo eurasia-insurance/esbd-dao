@@ -1,6 +1,6 @@
 package tech.lapsa.esbd.beans.dao.entities.converter;
 
-import static tech.lapsa.esbd.beans.dao.ESBDDates.*;
+import static tech.lapsa.esbd.beans.dao.TemporalUtil.*;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -61,7 +61,7 @@ public class SubjectPersonEntityConverterBean
 			.withName(source.getFirstName())
 			.withSurename(source.getLastName())
 			.withPatronymic(source.getMiddleName())
-			.withDayOfBirth(convertESBDDateToLocalDate(source.getBorn()))
+			.withDayOfBirth(dateToLocalDate(source.getBorn()))
 			.withGender(Util.optField(SubjectPersonEntity.class,
 				id,
 				genders::getById,
@@ -77,7 +77,7 @@ public class SubjectPersonEntityConverterBean
 	    // DOCUMENT_GIVED_DATE s:string Дата выдачи документа
 	    IdentityCardInfo.builder() //
 		    .withNumber(MyOptionals.of(source.getDOCUMENTNUMBER()))
-		    .withDateOfIssue(MyOptionals.of(convertESBDDateToLocalDate(source.getDOCUMENTGIVEDDATE())))
+		    .withDateOfIssue(MyOptionals.of(dateToLocalDate(source.getDOCUMENTGIVEDDATE())))
 		    .withIssuingAuthority(source.getDOCUMENTGIVEDBY()) //
 		    .withIdentityCardType(Util.optField(SubjectPersonEntity.class,
 			    id,

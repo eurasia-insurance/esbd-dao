@@ -10,7 +10,7 @@ import javax.ejb.TransactionAttributeType;
 
 import com.lapsa.insurance.elements.InsuranceClassType;
 
-import tech.lapsa.esbd.beans.dao.ESBDDates;
+import tech.lapsa.esbd.beans.dao.TemporalUtil;
 import tech.lapsa.esbd.beans.dao.elements.mapping.InsuranceClassTypeMapping;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
@@ -125,7 +125,7 @@ public class InsuranceClassTypeServiceBean
 	MyObjects.requireNonNull(subjectPerson.getId(), "subjectPerson.id");
 	MyObjects.requireNonNull(date, "date");
 	try (Connection con = pool.getConnection()) {
-	    final String esbdDate = ESBDDates.convertLocalDateToESBDDate(date);
+	    final String esbdDate = TemporalUtil.localDateToDate(date);
 	    final int aClassID = con.getClassId(subjectPerson.getId(), esbdDate, 0);
 	    if (aClassID == 0)
 		throw new NotFound("WS-call getClassId returned zero value for CLIENT_ID = " + subjectPerson.getId()

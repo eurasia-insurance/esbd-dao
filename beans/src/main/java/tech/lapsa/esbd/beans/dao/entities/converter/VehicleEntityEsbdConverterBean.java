@@ -7,7 +7,7 @@ import javax.ejb.Stateless;
 import com.lapsa.insurance.elements.SteeringWheelLocation;
 import com.lapsa.insurance.elements.VehicleClass;
 
-import tech.lapsa.esbd.beans.dao.ESBDDates;
+import tech.lapsa.esbd.beans.dao.TemporalUtil;
 import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter;
 import tech.lapsa.esbd.beans.dao.entities.Util;
 import tech.lapsa.esbd.dao.elements.VehicleClassService.VehicleClassServiceLocal;
@@ -98,7 +98,7 @@ public class VehicleEntityEsbdConverterBean implements EsbdAttributeConverter<Ve
 	    {
 		// BORN s:string Год выпуска (обязательно)
 		// BORN_MONTH s:int Месяц выпуска ТС
-		builder.withRealeaseDate(ESBDDates.fromESBDYearMonth(source.getBORN(), source.getBORNMONTH()));
+		builder.withRealeaseDate(TemporalUtil.yearMonthToLocalDate(source.getBORN(), source.getBORNMONTH()));
 	    }
 
 	    return builder.build();

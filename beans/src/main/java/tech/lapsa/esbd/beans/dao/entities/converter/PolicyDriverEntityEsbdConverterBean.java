@@ -1,6 +1,6 @@
 package tech.lapsa.esbd.beans.dao.entities.converter;
 
-import static tech.lapsa.esbd.beans.dao.ESBDDates.*;
+import static tech.lapsa.esbd.beans.dao.TemporalUtil.*;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -117,7 +117,7 @@ public class PolicyDriverEntityEsbdConverterBean implements EsbdAttributeConvert
 		// DRIVER_CERTIFICATE_DATE s:string Дата выдачи водительского
 		// удостоверения
 		DriverLicenseInfo.builder() //
-			.withDateOfIssue(convertESBDDateToLocalDate(source.getDRIVERCERTIFICATEDATE())) //
+			.withDateOfIssue(dateToLocalDate(source.getDRIVERCERTIFICATEDATE())) //
 			.withNumber(source.getDRIVERCERTIFICATE()) //
 			.buildTo(builder::withDriverLicense);
 	    }
@@ -146,7 +146,7 @@ public class PolicyDriverEntityEsbdConverterBean implements EsbdAttributeConvert
 			    .withType(source.getPRIVELEDGERTYPE())
 			    .withCertificateNumber(source.getPRIVELEDGERCERTIFICATE()) //
 			    .withCertificateDateOfIssue(
-				    convertESBDDateToLocalDate(source.getPRIVELEDGERCERTIFICATEDATE())) //
+				    dateToLocalDate(source.getPRIVELEDGERCERTIFICATEDATE())) //
 			    .buildTo(builder::withPrivilegerInfo);
 	    }
 
@@ -159,7 +159,7 @@ public class PolicyDriverEntityEsbdConverterBean implements EsbdAttributeConvert
 		final boolean gpwParticipant = source.getWOWBOOL() == 1;
 		if (gpwParticipant)
 		    GPWParticipantInfo.builder() //
-			    .withCertificateDateOfIssue(convertESBDDateToLocalDate(source.getWOWCERTIFICATEDATE())) //
+			    .withCertificateDateOfIssue(dateToLocalDate(source.getWOWCERTIFICATEDATE())) //
 			    .withCertificateNumber(source.getWOWCERTIFICATE()) //
 			    .buildTo(builder::withGpwParticipantInfo);
 	    }
@@ -174,7 +174,7 @@ public class PolicyDriverEntityEsbdConverterBean implements EsbdAttributeConvert
 		    PensionerInfo.builder() //
 			    .withCertificateNumber(source.getPENSIONERCERTIFICATE()) //
 			    .withCertiticateDateOfIssue(
-				    convertESBDDateToLocalDate(source.getPENSIONERCERTIFICATEDATE())) //
+				    dateToLocalDate(source.getPENSIONERCERTIFICATEDATE())) //
 			    .buildTo(builder::withPensionerInfo);
 	    }
 
@@ -191,8 +191,8 @@ public class PolicyDriverEntityEsbdConverterBean implements EsbdAttributeConvert
 		if (handicapped)
 		    HandicappedInfo.builder() //
 			    .withCertificateNumber(source.getINVALIDCERTIFICATE()) //
-			    .withCertificateValidFrom(convertESBDDateToLocalDate(source.getINVALIDCERTIFICATEBEGDATE())) //
-			    .withCertificateValidTill(convertESBDDateToLocalDate(source.getINVALIDCERTIFICATEENDDATE())) //
+			    .withCertificateValidFrom(dateToLocalDate(source.getINVALIDCERTIFICATEBEGDATE())) //
+			    .withCertificateValidTill(dateToLocalDate(source.getINVALIDCERTIFICATEENDDATE())) //
 			    .buildTo(builder::withHandicappedInfo);
 	    }
 
@@ -202,7 +202,7 @@ public class PolicyDriverEntityEsbdConverterBean implements EsbdAttributeConvert
 		// запись
 		// INPUT_DATE s:string Дата\время ввода записи в систему
 		RecordOperationInfo.builder()
-			.withDate(convertESBDDateToLocalDate(source.getINPUTDATE()))
+			.withInstant(optTemporalToInstant(source.getINPUTDATE()).orElse(null))
 			.withAuthor(Util.reqField(InsuredDriverEntity.class,
 				id,
 				userService::getById,
@@ -218,7 +218,7 @@ public class PolicyDriverEntityEsbdConverterBean implements EsbdAttributeConvert
 		// изменившего
 		// запись
 		RecordOperationInfo.builder()
-			.withDate(convertESBDDateToLocalDate(source.getRECORDCHANGEDAT()))
+			.withInstant(optTemporalToInstant(source.getRECORDCHANGEDAT()).orElse(null))
 			.withAuthor(Util.reqField(InsuredDriverEntity.class,
 				id,
 				userService::getById,
@@ -244,5 +244,4 @@ public class PolicyDriverEntityEsbdConverterBean implements EsbdAttributeConvert
 	    throw new EsbdConversionException(e.getMessage());
 	}
     }
-
 }

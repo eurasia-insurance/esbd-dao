@@ -1,6 +1,6 @@
 package tech.lapsa.esbd.beans.dao.entities.converter;
 
-import static tech.lapsa.esbd.beans.dao.ESBDDates.*;
+import static tech.lapsa.esbd.beans.dao.TemporalUtil.*;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -114,7 +114,7 @@ public class PolicyVehicleEntityEsbdConverterBean implements EsbdAttributeConver
 		// (обязательно)
 		VehicleCertificateInfo.builder() //
 			.withCertificateNumber(source.getTFREGISTRATIONCERTIFICATE())
-			.withDateOfIssue(convertESBDDateToLocalDate(source.getGIVEDATE()))
+			.withDateOfIssue(dateToLocalDate(source.getGIVEDATE()))
 			.withRegistrationMajorCity(source.getBIGCITYBOOL() == 1)
 			.withRegistrationRegion(Util.reqField(InsuredVehicleEntity.class,
 				id,
@@ -142,7 +142,7 @@ public class PolicyVehicleEntityEsbdConverterBean implements EsbdAttributeConver
 		// запись
 		// INPUT_DATE s:string Дата\время ввода записи в систему
 		RecordOperationInfo.builder()
-			.withDate(convertESBDDateToLocalDate(source.getINPUTDATE()))
+			.withInstant(optTemporalToInstant(source.getINPUTDATE()).orElse(null))
 			.withAuthor(Util.reqField(InsuredVehicleEntity.class,
 				id,
 				userService::getById,
@@ -159,7 +159,7 @@ public class PolicyVehicleEntityEsbdConverterBean implements EsbdAttributeConver
 		// запись
 		if (MyStrings.nonEmpty(source.getRECORDCHANGEDAT()))
 		    RecordOperationInfo.builder()
-			    .withDate(convertESBDDateToLocalDate(source.getRECORDCHANGEDAT()))
+			    .withInstant(optTemporalToInstant(source.getRECORDCHANGEDAT()).orElse(null))
 			    .withAuthor(Util.reqField(InsuredVehicleEntity.class,
 				    id,
 				    userService::getById,
