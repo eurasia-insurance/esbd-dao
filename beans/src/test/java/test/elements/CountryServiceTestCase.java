@@ -1,40 +1,24 @@
 package test.elements;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static test.entities.TestConstants.*;
-
 import javax.inject.Inject;
-
-import org.junit.Test;
 
 import com.lapsa.international.country.Country;
 
 import tech.lapsa.esbd.beans.dao.elements.mapping.CountryMapping;
-import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.elements.CountryService.CountryServiceLocal;
-import tech.lapsa.java.commons.exceptions.IllegalArgument;
-import test.ArquillianBaseTestCase;
+import tech.lapsa.esbd.dao.elements.ElementsService;
 
-public class CountryServiceTestCase extends ArquillianBaseTestCase {
+public class CountryServiceTestCase extends AMappedElementTestCase<Country> {
 
     @Inject
     private CountryServiceLocal service;
 
-    @Test
-    public void testGetById() throws IllegalArgument {
-	for (final int i : CountryMapping.getInstance().getAllIds())
-	    try {
-		final Country res = service.getById(i);
-		assertThat(res, allOf(not(nullValue()), equalTo(CountryMapping.getInstance().forId(i))));
-	    } catch (final NotFound e) {
-		fail(e.getMessage());
-	    }
+    public CountryServiceTestCase() {
+	super(Country.class, CountryMapping.getInstance(), "COUNTRIES", 99999);
     }
 
-    @Test(expected = NotFound.class)
-    public void testGetById_NotFound() throws NotFound, IllegalArgument {
-	service.getById(INVALID_COUNTRY_ID);
+    @Override
+    ElementsService<Country> service() {
+	return service;
     }
-
 }
