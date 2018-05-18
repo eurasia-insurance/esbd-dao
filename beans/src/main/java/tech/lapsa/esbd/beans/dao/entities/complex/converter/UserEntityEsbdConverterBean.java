@@ -9,13 +9,12 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import tech.lapsa.esbd.beans.dao.entities.complex.Util;
 import tech.lapsa.esbd.dao.entities.complex.SubjectEntity;
-import tech.lapsa.esbd.dao.entities.complex.UserEntity;
 import tech.lapsa.esbd.dao.entities.complex.SubjectEntityService.SubjectEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.UserEntity;
 import tech.lapsa.esbd.dao.entities.complex.UserEntity.UserEntityBuilder;
-import tech.lapsa.esbd.dao.entities.complex.UserEntityService.UserEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.dict.BranchEntity;
-import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.dao.entities.dict.BranchEntityService.BranchEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
 import tech.lapsa.esbd.jaxws.wsimport.User;
 import tech.lapsa.java.commons.function.MyOptionals;
@@ -32,9 +31,6 @@ public class UserEntityEsbdConverterBean implements EsbdAttributeConverter<UserE
 
     @EJB
     private BranchEntityServiceLocal branchService;
-
-    @EJB
-    private UserEntityServiceLocal userService;
 
     @Override
     public User convertToEsbdValue(UserEntity source) throws EsbdConversionException {
