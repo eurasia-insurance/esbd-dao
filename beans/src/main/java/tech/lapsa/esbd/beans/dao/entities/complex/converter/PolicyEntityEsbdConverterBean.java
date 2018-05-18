@@ -16,17 +16,19 @@ import tech.lapsa.esbd.beans.dao.entities.complex.Util;
 import tech.lapsa.esbd.dao.elements.dict.CancelationReasonService.CancelationReasonServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.PaymentTypeService.PaymentTypeServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.PersonTypeService.PersonTypeServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.InsuranceAgentEntity;
+import tech.lapsa.esbd.dao.entities.complex.InsuranceAgentEntityService.InsuranceAgentEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.InsuredDriverEntity;
 import tech.lapsa.esbd.dao.entities.complex.InsuredVehicleEntity;
 import tech.lapsa.esbd.dao.entities.complex.PolicyEntity;
-import tech.lapsa.esbd.dao.entities.complex.SubjectEntity;
-import tech.lapsa.esbd.dao.entities.complex.UserEntity;
 import tech.lapsa.esbd.dao.entities.complex.PolicyEntity.PolicyEntityBuilder;
+import tech.lapsa.esbd.dao.entities.complex.SubjectEntity;
 import tech.lapsa.esbd.dao.entities.complex.SubjectEntityService.SubjectEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.UserEntity;
 import tech.lapsa.esbd.dao.entities.complex.UserEntityService.UserEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.dict.BranchEntity;
-import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.dao.entities.dict.BranchEntityService.BranchEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.embeded.CancelationInfo;
 import tech.lapsa.esbd.dao.entities.embeded.RecordOperationInfo;
@@ -124,6 +126,20 @@ public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<Pol
 			    PersonType.class,
 			    source.getCLIENTFORMID()));
 		}
+	    }
+
+	    {
+		// MIDDLEMAN_ID s:int Посредник (Идентификатор)
+		if (MyNumbers.nonZero(source.getMIDDLEMANID())) {
+		    builder.withInsuranceAgent(Util.reqField(PolicyEntity.class,
+			    id,
+			    insuranceAgentService::getById,
+			    "insuranceAgent",
+			    InsuranceAgentEntity.class,
+			    source.getMIDDLEMANID()));
+		}
+
+		// MIDDLEMAN_CONTRACT_NUMBER s:string Номер договора посредника
 	    }
 
 	    {
@@ -246,8 +262,6 @@ public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<Pol
 	    // платежи
 	    // по
 	    // полису
-	    // MIDDLEMAN_ID s:int Посредник (Идентификатор)
-	    // MIDDLEMAN_CONTRACT_NUMBER s:string Номер договора посредника
 
 	    {
 		// PAYMENT_ORDER_TYPE_ID s:int Порядок оплаты (Идентификатор)
@@ -282,6 +296,9 @@ public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<Pol
 
     @EJB
     private SubjectEntityServiceLocal subjectService;
+
+    @EJB
+    private InsuranceAgentEntityServiceLocal insuranceAgentService;
 
     @EJB
     private PersonTypeServiceLocal personTypeService;
