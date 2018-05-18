@@ -16,6 +16,8 @@ import tech.lapsa.esbd.dao.dict.BranchEntity;
 import tech.lapsa.esbd.dao.dict.BranchEntityService.BranchEntityServiceLocal;
 import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
+import tech.lapsa.esbd.dao.dict.PersonTypeEntity;
+import tech.lapsa.esbd.dao.dict.PersonTypeEntityService.PersonTypeEntityServiceLocal;
 import tech.lapsa.esbd.dao.elements.CancelationReasonService.CancelationReasonServiceLocal;
 import tech.lapsa.esbd.dao.entities.CancelationInfo;
 import tech.lapsa.esbd.dao.entities.InsuredDriverEntity;
@@ -109,6 +111,17 @@ public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<Pol
 			"insurant",
 			SubjectEntity.class,
 			source.getCLIENTID()));
+	    }
+
+	    {
+		if (MyNumbers.nonZero(source.getCLIENTFORMID())) {
+		    builder.withInsurantPersonType(Util.reqField(PolicyEntity.class,
+			    id,
+			    personTypeService::getById,
+			    "insurantPersonType",
+			    PersonTypeEntity.class,
+			    source.getCLIENTFORMID()));
+		}
 	    }
 
 	    {
@@ -253,6 +266,9 @@ public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<Pol
 
     @EJB
     private SubjectEntityServiceLocal subjectService;
+
+    @EJB
+    private PersonTypeEntityServiceLocal personTypeService;
 
     @EJB
     private CancelationReasonServiceLocal cancelationReasonTypeService;
