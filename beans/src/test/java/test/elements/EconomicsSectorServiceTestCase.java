@@ -8,7 +8,7 @@ import tech.lapsa.esbd.beans.dao.elements.mapping.KZEconomicSectorMapping;
 import tech.lapsa.esbd.dao.elements.ElementsService;
 import tech.lapsa.esbd.dao.elements.KZEconomicSectorService.KZEconomicSectorServiceLocal;
 
-public class EconomicsSectorServiceTestCase extends AMappedElementTestCase<KZEconomicSector> {
+public class EconomicsSectorServiceTestCase extends AMappedElementIntTestCase<KZEconomicSector> {
 
     @Inject
     private KZEconomicSectorServiceLocal service;

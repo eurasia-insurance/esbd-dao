@@ -8,7 +8,7 @@ import tech.lapsa.esbd.beans.dao.elements.mapping.SexMapping;
 import tech.lapsa.esbd.dao.elements.ElementsService;
 import tech.lapsa.esbd.dao.elements.GenderService.GenderServiceLocal;
 
-public class GenderServiceTestCase extends AMappedElementTestCase<Sex> {
+public class GenderServiceTestCase extends AMappedElementIntTestCase<Sex> {
 
     @Inject
     private GenderServiceLocal service;

@@ -8,7 +8,7 @@ import tech.lapsa.esbd.beans.dao.elements.mapping.CountryMapping;
 import tech.lapsa.esbd.dao.elements.CountryService.CountryServiceLocal;
 import tech.lapsa.esbd.dao.elements.ElementsService;
 
-public class CountryServiceTestCase extends AMappedElementTestCase<Country> {
+public class CountryServiceTestCase extends AMappedElementIntTestCase<Country> {
 
     @Inject
     private CountryServiceLocal service;

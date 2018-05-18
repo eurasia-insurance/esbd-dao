@@ -8,7 +8,7 @@ import tech.lapsa.esbd.beans.dao.elements.mapping.PaymentTypeMapping;
 import tech.lapsa.esbd.dao.elements.ElementsService;
 import tech.lapsa.esbd.dao.elements.PaymentTypeService.PaymentTypeServiceLocal;
 
-public class PaymentTypeServiceTestCase extends AMappedElementTestCase<PaymentType> {
+public class PaymentTypeServiceTestCase extends AMappedElementIntTestCase<PaymentType> {
 
     @Inject
     private PaymentTypeServiceLocal service;

@@ -8,7 +8,7 @@ import tech.lapsa.esbd.beans.dao.elements.mapping.InsuredAgeAndExpirienceClassMa
 import tech.lapsa.esbd.dao.elements.ElementsService;
 import tech.lapsa.esbd.dao.elements.InsuredAgeAndExpirienceClassService.InsuredAgeAndExpirienceClassServiceLocal;
 
-public class InsuranceAgeExpirienceServiceTestCase extends AMappedElementTestCase<InsuredAgeAndExpirienceClass> {
+public class InsuranceAgeExpirienceServiceTestCase extends AMappedElementIntTestCase<InsuredAgeAndExpirienceClass> {
 
     @Inject
     private InsuredAgeAndExpirienceClassServiceLocal service;

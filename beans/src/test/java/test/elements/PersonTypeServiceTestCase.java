@@ -8,7 +8,7 @@ import tech.lapsa.esbd.beans.dao.elements.mapping.PersonTypeMapping;
 import tech.lapsa.esbd.dao.elements.ElementsService;
 import tech.lapsa.esbd.dao.elements.PersonTypeService.PersonTypeServiceLocal;
 
-public class PersonTypeServiceTestCase extends AMappedElementTestCase<PersonType> {
+public class PersonTypeServiceTestCase extends AMappedElementIntTestCase<PersonType> {
 
     @Inject
     private PersonTypeServiceLocal service;
