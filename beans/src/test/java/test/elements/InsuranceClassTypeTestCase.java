@@ -2,7 +2,6 @@ package test.elements;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static test.entities.TestConstants.*;
 
 import java.util.Set;
 
@@ -22,6 +21,8 @@ import test.ArquillianBaseTestCase;
 
 public class InsuranceClassTypeTestCase extends ArquillianBaseTestCase {
 
+    private static final int VALID_INSURANCE_CLASS_TYPE_ID = 14;
+
     @Inject
     private InsuranceClassTypeServiceLocal service;
 
@@ -34,6 +35,8 @@ public class InsuranceClassTypeTestCase extends ArquillianBaseTestCase {
 	    fail(e.getMessage());
 	}
     }
+
+    private static final int INVALID_INSURANCE_CLASS_TYPE_ID = 999999999;
 
     @Test(expected = NotFound.class)
     public void testGetById_NotFound() throws NotFound, IllegalArgument {
@@ -53,6 +56,8 @@ public class InsuranceClassTypeTestCase extends ArquillianBaseTestCase {
 	    }
     }
 
+    private static final String INVALID_INSURANCE_CLASS_TYPE_CODE = "QQ";
+
     @Test(expected = NotFound.class)
     public void testGetByCode_NotFound() throws NotFound, IllegalArgument {
 	service.getByCode(INVALID_INSURANCE_CLASS_TYPE_CODE);
@@ -60,6 +65,10 @@ public class InsuranceClassTypeTestCase extends ArquillianBaseTestCase {
 
     @Inject
     private SubjectPersonEntityServiceLocal persons;
+
+    private static final int VALID_SUBJECT_PERSON_ID = 14132412; // Evsyukovs ID
+    private static final InsuranceClassType VALID_CLASS_TYPE_FOR_CLIENT = InsuranceClassType.CLASS_13; // Evsyukovs
+												       // Class
 
     @Test
     public void testGetForSubject() throws IllegalArgument {

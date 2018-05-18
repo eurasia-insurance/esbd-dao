@@ -1,6 +1,5 @@
 package test.entities;
 
-import com.lapsa.insurance.elements.InsuranceClassType;
 import com.lapsa.insurance.elements.SubjectType;
 
 import tech.lapsa.esbd.dao.entities.SubjectCompanyEntity;
@@ -19,16 +18,6 @@ public final class TestConstants {
     // User
     public static final int INVALID_USER_ID = 999999999;
 
-    // InsuranceClassType
-    public static final int VALID_INSURANCE_CLASS_TYPE_ID = 14;
-    public static final int INVALID_INSURANCE_CLASS_TYPE_ID = 999999999;
-    public static final String INVALID_INSURANCE_CLASS_TYPE_CODE = "QQ";
-
-    // Subject
-    public static final int INVALID_SUBJECT_PERSON_ID = 999999999;
-    public static final int VALID_SUBJECT_PERSON_ID = 14132412; // Evsyukovs ID
-    public static final InsuranceClassType VALID_CLASS_TYPE_FOR_CLIENT = InsuranceClassType.CLASS_13; // Evsyukovs
-												      // Class
     // VehicleManufacturer
     public static final int VALID_VEHICLE_MANUFACTURER_ID = 45755; // INFINTI
 								   // FX35
