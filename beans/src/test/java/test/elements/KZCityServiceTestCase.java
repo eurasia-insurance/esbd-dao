@@ -19,7 +19,7 @@ import tech.lapsa.esbd.dao.elements.KZCityService.KZCityServiceLocal;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfItem;
 import tech.lapsa.esbd.jaxws.wsimport.Item;
 
-public class KZCityServiceTestCase extends AMappedElementIntTestCase<KZCity> {
+public class KZCityServiceTestCase extends AMappedElementTestCase<KZCity> {
 
     @Inject
     private KZCityServiceLocal service;

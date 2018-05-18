@@ -20,7 +20,7 @@ import tech.lapsa.esbd.jaxws.wsimport.Item;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import test.ArquillianBaseTestCase;
 
-public abstract class AMappedElementIntTestCase<T extends Enum<T>> extends ArquillianBaseTestCase {
+public abstract class AMappedElementTestCase<T extends Enum<T>> extends ArquillianBaseTestCase {
 
     final Class<T> clazz;
     final AbsMapping<Integer, T> mapper;
@@ -29,7 +29,7 @@ public abstract class AMappedElementIntTestCase<T extends Enum<T>> extends Arqui
 
     abstract ElementsService<T> service();
 
-    public AMappedElementIntTestCase(final Class<T> clazz, AbsMapping<Integer, T> mapper, String dictionaryName,
+    public AMappedElementTestCase(final Class<T> clazz, AbsMapping<Integer, T> mapper, String dictionaryName,
 	    int invalidId) {
 	this.clazz = clazz;
 	this.mapper = mapper;

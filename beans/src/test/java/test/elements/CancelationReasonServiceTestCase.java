@@ -8,7 +8,7 @@ import tech.lapsa.esbd.beans.dao.elements.mapping.CancelationReasonMapping;
 import tech.lapsa.esbd.dao.elements.CancelationReasonService.CancelationReasonServiceLocal;
 import tech.lapsa.esbd.dao.elements.ElementsService;
 
-public class CancelationReasonServiceTestCase extends AMappedElementIntTestCase<CancelationReason> {
+public class CancelationReasonServiceTestCase extends AMappedElementTestCase<CancelationReason> {
 
     @Inject
     private CancelationReasonServiceLocal service;

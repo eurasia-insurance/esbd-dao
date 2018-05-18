@@ -8,7 +8,7 @@ import tech.lapsa.esbd.beans.dao.elements.mapping.KZAreaMapping;
 import tech.lapsa.esbd.dao.elements.ElementsService;
 import tech.lapsa.esbd.dao.elements.KZAreaService.KZAreaServiceLocal;
 
-public class CountryRegionServiceTestCase extends AMappedElementIntTestCase<KZArea> {
+public class CountryRegionServiceTestCase extends AMappedElementTestCase<KZArea> {
 
     @Inject
     private KZAreaServiceLocal service;

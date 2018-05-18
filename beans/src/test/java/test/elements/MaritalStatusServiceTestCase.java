@@ -8,7 +8,7 @@ import tech.lapsa.esbd.beans.dao.elements.mapping.MaritalStatusMapping;
 import tech.lapsa.esbd.dao.elements.ElementsService;
 import tech.lapsa.esbd.dao.elements.MaritalStatusService.MaritalStatusServiceLocal;
 
-public class MaritalStatusServiceTestCase extends AMappedElementIntTestCase<MaritalStatus> {
+public class MaritalStatusServiceTestCase extends AMappedElementTestCase<MaritalStatus> {
 
     @Inject
     private MaritalStatusServiceLocal service;
