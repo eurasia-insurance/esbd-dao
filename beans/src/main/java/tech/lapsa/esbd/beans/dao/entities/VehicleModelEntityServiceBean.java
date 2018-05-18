@@ -10,15 +10,14 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter.EsbdConversionException;
+import tech.lapsa.esbd.beans.dao.entities.converter.VehicleModelEntityEsbdConverterBean;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
-import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.entities.VehicleManufacturerEntity;
 import tech.lapsa.esbd.dao.entities.VehicleModelEntity;
 import tech.lapsa.esbd.dao.entities.VehicleModelEntityService;
-import tech.lapsa.esbd.dao.entities.VehicleManufacturerEntityService.VehicleManufacturerEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.VehicleModelEntity.VehicleModelEntityBuilder;
 import tech.lapsa.esbd.dao.entities.VehicleModelEntityService.VehicleModelEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.VehicleModelEntityService.VehicleModelEntityServiceRemote;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfVOITUREMODEL;
@@ -35,6 +34,7 @@ import tech.lapsa.java.commons.logging.MyLogger;
 
 @Stateless(name = VehicleModelEntityService.BEAN_NAME)
 public class VehicleModelEntityServiceBean
+	extends AEntityServiceBeanTemplate<VehicleModelEntity, VOITUREMODEL>
 	implements VehicleModelEntityServiceLocal, VehicleModelEntityServiceRemote {
 
     private final MyLogger logger = MyLogger.newBuilder() //
@@ -48,6 +48,8 @@ public class VehicleModelEntityServiceBean
 	    return _getById(id);
 	} catch (final IllegalArgumentException e) {
 	    throw new IllegalArgument(e);
+	} catch (final EJBException e) {
+	    throw e;
 	} catch (final RuntimeException e) {
 	    logger.WARN.log(e);
 	    throw new EJBException(e.getMessage());
@@ -61,6 +63,8 @@ public class VehicleModelEntityServiceBean
 	    return _getByName(name);
 	} catch (final IllegalArgumentException e) {
 	    throw new IllegalArgument(e);
+	} catch (final EJBException e) {
+	    throw e;
 	} catch (final RuntimeException e) {
 	    logger.WARN.log(e);
 	    throw new EJBException(e.getMessage());
@@ -75,6 +79,8 @@ public class VehicleModelEntityServiceBean
 	    return _getByManufacturer(manufacturer);
 	} catch (final IllegalArgumentException e) {
 	    throw new IllegalArgument(e);
+	} catch (final EJBException e) {
+	    throw e;
 	} catch (final RuntimeException e) {
 	    logger.WARN.log(e);
 	    throw new EJBException(e.getMessage());
@@ -82,12 +88,6 @@ public class VehicleModelEntityServiceBean
     }
 
     // PRIVATE
-
-    @EJB
-    private VehicleManufacturerEntityServiceLocal vehicleManufacturerService;
-
-    @EJB
-    private ConnectionPool pool;
 
     private VehicleModelEntity _getById(final Integer id) throws IllegalArgumentException, NotFound {
 	MyNumbers.requireNonZero(id, "id");
@@ -104,9 +104,9 @@ public class VehicleModelEntityServiceBean
 		.map(ArrayOfVOITUREMODEL::getVOITUREMODEL) //
 		.filter(MyCollections::nonEmpty)
 		.orElseThrow(MyExceptions.supplier(NotFound::new, "%1$s not found with ID = '%2$s'",
-			VehicleManufacturerEntity.class.getSimpleName(), id));
+			VehicleModelEntity.class.getSimpleName(), id));
 	final VOITUREMODEL source = Util.requireSingle(list, VehicleModelEntity.class, "ID", id);
-	return convert(source);
+	return conversion(source);
     }
 
     private List<VehicleModelEntity> _getByName(final String name) throws IllegalArgumentException {
@@ -123,7 +123,7 @@ public class VehicleModelEntityServiceBean
 		.map(ArrayOfVOITUREMODEL::getVOITUREMODEL) //
 		.map(Collection::stream) //
 		.orElseGet(Stream::empty) //
-		.map(this::convert) //
+		.map(this::conversion) //
 		.collect(MyCollectors.unmodifiableList());
     }
 
@@ -142,44 +142,22 @@ public class VehicleModelEntityServiceBean
 		.map(ArrayOfVOITUREMODEL::getVOITUREMODEL) //
 		.map(Collection::stream) //
 		.orElseGet(Stream::empty) //
-		.map(this::convert) //
+		.map(this::conversion) //
 		.collect(MyCollectors.unmodifiableList());
     }
 
-    VehicleModelEntity convert(final VOITUREMODEL source) {
+    // converter
+
+    @EJB
+    private VehicleModelEntityEsbdConverterBean converter;
+
+    @Override
+    VehicleModelEntity conversion(final VOITUREMODEL source) {
 	try {
-
-	    final VehicleModelEntityBuilder builder = VehicleModelEntity.builder();
-
-	    final int id = source.getID();
-
-	    {
-		// ID s:int Идентификатор модели
-		builder.withId(MyOptionals.of(id).orElse(null));
-	    }
-
-	    {
-		// NAME s:string Наименование модели
-		builder.withName(source.getNAME());
-	    }
-
-	    {
-		// VOITURE_MARK_ID s:int Идентификатор марки ТС
-		builder.withManufacturer(Util.reqField(VehicleModelEntity.class,
-			id,
-			vehicleManufacturerService::getById,
-			"manufacturer",
-			VehicleManufacturerEntity.class,
-			source.getVOITUREMARKID()));
-	    }
-
-	    return builder.build();
-
-	} catch (final IllegalArgumentException e) {
-	    // it should not happens
-	    throw new EJBException(e.getMessage());
+	    return converter.convertToEntityAttribute(source);
+	} catch (EsbdConversionException e) {
+	    throw Util.esbdConversionExceptionToEJBException(e);
 	}
-
     }
 
 }

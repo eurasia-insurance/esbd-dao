@@ -12,11 +12,14 @@ import com.lapsa.insurance.elements.CancelationReason;
 
 import tech.lapsa.esbd.beans.dao.ESBDDates;
 import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter;
+import tech.lapsa.esbd.beans.dao.entities.Util;
 import tech.lapsa.esbd.dao.dict.BranchEntity;
 import tech.lapsa.esbd.dao.dict.BranchEntityService.BranchEntityServiceLocal;
 import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
 import tech.lapsa.esbd.dao.elements.CancelationReasonService.CancelationReasonServiceLocal;
+import tech.lapsa.esbd.dao.entities.InsuredDriverEntity;
+import tech.lapsa.esbd.dao.entities.InsuredVehicleEntity;
 import tech.lapsa.esbd.dao.entities.PolicyEntity;
 import tech.lapsa.esbd.dao.entities.PolicyEntity.PolicyEntityBuilder;
 import tech.lapsa.esbd.dao.entities.RecordOperationInfo;
@@ -35,7 +38,7 @@ import tech.lapsa.java.commons.function.MyStrings;
 
 @Stateless
 @LocalBean
-public class PolicyEntityEsbdConverter implements EsbdAttributeConverter<PolicyEntity, Policy> {
+public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<PolicyEntity, Policy> {
 
     @EJB
     private InsuranceCompanyEntityServiceLocal insuranceCompanyService;
@@ -53,10 +56,26 @@ public class PolicyEntityEsbdConverter implements EsbdAttributeConverter<PolicyE
     private UserEntityServiceLocal userService;
 
     @EJB
-    private PolicyDriverEntityEsbdConverter policyDriverEntityConverter;
+    private PolicyDriverEntityEsbdConverterBean policyDriverEntityConverter;
+
+    private InsuredDriverEntity _convertPolicyVehicle(Driver source) {
+	try {
+	    return policyDriverEntityConverter.convertToEntityAttribute(source);
+	} catch (EsbdConversionException e) {
+	    throw Util.esbdConversionExceptionToEJBException(e);
+	}
+    }
 
     @EJB
-    private PolicyVehicleEntityEsbdConverter policyVehicleEntityConverter;
+    private PolicyVehicleEntityEsbdConverterBean policyVehicleEntityConverter;
+
+    private InsuredVehicleEntity _convertPolicyVehicle(PoliciesTF source) {
+	try {
+	    return policyVehicleEntityConverter.convertToEntityAttribute(source);
+	} catch (EsbdConversionException e) {
+	    throw Util.esbdConversionExceptionToEJBException(e);
+	}
+    }
 
     @Override
     public Policy convertToEsbdValue(PolicyEntity source) throws EsbdConversionException {
@@ -185,7 +204,7 @@ public class PolicyEntityEsbdConverter implements EsbdAttributeConverter<PolicyE
 				Driver.class.getName(),
 				id,
 				x.getPOLICYID())) //
-			.map(policyDriverEntityConverter::convertToEntityAttribute)
+			.map(this::_convertPolicyVehicle)
 			.forEach(builder::addDriver);
 	    }
 
@@ -204,7 +223,7 @@ public class PolicyEntityEsbdConverter implements EsbdAttributeConverter<PolicyE
 				PoliciesTF.class.getName(),
 				id,
 				x.getPOLICYID())) //
-			.map(policyVehicleEntityConverter::convertToEntityAttribute)
+			.map(this::_convertPolicyVehicle)
 			.forEach(builder::addVehicle);
 	    }
 

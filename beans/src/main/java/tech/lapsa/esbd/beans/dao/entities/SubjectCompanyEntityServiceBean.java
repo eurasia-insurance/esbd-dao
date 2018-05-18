@@ -10,7 +10,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter.EsbdConversionException;
-import tech.lapsa.esbd.beans.dao.entities.converter.SubjectCompanyEntityConverter;
+import tech.lapsa.esbd.beans.dao.entities.converter.SubjectCompanyEntityConverterBean;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.dao.NotFound;
@@ -44,6 +44,8 @@ public class SubjectCompanyEntityServiceBean
 	    return _getById(id);
 	} catch (final IllegalArgumentException e) {
 	    throw new IllegalArgument(e);
+	} catch (final EJBException e) {
+	    throw e;
 	} catch (final RuntimeException e) {
 	    logger.WARN.log(e);
 	    throw new EJBException(e.getMessage());
@@ -57,6 +59,8 @@ public class SubjectCompanyEntityServiceBean
 	    return _getByIdNumber(taxpayerNumber);
 	} catch (final IllegalArgumentException e) {
 	    throw new IllegalArgument(e);
+	} catch (final EJBException e) {
+	    throw e;
 	} catch (final RuntimeException e) {
 	    logger.WARN.log(e);
 	    throw new EJBException(e.getMessage());
@@ -71,6 +75,8 @@ public class SubjectCompanyEntityServiceBean
 	    return _getFirstByIdNumber(taxpayerNumber);
 	} catch (final IllegalArgumentException e) {
 	    throw new IllegalArgument(e);
+	} catch (final EJBException e) {
+	    throw e;
 	} catch (final RuntimeException e) {
 	    logger.WARN.log(e);
 	    throw new EJBException(e.getMessage());
@@ -78,9 +84,6 @@ public class SubjectCompanyEntityServiceBean
     }
 
     // PRIVATE
-
-    @EJB
-    private SubjectCompanyEntityConverter converter;
 
     private SubjectCompanyEntity _getById(final Integer id) throws IllegalArgumentException, NotFound {
 	MyNumbers.requireNonZero(id, "id");
@@ -92,13 +95,7 @@ public class SubjectCompanyEntityServiceBean
 	    if (!isLegal)
 		throw new NotFound(SubjectCompanyEntity.class.getSimpleName() + " not found with ID = '" + id
 			+ "'. It was a " + SubjectPersonEntity.class.getName());
-
-	    try {
-		return converter.convertToEntityAttribute(source);
-	    } catch (EsbdConversionException e) {
-		// it should not happens
-		throw new EJBException(e.getMessage());
-	    }
+	    return conversion(source);
 	} catch (ConnectionException e) {
 	    throw new IllegalStateException(e.getMessage());
 	}
@@ -120,9 +117,17 @@ public class SubjectCompanyEntityServiceBean
 	return _getByIdNumber(taxpayerNumber, false, true);
     }
 
-    @Override
-    EsbdAttributeConverter<SubjectCompanyEntity, Client> getConverter() {
-	return converter;
-    }
+    // converter
 
+    @EJB
+    private SubjectCompanyEntityConverterBean converter;
+
+    @Override
+    SubjectCompanyEntity conversion(final Client source) {
+	try {
+	    return converter.convertToEntityAttribute(source);
+	} catch (EsbdConversionException e) {
+	    throw Util.esbdConversionExceptionToEJBException(e);
+	}
+    }
 }

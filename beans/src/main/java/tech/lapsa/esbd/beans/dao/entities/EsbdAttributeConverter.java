@@ -2,7 +2,7 @@ package tech.lapsa.esbd.beans.dao.entities;
 
 public interface EsbdAttributeConverter<X, Y> {
 
-    public static class EsbdConversionException extends RuntimeException {
+    public static class EsbdConversionException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 

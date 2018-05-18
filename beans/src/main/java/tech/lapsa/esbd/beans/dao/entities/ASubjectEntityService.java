@@ -5,11 +5,8 @@ import java.util.stream.IntStream;
 import java.util.stream.IntStream.Builder;
 import java.util.stream.Stream;
 
-import javax.ejb.EJB;
-
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
-import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.entities.GeneralSubjectEntityService.GeneralSubjectEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.GeneralSubjectEntityService.GeneralSubjectEntityServiceRemote;
 import tech.lapsa.esbd.dao.entities.SubjectEntity;
@@ -21,10 +18,8 @@ import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.kz.taxpayer.TaxpayerNumber;
 
 public abstract class ASubjectEntityService<T extends SubjectEntity>
+	extends AEntityServiceBeanTemplate<T, Client>
 	implements GeneralSubjectEntityServiceLocal<T>, GeneralSubjectEntityServiceRemote<T> {
-
-    @EJB
-    ConnectionPool pool;
 
     List<T> _getByIdNumber(final TaxpayerNumber taxpayerNumber,
 	    final boolean fetchNaturals,
@@ -63,9 +58,7 @@ public abstract class ASubjectEntityService<T extends SubjectEntity>
 	} catch (ConnectionException e) {
 	    throw new IllegalStateException(e.getMessage());
 	}
-	return resStream.map(getConverter()::convertToEntityAttribute)
+	return resStream.map(this::conversion)
 		.collect(MyCollectors.unmodifiableList());
     }
-
-    abstract EsbdAttributeConverter<T, Client> getConverter();
 }

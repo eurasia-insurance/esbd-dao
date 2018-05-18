@@ -10,13 +10,13 @@ import tech.lapsa.esbd.jaxws.wsimport.Client;
 
 @Stateless
 @LocalBean
-public class SubjectEntityEsbdConverter implements EsbdAttributeConverter<SubjectEntity, Client> {
+public class SubjectEntityEsbdConverterBean implements EsbdAttributeConverter<SubjectEntity, Client> {
 
     @EJB
-    private SubjectPersonEntityConverter subjectPersonEntityConveter;
+    private SubjectPersonEntityConverterBean subjectPersonEntityConveter;
 
     @EJB
-    private SubjectCompanyEntityConverter subjectCompanyEntityConveter;
+    private SubjectCompanyEntityConverterBean subjectCompanyEntityConveter;
 
     @Override
     public Client convertToEsbdValue(SubjectEntity source) throws EsbdConversionException {

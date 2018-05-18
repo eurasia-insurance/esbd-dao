@@ -1,6 +1,5 @@
 package tech.lapsa.esbd.beans.dao.entities;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -13,21 +12,14 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.xml.datatype.XMLGregorianCalendar;
 
+import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter.EsbdConversionException;
+import tech.lapsa.esbd.beans.dao.entities.converter.UserEntityEsbdConverterBean;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
-import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.dict.BranchEntity;
-import tech.lapsa.esbd.dao.dict.BranchEntityService.BranchEntityServiceLocal;
-import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntity;
-import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.SubjectEntity;
 import tech.lapsa.esbd.dao.entities.UserEntity;
 import tech.lapsa.esbd.dao.entities.UserEntityService;
-import tech.lapsa.esbd.dao.entities.SubjectEntityService.SubjectEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.UserEntity.UserEntityBuilder;
 import tech.lapsa.esbd.dao.entities.UserEntityService.UserEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.UserEntityService.UserEntityServiceRemote;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfUser;
@@ -43,6 +35,7 @@ import tech.lapsa.java.commons.logging.MyLogger;
 @Singleton(name = UserEntityService.BEAN_NAME)
 @Startup
 public class UserEntityServiceBean
+	extends AEntityServiceBeanTemplate<UserEntity, User>
 	implements UserEntityServiceLocal, UserEntityServiceRemote {
 
     private final MyLogger logger = MyLogger.newBuilder() //
@@ -54,6 +47,8 @@ public class UserEntityServiceBean
     public List<UserEntity> getAll() {
 	try {
 	    return _getAll();
+	} catch (final EJBException e) {
+	    throw e;
 	} catch (final RuntimeException e) {
 	    logger.WARN.log(e);
 	    throw new EJBException(e.getMessage());
@@ -66,6 +61,8 @@ public class UserEntityServiceBean
 	    return _getById(id);
 	} catch (final IllegalArgumentException e) {
 	    throw new IllegalArgument(e);
+	} catch (final EJBException e) {
+	    throw e;
 	} catch (final RuntimeException e) {
 	    logger.WARN.log(e);
 	    throw new EJBException(e.getMessage());
@@ -73,15 +70,6 @@ public class UserEntityServiceBean
     }
 
     // PRIVATE
-
-    @EJB
-    private BranchEntityServiceLocal branchService;
-
-    @EJB
-    private InsuranceCompanyEntityServiceLocal insuranceCompanyService;
-
-    @EJB
-    private ConnectionPool pool;
 
     private static class Holder {
 	private final User esbd;
@@ -117,7 +105,7 @@ public class UserEntityServiceBean
 	    throw MyExceptions.format(NotFound::new, "%1$s(%2$s) not found", UserEntity.class.getSimpleName(), id);
 	synchronized (holder) {
 	    if (holder.fetched == null)
-		holder.fetched = convert(holder.esbd);
+		holder.fetched = conversion(holder.esbd);
 	}
 	return holder.fetched;
     }
@@ -131,7 +119,7 @@ public class UserEntityServiceBean
 		    .map(holder -> {
 			synchronized (holder) {
 			    if (holder.fetched == null)
-				holder.fetched = convert(holder.esbd);
+				holder.fetched = conversion(holder.esbd);
 			}
 			return holder.fetched;
 		    })
@@ -142,75 +130,17 @@ public class UserEntityServiceBean
 	}
     }
 
+    // converter
+
     @EJB
-    private SubjectEntityServiceLocal subjects;
+    private UserEntityEsbdConverterBean converter;
 
-    UserEntity convert(final User source) {
+    @Override
+    UserEntity conversion(final User source) {
 	try {
-
-	    final UserEntityBuilder builder = UserEntity.builder();
-
-	    final int id = source.getID();
-
-	    {
-		// ID s:int Идентификатор пользователя
-		builder.withId(MyOptionals.of(id).orElse(null));
-	    }
-
-	    {
-		// Name s:string Имя пользователя
-		builder.withLogin(source.getName());
-	    }
-
-	    {
-		// Branch_ID s:int Филиал пользователя (справочник BRANCHES)
-		builder.withBranch(Util.optField(UserEntity.class,
-			id,
-			branchService::getById,
-			"branch",
-			BranchEntity.class,
-			MyOptionals.of(source.getBranchID())));
-	    }
-
-	    {
-		// CLIENT_ID s:int Клиент пользователя (справочник CLIENTS)
-		builder.withSubject(Util.optField(UserEntity.class,
-			id,
-			subjects::getById,
-			"subject", SubjectEntity.class,
-			MyOptionals.of(source.getCLIENTID())));
-	    }
-
-	    {
-		// SYSTEM_DELIMITER_ID s:int Разделитель учета (справочник
-		// SYSTEM_DELIMITER)
-		builder.withOrganization(Util.optField(UserEntity.class,
-			id,
-			insuranceCompanyService::getById,
-			"organization",
-			InsuranceCompanyEntity.class,
-			MyOptionals.of(source.getSYSTEMDELIMITERID())));
-	    }
-
-	    // IsAuthenticated s:int Пользователь аутентифицирован
-	    builder.withAuthentificated(source.getIsAuthenticated() == 1);
-
-	    // SessionID s:string Идентификатор текущей сессии пользователя
-	    builder.withLastSesionId(source.getSessionID());
-
-	    // LastRequestTime s:string Время последнего действия пользователя
-	    builder.withLastActivity(MyOptionals.of(source.getLastRequestTime())
-		    .map(XMLGregorianCalendar::toGregorianCalendar)
-		    .map(Calendar::toInstant));
-
-	    // ErrorMessage s:string Описание ошибки аутентификации
-
-	    return builder.build();
-
-	} catch (final IllegalArgumentException e) {
-	    // it should not happens
-	    throw new EJBException(e.getMessage());
+	    return converter.convertToEntityAttribute(source);
+	} catch (EsbdConversionException e) {
+	    throw Util.esbdConversionExceptionToEJBException(e);
 	}
     }
-
 }

@@ -1,11 +1,11 @@
 package tech.lapsa.esbd.beans.dao.entities.converter;
 
 import javax.ejb.EJB;
-import javax.ejb.EJBException;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
 import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter;
+import tech.lapsa.esbd.beans.dao.entities.Util;
 import tech.lapsa.esbd.dao.dict.CompanyActivityKindEntity;
 import tech.lapsa.esbd.dao.dict.CompanyActivityKindEntityService.CompanyActivityKindEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.SubjectCompanyEntity;
@@ -17,7 +17,7 @@ import tech.lapsa.java.commons.function.MyOptionals;
 
 @Stateless
 @LocalBean
-public class SubjectCompanyEntityConverter
+public class SubjectCompanyEntityConverterBean
 	extends ASubjectEntityEsdbdConverter
 	implements EsbdAttributeConverter<SubjectCompanyEntity, Client> {
 
@@ -71,7 +71,7 @@ public class SubjectCompanyEntityConverter
 
 	} catch (final IllegalArgumentException e) {
 	    // it should not happens
-	    throw new EJBException(e.getMessage());
+	    throw new EsbdConversionException(e.getMessage());
 	}
 
     }

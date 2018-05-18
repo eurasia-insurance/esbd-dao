@@ -3,7 +3,6 @@ package tech.lapsa.esbd.beans.dao.entities.converter;
 import static tech.lapsa.esbd.beans.dao.ESBDDates.*;
 
 import javax.ejb.EJB;
-import javax.ejb.EJBException;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
@@ -11,6 +10,7 @@ import com.lapsa.insurance.elements.IdentityCardType;
 import com.lapsa.insurance.elements.Sex;
 
 import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter;
+import tech.lapsa.esbd.beans.dao.entities.Util;
 import tech.lapsa.esbd.dao.elements.GenderService.GenderServiceLocal;
 import tech.lapsa.esbd.dao.elements.IdentityCardTypeService.IdentityCardTypeServiceLocal;
 import tech.lapsa.esbd.dao.entities.IdentityCardInfo;
@@ -24,7 +24,7 @@ import tech.lapsa.java.commons.function.MyOptionals;
 
 @Stateless
 @LocalBean
-public class SubjectPersonEntityConverter
+public class SubjectPersonEntityConverterBean
 	extends ASubjectEntityEsdbdConverter
 	implements EsbdAttributeConverter<SubjectPersonEntity, Client> {
 
@@ -91,7 +91,7 @@ public class SubjectPersonEntityConverter
 
 	} catch (final IllegalArgumentException e) {
 	    // it should not happens
-	    throw new EJBException(e.getMessage());
+	    throw new EsbdConversionException(e.getMessage());
 	}
     }
 }

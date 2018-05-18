@@ -10,22 +10,16 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import com.lapsa.insurance.elements.SteeringWheelLocation;
-import com.lapsa.insurance.elements.VehicleClass;
-
-import tech.lapsa.esbd.beans.dao.ESBDDates;
+import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter.EsbdConversionException;
+import tech.lapsa.esbd.beans.dao.entities.converter.VehicleEntityEsbdConverterBean;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.elements.VehicleClassService.VehicleClassServiceLocal;
 import tech.lapsa.esbd.dao.entities.VehicleEntity;
 import tech.lapsa.esbd.dao.entities.VehicleEntityService;
-import tech.lapsa.esbd.dao.entities.VehicleModelEntity;
-import tech.lapsa.esbd.dao.entities.VehicleEntity.VehicleEntityBuilder;
 import tech.lapsa.esbd.dao.entities.VehicleEntityService.VehicleEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.VehicleEntityService.VehicleEntityServiceRemote;
-import tech.lapsa.esbd.dao.entities.VehicleModelEntityService.VehicleModelEntityServiceLocal;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfTF;
 import tech.lapsa.esbd.jaxws.wsimport.TF;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
@@ -41,6 +35,7 @@ import tech.lapsa.kz.vehicle.VehicleRegNumber;
 
 @Stateless(name = VehicleEntityService.BEAN_NAME)
 public class VehicleEntityServiceBean
+	extends AEntityServiceBeanTemplate<VehicleEntity, TF>
 	implements VehicleEntityServiceLocal, VehicleEntityServiceRemote {
 
     private final MyLogger logger = MyLogger.newBuilder() //
@@ -54,6 +49,8 @@ public class VehicleEntityServiceBean
 	    return _getByRegNumber(regNumber);
 	} catch (final IllegalArgumentException e) {
 	    throw new IllegalArgument(e);
+	} catch (final EJBException e) {
+	    throw e;
 	} catch (final RuntimeException e) {
 	    logger.WARN.log(e);
 	    throw new EJBException(e.getMessage());
@@ -67,6 +64,8 @@ public class VehicleEntityServiceBean
 	    return _getById(id);
 	} catch (final IllegalArgumentException e) {
 	    throw new IllegalArgument(e);
+	} catch (final EJBException e) {
+	    throw e;
 	} catch (final RuntimeException e) {
 	    logger.WARN.log(e);
 	    throw new EJBException(e.getMessage());
@@ -80,6 +79,8 @@ public class VehicleEntityServiceBean
 	    return _getByVINCode(vinCode);
 	} catch (final IllegalArgumentException e) {
 	    throw new IllegalArgument(e);
+	} catch (final EJBException e) {
+	    throw e;
 	} catch (final RuntimeException e) {
 	    logger.WARN.log(e);
 	    throw new EJBException(e.getMessage());
@@ -87,12 +88,6 @@ public class VehicleEntityServiceBean
     }
 
     // PRIVATE
-
-    @EJB
-    private VehicleClassServiceLocal vehicleClassService;
-
-    @EJB
-    private VehicleModelEntityServiceLocal vehicleModelService;
 
     @EJB
     private ConnectionPool pool;
@@ -110,9 +105,7 @@ public class VehicleEntityServiceBean
 		.map(ArrayOfTF::getTF) //
 		.map(Collection::stream) //
 		.orElseGet(Stream::empty) //
-		.map(this::convertToBuilder) //
-		.peek(x -> x.withRegNum(regNumber))
-		.map(VehicleEntityBuilder::build)
+		.map(this::conversion) //
 		.collect(MyCollectors.unmodifiableList());
     }
 
@@ -132,7 +125,7 @@ public class VehicleEntityServiceBean
 		.orElseThrow(MyExceptions.supplier(NotFound::new, "%1$s not found with ID = '%2$s'",
 			VehicleEntity.class.getSimpleName(), id));
 	final TF source = Util.requireSingle(list, VehicleEntity.class, "ID", id);
-	return convertToBuilder(source).build();
+	return conversion(source);
     }
 
     private List<VehicleEntity> _getByVINCode(final String vinCode) throws IllegalArgumentException {
@@ -147,82 +140,21 @@ public class VehicleEntityServiceBean
 		.map(ArrayOfTF::getTF) //
 		.map(Collection::stream) //
 		.orElseGet(Stream::empty) //
-		.map(this::convertToBuilder) //
-		.map(VehicleEntityBuilder::build)
+		.map(this::conversion) //
 		.collect(MyCollectors.unmodifiableList());
     }
 
-    VehicleEntityBuilder convertToBuilder(final TF source) {
+    // converter
+
+    @EJB
+    private VehicleEntityEsbdConverterBean converter;
+
+    @Override
+    VehicleEntity conversion(TF source) {
 	try {
-
-	    final VehicleEntityBuilder builder = VehicleEntity.builder();
-
-	    final int id = source.getTFID();
-
-	    {
-		// TF_ID s:int Идентификатор ТС
-		builder.withId(MyOptionals.of(id).orElse(null));
-	    }
-
-	    {
-		// TF_TYPE_ID s:int Тип ТС (справочник TF_TYPES)
-		builder.withVehicleClass(Util.reqField(VehicleEntity.class,
-			id,
-			vehicleClassService::getById,
-			"VehicleClass",
-			VehicleClass.class,
-			source.getTFTYPEID()));
-	    }
-
-	    {
-		// VIN s:string VIN код (номер кузова) (обязательно)
-		builder.withVinCode(source.getVIN());
-	    }
-
-	    {
-		// MODEL_ID s:int Марка\Модель (справочник VOITURE_MODELS)
-		// (обязательно)
-		builder.withVehicleModel(Util.reqField(VehicleEntity.class,
-			id,
-			vehicleModelService::getById,
-			"vehicleModel",
-			VehicleModelEntity.class,
-			source.getMODELID()));
-	    }
-
-	    {
-		// RIGHT_HAND_DRIVE_BOOL s:int Признак расположения руля (0 -
-		// слева;
-		// 1 -
-		// справа)
-		builder.withSteeringWheelLocation(source.getRIGHTHANDDRIVEBOOL() == 0
-			? SteeringWheelLocation.LEFT_SIDE
-			: SteeringWheelLocation.RIGHT_SIDE);
-	    }
-
-	    {
-		// ENGINE_VOLUME s:int Объем двигателя (куб.см.)
-		// ENGINE_NUMBER s:string Номер двигателя
-		// ENGINE_POWER s:int Мощность двигателя (квт.)
-		builder.withEngine(source.getENGINENUMBER(), source.getENGINEVOLUME(), source.getENGINEPOWER());
-	    }
-
-	    {
-		// COLOR s:string Цвет ТС
-		builder.withColor(source.getCOLOR());
-	    }
-
-	    {
-		// BORN s:string Год выпуска (обязательно)
-		// BORN_MONTH s:int Месяц выпуска ТС
-		builder.withRealeaseDate(ESBDDates.fromESBDYearMonth(source.getBORN(), source.getBORNMONTH()));
-	    }
-
-	    return builder;
-
-	} catch (final IllegalArgumentException e) {
-	    // it should not happens
-	    throw new EJBException(e.getMessage());
+	    return converter.convertToEntityAttribute(source);
+	} catch (EsbdConversionException e) {
+	    throw Util.esbdConversionExceptionToEJBException(e);
 	}
     }
 }

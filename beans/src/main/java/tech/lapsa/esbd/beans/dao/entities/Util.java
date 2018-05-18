@@ -7,18 +7,18 @@ import java.util.function.Predicate;
 
 import javax.ejb.EJBException;
 
+import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter.EsbdConversionException;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.java.commons.function.MyExceptions;
 import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.function.MyStrings;
 
-@Deprecated
-final class Util {
+public final class Util {
 
     private Util() {
     }
 
-    static <T> T requireSingle(final List<T> list,
+    public static <T> T requireSingle(final List<T> list,
 	    final Class<?> clazz,
 	    final String keyName,
 	    final Object key) throws EJBException {
@@ -33,11 +33,11 @@ final class Util {
     }
 
     @FunctionalInterface
-    interface ThrowingFunction<T, R> {
+    public interface ThrowingFunction<T, R> {
 	R apply(T value) throws Exception;
     }
 
-    static <T> IllegalArgumentException requireNonEmtyList(final Class<T> targetClazz,
+    public static <T> IllegalArgumentException requireNonEmtyList(final Class<T> targetClazz,
 	    final Object targetId,
 	    final String fieldName) {
 	final String message = MyStrings.format("Error fetching %1$s(%2$s).%3$s -> list is empty",
@@ -50,7 +50,7 @@ final class Util {
 
     // requireField
 
-    static <T, F, FI> void requireField(final T target,
+    public static <T, F, FI> void requireField(final T target,
 	    final Object targetId,
 	    final ThrowingFunction<FI, F> fieldGeter,
 	    final Consumer<F> fieldSeter,
@@ -75,7 +75,7 @@ final class Util {
 	fieldSeter.accept(fieldObject);
     }
 
-    static <T, F, FI> F reqField(final Class<T> targetClazz,
+    public static <T, F, FI> F reqField(final Class<T> targetClazz,
 	    final Object targetId,
 	    final ThrowingFunction<FI, F> entityGeter,
 	    final String fieldName,
@@ -103,7 +103,7 @@ final class Util {
 	return fieldObject;
     }
 
-    static <T, F, FI> F reqField(final Class<T> targetClazz,
+    public static <T, F, FI> F reqField(final Class<T> targetClazz,
 	    final Object targetId,
 	    final ThrowingFunction<FI, F> fieldGeter,
 	    final String fieldName,
@@ -114,7 +114,7 @@ final class Util {
 
     // optionalField
 
-    static <T, F, FI> Optional<F> optField(final Class<T> targetClazz,
+    public static <T, F, FI> Optional<F> optField(final Class<T> targetClazz,
 	    final Object targetId,
 	    final ThrowingFunction<FI, F> entityGeter,
 	    final String fieldName,
@@ -145,7 +145,7 @@ final class Util {
 	return MyOptionals.of(fieldObject);
     }
 
-    static <T, F, FI> Optional<F> optField(final Class<T> targetClazz,
+    public static <T, F, FI> Optional<F> optField(final Class<T> targetClazz,
 	    final Object targetId,
 	    final ThrowingFunction<FI, F> fieldGeter,
 	    final String fieldName,
@@ -154,7 +154,7 @@ final class Util {
 	return optField(targetClazz, targetId, fieldGeter, fieldName, fieldClazz, optFieldId, null);
     }
 
-    static <T, F, FI> Optional<F> optFieldIgnoreFieldNotFound(final Class<T> targetClazz,
+    public static <T, F, FI> Optional<F> optFieldIgnoreFieldNotFound(final Class<T> targetClazz,
 	    final Object targetId,
 	    final ThrowingFunction<FI, F> fieldGeter,
 	    final String fieldName,
@@ -164,7 +164,7 @@ final class Util {
 		e -> (e instanceof NotFound));
     }
 
-    static <T, F, FI> void optionalField(final T target,
+    public static <T, F, FI> void optionalField(final T target,
 	    final Object targetId,
 	    final ThrowingFunction<FI, F> fieldGeter,
 	    final Consumer<F> fieldSeter,
@@ -194,7 +194,7 @@ final class Util {
 	}
     }
 
-    static <T, F, FI> void optionalFieldIgnoreFieldNotFound(final T target,
+    public static <T, F, FI> void optionalFieldIgnoreFieldNotFound(final T target,
 	    final Object targetId,
 	    final ThrowingFunction<FI, F> fieldGeter,
 	    final Consumer<F> fieldSeter,
@@ -205,7 +205,7 @@ final class Util {
 		e -> (e instanceof NotFound));
     }
 
-    static <T, F, FI> void optionalField(final T target,
+    public static <T, F, FI> void optionalField(final T target,
 	    final Object targetId,
 	    final ThrowingFunction<FI, F> fieldGeter,
 	    final Consumer<F> fieldSeter,
@@ -215,4 +215,8 @@ final class Util {
 	optionalField(target, targetId, fieldGeter, fieldSeter, fieldName, fieldClazz, optFieldId, null);
     }
 
+    public static EJBException esbdConversionExceptionToEJBException(EsbdConversionException e) {
+	return MyExceptions.format(EJBException::new, "An exception has thrown during mapping the entity %1$s '%2$s'",
+		e.getClass(), e.getMessage());
+    }
 }

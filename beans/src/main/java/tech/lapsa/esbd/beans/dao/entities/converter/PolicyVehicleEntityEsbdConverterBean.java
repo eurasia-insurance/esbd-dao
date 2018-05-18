@@ -3,7 +3,6 @@ package tech.lapsa.esbd.beans.dao.entities.converter;
 import static tech.lapsa.esbd.beans.dao.ESBDDates.*;
 
 import javax.ejb.EJB;
-import javax.ejb.EJBException;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
@@ -12,6 +11,7 @@ import com.lapsa.insurance.elements.VehicleClass;
 import com.lapsa.kz.country.KZArea;
 
 import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter;
+import tech.lapsa.esbd.beans.dao.entities.Util;
 import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
 import tech.lapsa.esbd.dao.elements.KZAreaService.KZAreaServiceLocal;
@@ -31,7 +31,7 @@ import tech.lapsa.java.commons.function.MyStrings;
 
 @Stateless
 @LocalBean
-public class PolicyVehicleEntityEsbdConverter implements EsbdAttributeConverter<InsuredVehicleEntity, PoliciesTF> {
+public class PolicyVehicleEntityEsbdConverterBean implements EsbdAttributeConverter<InsuredVehicleEntity, PoliciesTF> {
 
     @EJB
     private VehicleEntityServiceLocal vehicleService;
@@ -183,7 +183,7 @@ public class PolicyVehicleEntityEsbdConverter implements EsbdAttributeConverter<
 
 	} catch (final IllegalArgumentException e) {
 	    // it should not happens
-	    throw new EJBException(e.getMessage());
+	    throw new EsbdConversionException(e.getMessage());
 	}
     }
 }

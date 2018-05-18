@@ -11,6 +11,7 @@ import com.lapsa.insurance.elements.InsuredAgeAndExpirienceClass;
 import com.lapsa.insurance.elements.MaritalStatus;
 
 import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter;
+import tech.lapsa.esbd.beans.dao.entities.Util;
 import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
 import tech.lapsa.esbd.dao.elements.InsuranceClassTypeService.InsuranceClassTypeServiceLocal;
@@ -33,7 +34,7 @@ import tech.lapsa.java.commons.function.MyOptionals;
 
 @Stateless
 @LocalBean
-public class PolicyDriverEntityEsbdConverter implements EsbdAttributeConverter<InsuredDriverEntity, Driver> {
+public class PolicyDriverEntityEsbdConverterBean implements EsbdAttributeConverter<InsuredDriverEntity, Driver> {
 
     @EJB
     private SubjectPersonEntityServiceLocal subjectPersonService;

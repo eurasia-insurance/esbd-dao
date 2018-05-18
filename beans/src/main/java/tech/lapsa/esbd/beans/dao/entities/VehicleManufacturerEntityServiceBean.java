@@ -10,13 +10,13 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter.EsbdConversionException;
+import tech.lapsa.esbd.beans.dao.entities.converter.VehicleManufacturerEntityEsbdConverterBean;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
-import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.entities.VehicleManufacturerEntity;
 import tech.lapsa.esbd.dao.entities.VehicleManufacturerEntityService;
-import tech.lapsa.esbd.dao.entities.VehicleManufacturerEntity.VehicleManufacturerEntityBuilder;
 import tech.lapsa.esbd.dao.entities.VehicleManufacturerEntityService.VehicleManufacturerEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.VehicleManufacturerEntityService.VehicleManufacturerEntityServiceRemote;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfVOITUREMARK;
@@ -32,6 +32,7 @@ import tech.lapsa.java.commons.logging.MyLogger;
 
 @Stateless(name = VehicleManufacturerEntityService.BEAN_NAME)
 public class VehicleManufacturerEntityServiceBean
+	extends AEntityServiceBeanTemplate<VehicleManufacturerEntity, VOITUREMARK>
 	implements VehicleManufacturerEntityServiceLocal, VehicleManufacturerEntityServiceRemote {
 
     private final MyLogger logger = MyLogger.newBuilder() //
@@ -45,6 +46,8 @@ public class VehicleManufacturerEntityServiceBean
 	    return _getById(id);
 	} catch (final IllegalArgumentException e) {
 	    throw new IllegalArgument(e);
+	} catch (final EJBException e) {
+	    throw e;
 	} catch (final RuntimeException e) {
 	    logger.WARN.log(e);
 	    throw new EJBException(e.getMessage());
@@ -58,6 +61,8 @@ public class VehicleManufacturerEntityServiceBean
 	    return _getByName(name);
 	} catch (final IllegalArgumentException e) {
 	    throw new IllegalArgument(e);
+	} catch (final EJBException e) {
+	    throw e;
 	} catch (final RuntimeException e) {
 	    logger.WARN.log(e);
 	    throw new EJBException(e.getMessage());
@@ -65,9 +70,6 @@ public class VehicleManufacturerEntityServiceBean
     }
 
     // PRIVATE
-
-    @EJB
-    private ConnectionPool pool;
 
     private VehicleManufacturerEntity _getById(final Integer id) throws IllegalArgumentException, NotFound {
 	MyNumbers.requireNonZero(id, "id");
@@ -85,7 +87,7 @@ public class VehicleManufacturerEntityServiceBean
 		.orElseThrow(MyExceptions.supplier(NotFound::new, "%1$s not found with ID = '%2$s'",
 			VehicleManufacturerEntity.class.getSimpleName(), id));
 	final VOITUREMARK source = Util.requireSingle(list, VehicleManufacturerEntity.class, "ID", id);
-	return convert(source);
+	return conversion(source);
 
     }
 
@@ -103,37 +105,21 @@ public class VehicleManufacturerEntityServiceBean
 		.map(ArrayOfVOITUREMARK::getVOITUREMARK) //
 		.map(Collection::stream) //
 		.orElseGet(Stream::empty) //
-		.map(this::convert) //
+		.map(this::conversion) //
 		.collect(MyCollectors.unmodifiableList());
     }
 
-    VehicleManufacturerEntity convert(final VOITUREMARK source) {
+    // converter
+
+    @EJB
+    private VehicleManufacturerEntityEsbdConverterBean converter;
+
+    @Override
+    VehicleManufacturerEntity conversion(final VOITUREMARK source) {
 	try {
-
-	    final VehicleManufacturerEntityBuilder builder = VehicleManufacturerEntity.builder();
-
-	    final int id = source.getID();
-
-	    {
-		// ID s:int Идентификатор
-		builder.withId(MyOptionals.of(id).orElse(null));
-	    }
-
-	    {
-		// NAME s:string Наименование марки
-		builder.withName(source.getNAME());
-	    }
-
-	    {
-		// IS_FOREIGN_BOOL s:int Признак иностранной марки
-		builder.withForeign(Boolean.valueOf(source.getISFOREIGNBOOL() != 0));
-	    }
-
-	    return builder.build();
-
-	} catch (final IllegalArgumentException e) {
-	    // it should not happens
-	    throw new EJBException(e.getMessage());
+	    return converter.convertToEntityAttribute(source);
+	} catch (EsbdConversionException e) {
+	    throw Util.esbdConversionExceptionToEJBException(e);
 	}
     }
 }
