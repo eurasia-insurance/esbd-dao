@@ -1,10 +1,10 @@
-package tech.lapsa.esbd.beans.dao.elements.mapping;
+package tech.lapsa.esbd.beans.dao.elements.dict.mapping;
 
 import static com.lapsa.insurance.elements.InsuranceClassType.*;
 
 import com.lapsa.insurance.elements.InsuranceClassType;
 
-public final class InsuranceClassTypeMapping extends AbsMapping<String, InsuranceClassType> {
+public final class InsuranceClassTypeMapping extends AMapping<String, InsuranceClassType> {
 
     private static final class SingletonHolder {
 	private static final InsuranceClassTypeMapping HOLDER_INSTANCE = new InsuranceClassTypeMapping();

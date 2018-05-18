@@ -1,17 +1,17 @@
-package tech.lapsa.esbd.beans.dao.elements;
+package tech.lapsa.esbd.beans.dao.elements.dict;
 
 import javax.ejb.Singleton;
 
 import com.lapsa.insurance.elements.VehicleAgeClass;
 
-import tech.lapsa.esbd.beans.dao.elements.mapping.VehicleAgeClassMapping;
-import tech.lapsa.esbd.dao.elements.VehicleAgeClassService;
-import tech.lapsa.esbd.dao.elements.VehicleAgeClassService.VehicleAgeClassServiceLocal;
-import tech.lapsa.esbd.dao.elements.VehicleAgeClassService.VehicleAgeClassServiceRemote;
+import tech.lapsa.esbd.beans.dao.elements.dict.mapping.VehicleAgeClassMapping;
+import tech.lapsa.esbd.dao.elements.dict.VehicleAgeClassService;
+import tech.lapsa.esbd.dao.elements.dict.VehicleAgeClassService.VehicleAgeClassServiceLocal;
+import tech.lapsa.esbd.dao.elements.dict.VehicleAgeClassService.VehicleAgeClassServiceRemote;
 
 @Singleton(name = VehicleAgeClassService.BEAN_NAME)
 public class VehicleAgeClassServiceBean
-	extends AElementsService<VehicleAgeClass>
+	extends ADictElementsService<VehicleAgeClass>
 	implements VehicleAgeClassServiceLocal, VehicleAgeClassServiceRemote {
 
     public VehicleAgeClassServiceBean() {

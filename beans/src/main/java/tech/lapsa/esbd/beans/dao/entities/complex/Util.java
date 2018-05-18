@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.entities;
+package tech.lapsa.esbd.beans.dao.entities.complex;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 
 import javax.ejb.EJBException;
 
-import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter.EsbdConversionException;
+import tech.lapsa.esbd.beans.dao.entities.complex.converter.EsbdAttributeConverter.EsbdConversionException;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.java.commons.function.MyExceptions;
 import tech.lapsa.java.commons.function.MyOptionals;

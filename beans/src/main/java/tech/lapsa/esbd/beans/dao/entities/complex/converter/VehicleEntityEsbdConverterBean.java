@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.entities.converter;
+package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -8,13 +8,12 @@ import com.lapsa.insurance.elements.SteeringWheelLocation;
 import com.lapsa.insurance.elements.VehicleClass;
 
 import tech.lapsa.esbd.beans.dao.TemporalUtil;
-import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter;
-import tech.lapsa.esbd.beans.dao.entities.Util;
-import tech.lapsa.esbd.dao.elements.VehicleClassService.VehicleClassServiceLocal;
-import tech.lapsa.esbd.dao.entities.VehicleEntity;
-import tech.lapsa.esbd.dao.entities.VehicleEntity.VehicleEntityBuilder;
-import tech.lapsa.esbd.dao.entities.VehicleModelEntity;
-import tech.lapsa.esbd.dao.entities.VehicleModelEntityService.VehicleModelEntityServiceLocal;
+import tech.lapsa.esbd.beans.dao.entities.complex.Util;
+import tech.lapsa.esbd.dao.elements.dict.VehicleClassService.VehicleClassServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.VehicleEntity;
+import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntity;
+import tech.lapsa.esbd.dao.entities.complex.VehicleEntity.VehicleEntityBuilder;
+import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService.VehicleModelEntityServiceLocal;
 import tech.lapsa.esbd.jaxws.wsimport.TF;
 import tech.lapsa.java.commons.function.MyOptionals;
 

@@ -4,9 +4,9 @@ import javax.inject.Inject;
 
 import com.lapsa.international.country.Country;
 
-import tech.lapsa.esbd.beans.dao.elements.mapping.CountryMapping;
-import tech.lapsa.esbd.dao.elements.CountryService.CountryServiceLocal;
+import tech.lapsa.esbd.beans.dao.elements.dict.mapping.CountryMapping;
 import tech.lapsa.esbd.dao.elements.ElementsService;
+import tech.lapsa.esbd.dao.elements.dict.CountryService.CountryServiceLocal;
 
 public class CountryServiceTestCase extends AMappedElementTestCase<Country> {
 

@@ -1,17 +1,17 @@
-package tech.lapsa.esbd.beans.dao.elements;
+package tech.lapsa.esbd.beans.dao.elements.dict;
 
 import javax.ejb.Singleton;
 
 import com.lapsa.insurance.elements.PaymentType;
 
-import tech.lapsa.esbd.beans.dao.elements.mapping.PaymentTypeMapping;
-import tech.lapsa.esbd.dao.elements.PaymentTypeService;
-import tech.lapsa.esbd.dao.elements.PaymentTypeService.PaymentTypeServiceLocal;
-import tech.lapsa.esbd.dao.elements.PaymentTypeService.PaymentTypeServiceRemote;
+import tech.lapsa.esbd.beans.dao.elements.dict.mapping.PaymentTypeMapping;
+import tech.lapsa.esbd.dao.elements.dict.PaymentTypeService;
+import tech.lapsa.esbd.dao.elements.dict.PaymentTypeService.PaymentTypeServiceLocal;
+import tech.lapsa.esbd.dao.elements.dict.PaymentTypeService.PaymentTypeServiceRemote;
 
 @Singleton(name = PaymentTypeService.BEAN_NAME)
 public class PaymentTypeServiceBean
-	extends AElementsService<PaymentType>
+	extends ADictElementsService<PaymentType>
 	implements PaymentTypeServiceLocal, PaymentTypeServiceRemote {
 
     public PaymentTypeServiceBean() {

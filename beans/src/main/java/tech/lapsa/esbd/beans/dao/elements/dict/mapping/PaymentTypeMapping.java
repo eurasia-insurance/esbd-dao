@@ -1,10 +1,10 @@
-package tech.lapsa.esbd.beans.dao.elements.mapping;
+package tech.lapsa.esbd.beans.dao.elements.dict.mapping;
 
 import static com.lapsa.insurance.elements.PaymentType.*;
 
 import com.lapsa.insurance.elements.PaymentType;
 
-public final class PaymentTypeMapping extends AbsMapping<Integer, PaymentType> {
+public final class PaymentTypeMapping extends AMapping<Integer, PaymentType> {
 
     private static final class SingletonHolder {
 	private static final PaymentTypeMapping HOLDER_INSTANCE = new PaymentTypeMapping();

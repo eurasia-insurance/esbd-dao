@@ -1,16 +1,15 @@
-package tech.lapsa.esbd.beans.dao.entities.converter;
+package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
-import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter;
-import tech.lapsa.esbd.beans.dao.entities.Util;
-import tech.lapsa.esbd.dao.dict.CompanyActivityKindEntity;
-import tech.lapsa.esbd.dao.dict.CompanyActivityKindEntityService.CompanyActivityKindEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.SubjectCompanyEntity;
-import tech.lapsa.esbd.dao.entities.SubjectCompanyEntity.SubjectCompanyEntityBuilder;
-import tech.lapsa.esbd.dao.entities.SubjectEntity.SubjectEntityBuilder;
+import tech.lapsa.esbd.beans.dao.entities.complex.Util;
+import tech.lapsa.esbd.dao.entities.complex.SubjectCompanyEntity;
+import tech.lapsa.esbd.dao.entities.complex.SubjectCompanyEntity.SubjectCompanyEntityBuilder;
+import tech.lapsa.esbd.dao.entities.complex.SubjectEntity.SubjectEntityBuilder;
+import tech.lapsa.esbd.dao.entities.dict.CompanyActivityKindEntity;
+import tech.lapsa.esbd.dao.entities.dict.CompanyActivityKindEntityService.CompanyActivityKindEntityServiceLocal;
 import tech.lapsa.esbd.jaxws.wsimport.Client;
 import tech.lapsa.java.commons.function.MyExceptions;
 import tech.lapsa.java.commons.function.MyOptionals;

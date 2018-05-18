@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.entities;
+package tech.lapsa.esbd.beans.dao.entities.complex;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -7,9 +7,9 @@ import java.util.stream.Stream;
 
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
-import tech.lapsa.esbd.dao.entities.GeneralSubjectEntityService.GeneralSubjectEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.GeneralSubjectEntityService.GeneralSubjectEntityServiceRemote;
-import tech.lapsa.esbd.dao.entities.SubjectEntity;
+import tech.lapsa.esbd.dao.entities.complex.SubjectEntity;
+import tech.lapsa.esbd.dao.entities.complex.GeneralSubjectEntityService.GeneralSubjectEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.GeneralSubjectEntityService.GeneralSubjectEntityServiceRemote;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfClient;
 import tech.lapsa.esbd.jaxws.wsimport.Client;
 import tech.lapsa.java.commons.function.MyCollectors;
@@ -18,7 +18,7 @@ import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.kz.taxpayer.TaxpayerNumber;
 
 public abstract class ASubjectEntityService<T extends SubjectEntity>
-	extends AEntityServiceBeanTemplate<T, Client>
+	extends AComplexEntitiesService<T, Client>
 	implements GeneralSubjectEntityServiceLocal<T>, GeneralSubjectEntityServiceRemote<T> {
 
     List<T> _getByIdNumber(final TaxpayerNumber taxpayerNumber,

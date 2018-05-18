@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.entities.converter;
+package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
 import java.util.Calendar;
 
@@ -7,17 +7,16 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter;
-import tech.lapsa.esbd.beans.dao.entities.Util;
-import tech.lapsa.esbd.dao.dict.BranchEntity;
-import tech.lapsa.esbd.dao.dict.BranchEntityService.BranchEntityServiceLocal;
-import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntity;
-import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.SubjectEntity;
-import tech.lapsa.esbd.dao.entities.SubjectEntityService.SubjectEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.UserEntity;
-import tech.lapsa.esbd.dao.entities.UserEntity.UserEntityBuilder;
-import tech.lapsa.esbd.dao.entities.UserEntityService.UserEntityServiceLocal;
+import tech.lapsa.esbd.beans.dao.entities.complex.Util;
+import tech.lapsa.esbd.dao.entities.complex.SubjectEntity;
+import tech.lapsa.esbd.dao.entities.complex.UserEntity;
+import tech.lapsa.esbd.dao.entities.complex.SubjectEntityService.SubjectEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.UserEntity.UserEntityBuilder;
+import tech.lapsa.esbd.dao.entities.complex.UserEntityService.UserEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.dict.BranchEntity;
+import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntity;
+import tech.lapsa.esbd.dao.entities.dict.BranchEntityService.BranchEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
 import tech.lapsa.esbd.jaxws.wsimport.User;
 import tech.lapsa.java.commons.function.MyOptionals;
 

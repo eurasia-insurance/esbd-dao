@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.entities.converter;
+package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
 import javax.ejb.EJB;
 
@@ -7,14 +7,14 @@ import com.lapsa.international.phone.PhoneNumber;
 import com.lapsa.kz.country.KZCity;
 import com.lapsa.kz.economic.KZEconomicSector;
 
-import tech.lapsa.esbd.beans.dao.entities.Util;
-import tech.lapsa.esbd.dao.elements.CountryService.CountryServiceLocal;
-import tech.lapsa.esbd.dao.elements.KZCityService.KZCityServiceLocal;
-import tech.lapsa.esbd.dao.elements.KZEconomicSectorService.KZEconomicSectorServiceLocal;
-import tech.lapsa.esbd.dao.entities.ContactInfo;
-import tech.lapsa.esbd.dao.entities.OriginInfo;
-import tech.lapsa.esbd.dao.entities.SubjectEntity;
-import tech.lapsa.esbd.dao.entities.SubjectEntity.SubjectEntityBuilder;
+import tech.lapsa.esbd.beans.dao.entities.complex.Util;
+import tech.lapsa.esbd.dao.elements.dict.CountryService.CountryServiceLocal;
+import tech.lapsa.esbd.dao.elements.dict.KZCityService.KZCityServiceLocal;
+import tech.lapsa.esbd.dao.elements.dict.KZEconomicSectorService.KZEconomicSectorServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.SubjectEntity;
+import tech.lapsa.esbd.dao.entities.complex.SubjectEntity.SubjectEntityBuilder;
+import tech.lapsa.esbd.dao.entities.embeded.ContactInfo;
+import tech.lapsa.esbd.dao.entities.embeded.OriginInfo;
 import tech.lapsa.esbd.jaxws.wsimport.Client;
 import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.kz.taxpayer.TaxpayerNumber;

@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.elements;
+package tech.lapsa.esbd.beans.dao.elements.nondict;
 
 import java.time.LocalDate;
 
@@ -11,15 +11,15 @@ import javax.ejb.TransactionAttributeType;
 import com.lapsa.insurance.elements.InsuranceClassType;
 
 import tech.lapsa.esbd.beans.dao.TemporalUtil;
-import tech.lapsa.esbd.beans.dao.elements.mapping.InsuranceClassTypeMapping;
+import tech.lapsa.esbd.beans.dao.elements.dict.mapping.InsuranceClassTypeMapping;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.elements.InsuranceClassTypeService;
-import tech.lapsa.esbd.dao.elements.InsuranceClassTypeService.InsuranceClassTypeServiceLocal;
-import tech.lapsa.esbd.dao.elements.InsuranceClassTypeService.InsuranceClassTypeServiceRemote;
-import tech.lapsa.esbd.dao.entities.SubjectPersonEntity;
+import tech.lapsa.esbd.dao.elements.nondict.InsuranceClassTypeService;
+import tech.lapsa.esbd.dao.elements.nondict.InsuranceClassTypeService.InsuranceClassTypeServiceLocal;
+import tech.lapsa.esbd.dao.elements.nondict.InsuranceClassTypeService.InsuranceClassTypeServiceRemote;
+import tech.lapsa.esbd.dao.entities.complex.SubjectPersonEntity;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyNumbers;
 import tech.lapsa.java.commons.function.MyObjects;

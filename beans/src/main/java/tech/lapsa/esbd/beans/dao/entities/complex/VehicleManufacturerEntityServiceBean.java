@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.entities;
+package tech.lapsa.esbd.beans.dao.entities.complex;
 
 import java.util.Collection;
 import java.util.List;
@@ -10,15 +10,15 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter.EsbdConversionException;
-import tech.lapsa.esbd.beans.dao.entities.converter.VehicleManufacturerEntityEsbdConverterBean;
+import tech.lapsa.esbd.beans.dao.entities.complex.converter.VehicleManufacturerEntityEsbdConverterBean;
+import tech.lapsa.esbd.beans.dao.entities.complex.converter.EsbdAttributeConverter.EsbdConversionException;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.entities.VehicleManufacturerEntity;
-import tech.lapsa.esbd.dao.entities.VehicleManufacturerEntityService;
-import tech.lapsa.esbd.dao.entities.VehicleManufacturerEntityService.VehicleManufacturerEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.VehicleManufacturerEntityService.VehicleManufacturerEntityServiceRemote;
+import tech.lapsa.esbd.dao.entities.complex.VehicleManufacturerEntity;
+import tech.lapsa.esbd.dao.entities.complex.VehicleManufacturerEntityService;
+import tech.lapsa.esbd.dao.entities.complex.VehicleManufacturerEntityService.VehicleManufacturerEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.VehicleManufacturerEntityService.VehicleManufacturerEntityServiceRemote;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfVOITUREMARK;
 import tech.lapsa.esbd.jaxws.wsimport.VOITUREMARK;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
@@ -32,7 +32,7 @@ import tech.lapsa.java.commons.logging.MyLogger;
 
 @Stateless(name = VehicleManufacturerEntityService.BEAN_NAME)
 public class VehicleManufacturerEntityServiceBean
-	extends AEntityServiceBeanTemplate<VehicleManufacturerEntity, VOITUREMARK>
+	extends AComplexEntitiesService<VehicleManufacturerEntity, VOITUREMARK>
 	implements VehicleManufacturerEntityServiceLocal, VehicleManufacturerEntityServiceRemote {
 
     private final MyLogger logger = MyLogger.newBuilder() //

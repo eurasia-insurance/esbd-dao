@@ -1,17 +1,17 @@
-package tech.lapsa.esbd.beans.dao.elements;
+package tech.lapsa.esbd.beans.dao.elements.dict;
 
 import javax.ejb.Singleton;
 
 import com.lapsa.insurance.elements.PersonType;
 
-import tech.lapsa.esbd.beans.dao.elements.mapping.PersonTypeMapping;
-import tech.lapsa.esbd.dao.elements.PersonTypeService;
-import tech.lapsa.esbd.dao.elements.PersonTypeService.PersonTypeServiceLocal;
-import tech.lapsa.esbd.dao.elements.PersonTypeService.PersonTypeServiceRemote;
+import tech.lapsa.esbd.beans.dao.elements.dict.mapping.PersonTypeMapping;
+import tech.lapsa.esbd.dao.elements.dict.PersonTypeService;
+import tech.lapsa.esbd.dao.elements.dict.PersonTypeService.PersonTypeServiceLocal;
+import tech.lapsa.esbd.dao.elements.dict.PersonTypeService.PersonTypeServiceRemote;
 
 @Singleton(name = PersonTypeService.BEAN_NAME)
 public class PersonTypeServiceBean
-	extends AElementsService<PersonType>
+	extends ADictElementsService<PersonType>
 	implements PersonTypeServiceLocal, PersonTypeServiceRemote {
 
     public PersonTypeServiceBean() {

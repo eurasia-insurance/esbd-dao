@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.entities.converter;
+package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
 import static tech.lapsa.esbd.beans.dao.TemporalUtil.*;
 
@@ -10,25 +10,24 @@ import com.lapsa.insurance.elements.InsuranceClassType;
 import com.lapsa.insurance.elements.InsuredAgeAndExpirienceClass;
 import com.lapsa.insurance.elements.MaritalStatus;
 
-import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter;
-import tech.lapsa.esbd.beans.dao.entities.Util;
-import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntity;
-import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
-import tech.lapsa.esbd.dao.elements.InsuranceClassTypeService.InsuranceClassTypeServiceLocal;
-import tech.lapsa.esbd.dao.elements.InsuredAgeAndExpirienceClassService.InsuredAgeAndExpirienceClassServiceLocal;
-import tech.lapsa.esbd.dao.elements.MaritalStatusService.MaritalStatusServiceLocal;
-import tech.lapsa.esbd.dao.entities.DriverLicenseInfo;
-import tech.lapsa.esbd.dao.entities.GPWParticipantInfo;
-import tech.lapsa.esbd.dao.entities.HandicappedInfo;
-import tech.lapsa.esbd.dao.entities.InsuredDriverEntity;
-import tech.lapsa.esbd.dao.entities.InsuredDriverEntity.InsuredDriverEntityBuilder;
-import tech.lapsa.esbd.dao.entities.PensionerInfo;
-import tech.lapsa.esbd.dao.entities.PrivilegerInfo;
-import tech.lapsa.esbd.dao.entities.RecordOperationInfo;
-import tech.lapsa.esbd.dao.entities.SubjectPersonEntity;
-import tech.lapsa.esbd.dao.entities.SubjectPersonEntityService.SubjectPersonEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.UserEntity;
-import tech.lapsa.esbd.dao.entities.UserEntityService.UserEntityServiceLocal;
+import tech.lapsa.esbd.beans.dao.entities.complex.Util;
+import tech.lapsa.esbd.dao.elements.dict.InsuredAgeAndExpirienceClassService.InsuredAgeAndExpirienceClassServiceLocal;
+import tech.lapsa.esbd.dao.elements.dict.MaritalStatusService.MaritalStatusServiceLocal;
+import tech.lapsa.esbd.dao.elements.nondict.InsuranceClassTypeService.InsuranceClassTypeServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.InsuredDriverEntity;
+import tech.lapsa.esbd.dao.entities.complex.SubjectPersonEntity;
+import tech.lapsa.esbd.dao.entities.complex.UserEntity;
+import tech.lapsa.esbd.dao.entities.complex.InsuredDriverEntity.InsuredDriverEntityBuilder;
+import tech.lapsa.esbd.dao.entities.complex.SubjectPersonEntityService.SubjectPersonEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.UserEntityService.UserEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntity;
+import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.embeded.DriverLicenseInfo;
+import tech.lapsa.esbd.dao.entities.embeded.GPWParticipantInfo;
+import tech.lapsa.esbd.dao.entities.embeded.HandicappedInfo;
+import tech.lapsa.esbd.dao.entities.embeded.PensionerInfo;
+import tech.lapsa.esbd.dao.entities.embeded.PrivilegerInfo;
+import tech.lapsa.esbd.dao.entities.embeded.RecordOperationInfo;
 import tech.lapsa.esbd.jaxws.wsimport.Driver;
 import tech.lapsa.java.commons.function.MyOptionals;
 

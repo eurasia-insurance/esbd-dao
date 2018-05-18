@@ -4,9 +4,9 @@ import javax.inject.Inject;
 
 import com.lapsa.insurance.elements.MaritalStatus;
 
-import tech.lapsa.esbd.beans.dao.elements.mapping.MaritalStatusMapping;
+import tech.lapsa.esbd.beans.dao.elements.dict.mapping.MaritalStatusMapping;
 import tech.lapsa.esbd.dao.elements.ElementsService;
-import tech.lapsa.esbd.dao.elements.MaritalStatusService.MaritalStatusServiceLocal;
+import tech.lapsa.esbd.dao.elements.dict.MaritalStatusService.MaritalStatusServiceLocal;
 
 public class MaritalStatusServiceTestCase extends AMappedElementTestCase<MaritalStatus> {
 

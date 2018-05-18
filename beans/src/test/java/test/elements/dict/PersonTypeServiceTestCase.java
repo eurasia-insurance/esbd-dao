@@ -4,9 +4,9 @@ import javax.inject.Inject;
 
 import com.lapsa.insurance.elements.PersonType;
 
-import tech.lapsa.esbd.beans.dao.elements.mapping.PersonTypeMapping;
+import tech.lapsa.esbd.beans.dao.elements.dict.mapping.PersonTypeMapping;
 import tech.lapsa.esbd.dao.elements.ElementsService;
-import tech.lapsa.esbd.dao.elements.PersonTypeService.PersonTypeServiceLocal;
+import tech.lapsa.esbd.dao.elements.dict.PersonTypeService.PersonTypeServiceLocal;
 
 public class PersonTypeServiceTestCase extends AMappedElementTestCase<PersonType> {
 

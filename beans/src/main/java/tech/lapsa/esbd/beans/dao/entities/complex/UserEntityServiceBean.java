@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.entities;
+package tech.lapsa.esbd.beans.dao.entities.complex;
 
 import java.util.List;
 import java.util.Map;
@@ -13,15 +13,15 @@ import javax.ejb.Startup;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter.EsbdConversionException;
-import tech.lapsa.esbd.beans.dao.entities.converter.UserEntityEsbdConverterBean;
+import tech.lapsa.esbd.beans.dao.entities.complex.converter.UserEntityEsbdConverterBean;
+import tech.lapsa.esbd.beans.dao.entities.complex.converter.EsbdAttributeConverter.EsbdConversionException;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.entities.UserEntity;
-import tech.lapsa.esbd.dao.entities.UserEntityService;
-import tech.lapsa.esbd.dao.entities.UserEntityService.UserEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.UserEntityService.UserEntityServiceRemote;
+import tech.lapsa.esbd.dao.entities.complex.UserEntity;
+import tech.lapsa.esbd.dao.entities.complex.UserEntityService;
+import tech.lapsa.esbd.dao.entities.complex.UserEntityService.UserEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.UserEntityService.UserEntityServiceRemote;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfUser;
 import tech.lapsa.esbd.jaxws.wsimport.User;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
@@ -35,7 +35,7 @@ import tech.lapsa.java.commons.logging.MyLogger;
 @Singleton(name = UserEntityService.BEAN_NAME)
 @Startup
 public class UserEntityServiceBean
-	extends AEntityServiceBeanTemplate<UserEntity, User>
+	extends AComplexEntitiesService<UserEntity, User>
 	implements UserEntityServiceLocal, UserEntityServiceRemote {
 
     private final MyLogger logger = MyLogger.newBuilder() //

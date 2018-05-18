@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.elements;
+package tech.lapsa.esbd.beans.dao.elements.dict;
 
 import java.util.function.Function;
 
@@ -15,13 +15,13 @@ import tech.lapsa.java.commons.function.MyObjects;
 import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.logging.MyLogger;
 
-public abstract class AElementsService<T extends Enum<T>> implements ElementsService<T> {
+public abstract class ADictElementsService<T extends Enum<T>> implements ElementsService<T> {
 
     private final MyLogger logger;
     private final Function<Integer, T> converter;
     private final Class<T> entityClazz;
 
-    AElementsService(final Class<?> serviceClazz, final Function<Integer, T> converter, final Class<T> entityClazz) {
+    ADictElementsService(final Class<?> serviceClazz, final Function<Integer, T> converter, final Class<T> entityClazz) {
 	this.logger = MyLogger.newBuilder() //
 		.withNameOf(MyObjects.requireNonNull(serviceClazz, "serviceClazz")) //
 		.build();

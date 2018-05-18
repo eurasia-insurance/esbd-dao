@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.entities;
+package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
 public interface EsbdAttributeConverter<X, Y> {
 

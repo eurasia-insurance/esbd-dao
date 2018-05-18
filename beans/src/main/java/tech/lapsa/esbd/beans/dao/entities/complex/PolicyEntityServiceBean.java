@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.entities;
+package tech.lapsa.esbd.beans.dao.entities.complex;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -9,15 +9,15 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter.EsbdConversionException;
-import tech.lapsa.esbd.beans.dao.entities.converter.PolicyEntityEsbdConverterBean;
+import tech.lapsa.esbd.beans.dao.entities.complex.converter.PolicyEntityEsbdConverterBean;
+import tech.lapsa.esbd.beans.dao.entities.complex.converter.EsbdAttributeConverter.EsbdConversionException;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.entities.PolicyEntity;
-import tech.lapsa.esbd.dao.entities.PolicyEntityService;
-import tech.lapsa.esbd.dao.entities.PolicyEntityService.PolicyEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.PolicyEntityService.PolicyEntityServiceRemote;
+import tech.lapsa.esbd.dao.entities.complex.PolicyEntity;
+import tech.lapsa.esbd.dao.entities.complex.PolicyEntityService;
+import tech.lapsa.esbd.dao.entities.complex.PolicyEntityService.PolicyEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.PolicyEntityService.PolicyEntityServiceRemote;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfPolicy;
 import tech.lapsa.esbd.jaxws.wsimport.Policy;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
@@ -30,7 +30,7 @@ import tech.lapsa.java.commons.logging.MyLogger;
 
 @Stateless(name = PolicyEntityService.BEAN_NAME)
 public class PolicyEntityServiceBean
-	extends AEntityServiceBeanTemplate<PolicyEntity, Policy>
+	extends AComplexEntitiesService<PolicyEntity, Policy>
 	implements PolicyEntityServiceLocal, PolicyEntityServiceRemote {
 
     private final MyLogger logger = MyLogger.newBuilder() //

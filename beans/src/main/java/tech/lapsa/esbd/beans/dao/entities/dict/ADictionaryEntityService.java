@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.dict;
+package tech.lapsa.esbd.beans.dao.entities.dict;
 
 import java.util.List;
 import java.util.Map;
@@ -16,9 +16,9 @@ import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.dict.DictionaryEntity;
-import tech.lapsa.esbd.dao.dict.DictionaryEntityService;
-import tech.lapsa.esbd.dao.dict.DictionaryEntity.DictionaryEntityBuilder;
+import tech.lapsa.esbd.dao.entities.dict.ADictEntity;
+import tech.lapsa.esbd.dao.entities.dict.ADictEntityService;
+import tech.lapsa.esbd.dao.entities.dict.ADictEntity.DictionaryEntityBuilder;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfItem;
 import tech.lapsa.esbd.jaxws.wsimport.Item;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
@@ -29,8 +29,8 @@ import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.function.MyStrings;
 import tech.lapsa.java.commons.logging.MyLogger;
 
-public abstract class ADictionaryEntityService<T extends DictionaryEntity>
-	implements DictionaryEntityService<T> {
+public abstract class ADictionaryEntityService<T extends ADictEntity>
+	implements ADictEntityService<T> {
 
     private final MyLogger logger;
     private final String dictionaryName;
@@ -64,7 +64,7 @@ public abstract class ADictionaryEntityService<T extends DictionaryEntity>
 		.map(List::stream) //
 		.orElseGet(Stream::empty) //
 		.map(this::convert) //
-		.collect(MyCollectors.unmodifiableMap(DictionaryEntity::getId, Function.identity()));
+		.collect(MyCollectors.unmodifiableMap(ADictEntity::getId, Function.identity()));
     }
 
     @Override

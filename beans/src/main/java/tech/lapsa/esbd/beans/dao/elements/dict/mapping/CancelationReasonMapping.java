@@ -1,10 +1,10 @@
-package tech.lapsa.esbd.beans.dao.elements.mapping;
+package tech.lapsa.esbd.beans.dao.elements.dict.mapping;
 
 import static com.lapsa.insurance.elements.CancelationReason.*;
 
 import com.lapsa.insurance.elements.CancelationReason;
 
-public final class CancelationReasonMapping extends AbsMapping<Integer, CancelationReason> {
+public final class CancelationReasonMapping extends AMapping<Integer, CancelationReason> {
 
     private static final class SingletonHolder {
 	private static final CancelationReasonMapping HOLDER_INSTANCE = new CancelationReasonMapping();

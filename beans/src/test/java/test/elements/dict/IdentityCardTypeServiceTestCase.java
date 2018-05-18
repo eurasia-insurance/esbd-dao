@@ -4,9 +4,9 @@ import javax.inject.Inject;
 
 import com.lapsa.insurance.elements.IdentityCardType;
 
-import tech.lapsa.esbd.beans.dao.elements.mapping.IdentityCardTypeMapping;
+import tech.lapsa.esbd.beans.dao.elements.dict.mapping.IdentityCardTypeMapping;
 import tech.lapsa.esbd.dao.elements.ElementsService;
-import tech.lapsa.esbd.dao.elements.IdentityCardTypeService.IdentityCardTypeServiceLocal;
+import tech.lapsa.esbd.dao.elements.dict.IdentityCardTypeService.IdentityCardTypeServiceLocal;
 
 public class IdentityCardTypeServiceTestCase extends AMappedElementTestCase<IdentityCardType> {
 

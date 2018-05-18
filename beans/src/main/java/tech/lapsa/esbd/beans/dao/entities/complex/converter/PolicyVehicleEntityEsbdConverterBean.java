@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.entities.converter;
+package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
 import static tech.lapsa.esbd.beans.dao.TemporalUtil.*;
 
@@ -10,21 +10,20 @@ import com.lapsa.insurance.elements.VehicleAgeClass;
 import com.lapsa.insurance.elements.VehicleClass;
 import com.lapsa.kz.country.KZArea;
 
-import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter;
-import tech.lapsa.esbd.beans.dao.entities.Util;
-import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntity;
-import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
-import tech.lapsa.esbd.dao.elements.KZAreaService.KZAreaServiceLocal;
-import tech.lapsa.esbd.dao.elements.VehicleAgeClassService.VehicleAgeClassServiceLocal;
-import tech.lapsa.esbd.dao.elements.VehicleClassService.VehicleClassServiceLocal;
-import tech.lapsa.esbd.dao.entities.InsuredVehicleEntity;
-import tech.lapsa.esbd.dao.entities.InsuredVehicleEntity.InsuredVehicleEntityBuilder;
-import tech.lapsa.esbd.dao.entities.RecordOperationInfo;
-import tech.lapsa.esbd.dao.entities.UserEntity;
-import tech.lapsa.esbd.dao.entities.UserEntityService.UserEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.VehicleCertificateInfo;
-import tech.lapsa.esbd.dao.entities.VehicleEntity;
-import tech.lapsa.esbd.dao.entities.VehicleEntityService.VehicleEntityServiceLocal;
+import tech.lapsa.esbd.beans.dao.entities.complex.Util;
+import tech.lapsa.esbd.dao.elements.dict.KZAreaService.KZAreaServiceLocal;
+import tech.lapsa.esbd.dao.elements.dict.VehicleAgeClassService.VehicleAgeClassServiceLocal;
+import tech.lapsa.esbd.dao.elements.dict.VehicleClassService.VehicleClassServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.InsuredVehicleEntity;
+import tech.lapsa.esbd.dao.entities.complex.UserEntity;
+import tech.lapsa.esbd.dao.entities.complex.VehicleEntity;
+import tech.lapsa.esbd.dao.entities.complex.InsuredVehicleEntity.InsuredVehicleEntityBuilder;
+import tech.lapsa.esbd.dao.entities.complex.UserEntityService.UserEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.VehicleEntityService.VehicleEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntity;
+import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.embeded.RecordOperationInfo;
+import tech.lapsa.esbd.dao.entities.embeded.VehicleCertificateInfo;
 import tech.lapsa.esbd.jaxws.wsimport.PoliciesTF;
 import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.function.MyStrings;

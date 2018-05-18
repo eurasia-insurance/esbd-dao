@@ -1,11 +1,11 @@
-package tech.lapsa.esbd.beans.dao.dict;
+package tech.lapsa.esbd.beans.dao.entities.dict;
 
 import javax.ejb.Singleton;
 
-import tech.lapsa.esbd.dao.dict.BranchEntity;
-import tech.lapsa.esbd.dao.dict.BranchEntityService;
-import tech.lapsa.esbd.dao.dict.BranchEntityService.BranchEntityServiceLocal;
-import tech.lapsa.esbd.dao.dict.BranchEntityService.BranchEntityServiceRemote;
+import tech.lapsa.esbd.dao.entities.dict.BranchEntity;
+import tech.lapsa.esbd.dao.entities.dict.BranchEntityService;
+import tech.lapsa.esbd.dao.entities.dict.BranchEntityService.BranchEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.dict.BranchEntityService.BranchEntityServiceRemote;
 
 @Singleton(name = BranchEntityService.BEAN_NAME)
 public class BranchEntityServiceBean

@@ -1,8 +1,8 @@
-package tech.lapsa.esbd.beans.dao.elements.mapping;
+package tech.lapsa.esbd.beans.dao.elements.dict.mapping;
 
 import com.lapsa.international.country.Country;
 
-public final class CountryMapping extends AbsMapping<Integer, Country> {
+public final class CountryMapping extends AMapping<Integer, Country> {
 
     private static final class SingletonHolder {
 	private static final CountryMapping HOLDER_INSTANCE = new CountryMapping();

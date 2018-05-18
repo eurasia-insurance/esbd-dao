@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.entities.converter;
+package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
 import static tech.lapsa.esbd.beans.dao.TemporalUtil.*;
 
@@ -9,15 +9,14 @@ import javax.ejb.Stateless;
 import com.lapsa.insurance.elements.IdentityCardType;
 import com.lapsa.insurance.elements.Sex;
 
-import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter;
-import tech.lapsa.esbd.beans.dao.entities.Util;
-import tech.lapsa.esbd.dao.elements.GenderService.GenderServiceLocal;
-import tech.lapsa.esbd.dao.elements.IdentityCardTypeService.IdentityCardTypeServiceLocal;
-import tech.lapsa.esbd.dao.entities.IdentityCardInfo;
-import tech.lapsa.esbd.dao.entities.PersonalInfo;
-import tech.lapsa.esbd.dao.entities.SubjectEntity.SubjectEntityBuilder;
-import tech.lapsa.esbd.dao.entities.SubjectPersonEntity;
-import tech.lapsa.esbd.dao.entities.SubjectPersonEntity.SubjectPersonEntityBuilder;
+import tech.lapsa.esbd.beans.dao.entities.complex.Util;
+import tech.lapsa.esbd.dao.elements.dict.GenderService.GenderServiceLocal;
+import tech.lapsa.esbd.dao.elements.dict.IdentityCardTypeService.IdentityCardTypeServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.SubjectPersonEntity;
+import tech.lapsa.esbd.dao.entities.complex.SubjectEntity.SubjectEntityBuilder;
+import tech.lapsa.esbd.dao.entities.complex.SubjectPersonEntity.SubjectPersonEntityBuilder;
+import tech.lapsa.esbd.dao.entities.embeded.IdentityCardInfo;
+import tech.lapsa.esbd.dao.entities.embeded.PersonalInfo;
 import tech.lapsa.esbd.jaxws.wsimport.Client;
 import tech.lapsa.java.commons.function.MyExceptions;
 import tech.lapsa.java.commons.function.MyOptionals;

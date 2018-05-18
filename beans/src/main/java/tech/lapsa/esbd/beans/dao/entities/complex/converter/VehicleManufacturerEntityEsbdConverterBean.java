@@ -1,11 +1,10 @@
-package tech.lapsa.esbd.beans.dao.entities.converter;
+package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
-import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter;
-import tech.lapsa.esbd.dao.entities.VehicleManufacturerEntity;
-import tech.lapsa.esbd.dao.entities.VehicleManufacturerEntity.VehicleManufacturerEntityBuilder;
+import tech.lapsa.esbd.dao.entities.complex.VehicleManufacturerEntity;
+import tech.lapsa.esbd.dao.entities.complex.VehicleManufacturerEntity.VehicleManufacturerEntityBuilder;
 import tech.lapsa.esbd.jaxws.wsimport.VOITUREMARK;
 import tech.lapsa.java.commons.function.MyOptionals;
 

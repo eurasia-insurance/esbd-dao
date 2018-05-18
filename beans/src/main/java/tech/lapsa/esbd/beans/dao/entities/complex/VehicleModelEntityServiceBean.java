@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.entities;
+package tech.lapsa.esbd.beans.dao.entities.complex;
 
 import java.util.Collection;
 import java.util.List;
@@ -10,16 +10,16 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter.EsbdConversionException;
-import tech.lapsa.esbd.beans.dao.entities.converter.VehicleModelEntityEsbdConverterBean;
+import tech.lapsa.esbd.beans.dao.entities.complex.converter.VehicleModelEntityEsbdConverterBean;
+import tech.lapsa.esbd.beans.dao.entities.complex.converter.EsbdAttributeConverter.EsbdConversionException;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.entities.VehicleManufacturerEntity;
-import tech.lapsa.esbd.dao.entities.VehicleModelEntity;
-import tech.lapsa.esbd.dao.entities.VehicleModelEntityService;
-import tech.lapsa.esbd.dao.entities.VehicleModelEntityService.VehicleModelEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.VehicleModelEntityService.VehicleModelEntityServiceRemote;
+import tech.lapsa.esbd.dao.entities.complex.VehicleManufacturerEntity;
+import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntity;
+import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService;
+import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService.VehicleModelEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService.VehicleModelEntityServiceRemote;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfVOITUREMODEL;
 import tech.lapsa.esbd.jaxws.wsimport.VOITUREMODEL;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
@@ -34,7 +34,7 @@ import tech.lapsa.java.commons.logging.MyLogger;
 
 @Stateless(name = VehicleModelEntityService.BEAN_NAME)
 public class VehicleModelEntityServiceBean
-	extends AEntityServiceBeanTemplate<VehicleModelEntity, VOITUREMODEL>
+	extends AComplexEntitiesService<VehicleModelEntity, VOITUREMODEL>
 	implements VehicleModelEntityServiceLocal, VehicleModelEntityServiceRemote {
 
     private final MyLogger logger = MyLogger.newBuilder() //

@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.entities;
+package tech.lapsa.esbd.beans.dao.entities.complex;
 
 import java.util.Collection;
 import java.util.List;
@@ -10,16 +10,16 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter.EsbdConversionException;
-import tech.lapsa.esbd.beans.dao.entities.converter.VehicleEntityEsbdConverterBean;
+import tech.lapsa.esbd.beans.dao.entities.complex.converter.VehicleEntityEsbdConverterBean;
+import tech.lapsa.esbd.beans.dao.entities.complex.converter.EsbdAttributeConverter.EsbdConversionException;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.entities.VehicleEntity;
-import tech.lapsa.esbd.dao.entities.VehicleEntityService;
-import tech.lapsa.esbd.dao.entities.VehicleEntityService.VehicleEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.VehicleEntityService.VehicleEntityServiceRemote;
+import tech.lapsa.esbd.dao.entities.complex.VehicleEntity;
+import tech.lapsa.esbd.dao.entities.complex.VehicleEntityService;
+import tech.lapsa.esbd.dao.entities.complex.VehicleEntityService.VehicleEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.VehicleEntityService.VehicleEntityServiceRemote;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfTF;
 import tech.lapsa.esbd.jaxws.wsimport.TF;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
@@ -35,7 +35,7 @@ import tech.lapsa.kz.vehicle.VehicleRegNumber;
 
 @Stateless(name = VehicleEntityService.BEAN_NAME)
 public class VehicleEntityServiceBean
-	extends AEntityServiceBeanTemplate<VehicleEntity, TF>
+	extends AComplexEntitiesService<VehicleEntity, TF>
 	implements VehicleEntityServiceLocal, VehicleEntityServiceRemote {
 
     private final MyLogger logger = MyLogger.newBuilder() //

@@ -1,4 +1,4 @@
-package test.elements.dict;
+package test.elements.nondict;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -11,11 +11,11 @@ import org.junit.Test;
 
 import com.lapsa.insurance.elements.InsuranceClassType;
 
-import tech.lapsa.esbd.beans.dao.elements.mapping.InsuranceClassTypeMapping;
+import tech.lapsa.esbd.beans.dao.elements.dict.mapping.InsuranceClassTypeMapping;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.elements.InsuranceClassTypeService.InsuranceClassTypeServiceLocal;
-import tech.lapsa.esbd.dao.entities.SubjectPersonEntity;
-import tech.lapsa.esbd.dao.entities.SubjectPersonEntityService.SubjectPersonEntityServiceLocal;
+import tech.lapsa.esbd.dao.elements.nondict.InsuranceClassTypeService.InsuranceClassTypeServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.SubjectPersonEntity;
+import tech.lapsa.esbd.dao.entities.complex.SubjectPersonEntityService.SubjectPersonEntityServiceLocal;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import test.ArquillianBaseTestCase;
 
