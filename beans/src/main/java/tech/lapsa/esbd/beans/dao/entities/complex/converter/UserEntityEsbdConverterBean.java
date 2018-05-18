@@ -21,7 +21,7 @@ import tech.lapsa.java.commons.function.MyOptionals;
 
 @Stateless
 @LocalBean
-public class UserEntityEsbdConverterBean implements EsbdAttributeConverter<UserEntity, User> {
+public class UserEntityEsbdConverterBean implements AEsbdAttributeConverter<UserEntity, User> {
 
     @EJB
     private InsuranceCompanyEntityServiceLocal insuranceCompanyService;

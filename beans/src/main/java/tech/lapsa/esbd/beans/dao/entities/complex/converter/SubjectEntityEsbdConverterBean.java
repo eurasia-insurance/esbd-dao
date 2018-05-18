@@ -9,7 +9,7 @@ import tech.lapsa.esbd.jaxws.wsimport.Client;
 
 @Stateless
 @LocalBean
-public class SubjectEntityEsbdConverterBean implements EsbdAttributeConverter<SubjectEntity, Client> {
+public class SubjectEntityEsbdConverterBean implements AEsbdAttributeConverter<SubjectEntity, Client> {
 
     @EJB
     private SubjectPersonEntityConverterBean subjectPersonEntityConveter;

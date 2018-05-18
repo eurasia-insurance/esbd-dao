@@ -18,7 +18,7 @@ import tech.lapsa.java.commons.function.MyOptionals;
 @LocalBean
 public class SubjectCompanyEntityConverterBean
 	extends ASubjectEntityEsdbdConverter
-	implements EsbdAttributeConverter<SubjectCompanyEntity, Client> {
+	implements AEsbdAttributeConverter<SubjectCompanyEntity, Client> {
 
     @EJB
     private CompanyActivityKindEntityServiceLocal companyActivityKinds;

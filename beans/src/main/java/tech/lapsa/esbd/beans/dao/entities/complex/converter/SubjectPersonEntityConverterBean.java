@@ -25,7 +25,7 @@ import tech.lapsa.java.commons.function.MyOptionals;
 @LocalBean
 public class SubjectPersonEntityConverterBean
 	extends ASubjectEntityEsdbdConverter
-	implements EsbdAttributeConverter<SubjectPersonEntity, Client> {
+	implements AEsbdAttributeConverter<SubjectPersonEntity, Client> {
 
     @EJB
     private GenderServiceLocal genders;

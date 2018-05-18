@@ -33,7 +33,7 @@ import tech.lapsa.java.commons.function.MyOptionals;
 
 @Stateless
 @LocalBean
-public class PolicyDriverEntityEsbdConverterBean implements EsbdAttributeConverter<InsuredDriverEntity, Driver> {
+public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConverter<InsuredDriverEntity, Driver> {
 
     @EJB
     private SubjectPersonEntityServiceLocal subjectPersonService;

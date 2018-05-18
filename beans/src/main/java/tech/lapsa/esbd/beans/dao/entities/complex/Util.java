@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 
 import javax.ejb.EJBException;
 
-import tech.lapsa.esbd.beans.dao.entities.complex.converter.EsbdAttributeConverter.EsbdConversionException;
+import tech.lapsa.esbd.beans.dao.entities.complex.converter.AEsbdAttributeConverter.EsbdConversionException;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.java.commons.function.MyExceptions;
 import tech.lapsa.java.commons.function.MyOptionals;

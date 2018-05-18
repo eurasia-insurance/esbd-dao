@@ -15,7 +15,7 @@ import tech.lapsa.java.commons.function.MyOptionals;
 @Stateless
 @LocalBean
 public class VehicleModelEntityEsbdConverterBean
-	implements EsbdAttributeConverter<VehicleModelEntity, VOITUREMODEL> {
+	implements AEsbdAttributeConverter<VehicleModelEntity, VOITUREMODEL> {
 
     @EJB
     private VehicleManufacturerEntityServiceLocal vehicleManufacturerService;

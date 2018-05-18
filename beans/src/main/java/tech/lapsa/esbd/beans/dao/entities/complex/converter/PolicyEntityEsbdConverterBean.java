@@ -43,7 +43,7 @@ import tech.lapsa.java.commons.function.MyStrings;
 
 @Stateless
 @LocalBean
-public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<PolicyEntity, Policy> {
+public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<PolicyEntity, Policy> {
 
     @Override
     public Policy convertToEsbdValue(PolicyEntity source) throws EsbdConversionException {

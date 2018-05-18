@@ -11,7 +11,7 @@ import tech.lapsa.java.commons.function.MyOptionals;
 @Stateless
 @LocalBean
 public class InsuranceAgentEntityEsbdConverterBean
-	implements EsbdAttributeConverter<InsuranceAgentEntity, MIDDLEMAN> {
+	implements AEsbdAttributeConverter<InsuranceAgentEntity, MIDDLEMAN> {
 
     @Override
     public MIDDLEMAN convertToEsbdValue(InsuranceAgentEntity source) throws EsbdConversionException {

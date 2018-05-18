@@ -30,7 +30,7 @@ import tech.lapsa.java.commons.function.MyStrings;
 
 @Stateless
 @LocalBean
-public class PolicyVehicleEntityEsbdConverterBean implements EsbdAttributeConverter<InsuredVehicleEntity, PoliciesTF> {
+public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConverter<InsuredVehicleEntity, PoliciesTF> {
 
     @EJB
     private VehicleEntityServiceLocal vehicleService;

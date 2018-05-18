@@ -11,7 +11,7 @@ import tech.lapsa.java.commons.function.MyOptionals;
 @Stateless
 @LocalBean
 public class VehicleManufacturerEntityEsbdConverterBean
-	implements EsbdAttributeConverter<VehicleManufacturerEntity, VOITUREMARK> {
+	implements AEsbdAttributeConverter<VehicleManufacturerEntity, VOITUREMARK> {
 
     @Override
     public VOITUREMARK convertToEsbdValue(VehicleManufacturerEntity source) throws EsbdConversionException {
