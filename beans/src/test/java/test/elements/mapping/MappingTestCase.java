@@ -7,7 +7,6 @@ import java.util.Iterator;
 
 import org.junit.Test;
 
-import com.lapsa.insurance.elements.CancelationReason;
 import com.lapsa.insurance.elements.IdentityCardType;
 import com.lapsa.insurance.elements.InsuredAgeAndExpirienceClass;
 import com.lapsa.insurance.elements.VehicleAgeClass;
@@ -16,7 +15,6 @@ import com.lapsa.international.country.Country;
 import com.lapsa.kz.country.KZArea;
 import com.lapsa.kz.economic.KZEconomicSector;
 
-import tech.lapsa.esbd.beans.dao.elements.mapping.CancelationReasonMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.CountryMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.IdentityCardTypeMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.InsuredAgeAndExpirienceClassMapping;
@@ -28,27 +26,6 @@ import tech.lapsa.esbd.jaxws.wsimport.ArrayOfItem;
 import tech.lapsa.esbd.jaxws.wsimport.Item;
 
 public class MappingTestCase extends BaseTestCase {
-
-    private static final String DICT_CANCELATION_REASON = "RESCINDING_REASONS";
-
-    @Test
-    public void testCancelationReasonMapping() {
-	final ArrayOfItem items = getSoap().getItems(getSessionId(), DICT_CANCELATION_REASON);
-	assertThat(items, not(nullValue()));
-	final Iterator<Item> i = items.getItem().iterator();
-	while (i.hasNext()) {
-	    final Item item = i.next();
-	    final CancelationReason dict = CancelationReasonMapping.getInstance().forId(item.getID());
-	    assertThat(String.format(
-		    "ESBD  dictionary '%1$s' name = '%2$s' with code = '%3$s' and id = '%4$s' present, but %5$s enum variable is missing",
-		    DICT_CANCELATION_REASON, // 1
-		    item.getName(), // 2
-		    item.getCode(), // 3
-		    item.getID(), // 4
-		    CancelationReason.class.getSimpleName() // 5
-	    ), dict, not(nullValue()));
-	}
-    }
 
     private static final String DICT_COUNTRY = "COUNTRIES";
 
