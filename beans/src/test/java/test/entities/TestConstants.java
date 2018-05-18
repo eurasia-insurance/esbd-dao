@@ -10,41 +10,14 @@ public final class TestConstants {
     // Branch
     public static final int INVALID_BRANCH_ID = 999999999;
 
-    // CancelationReason
-    public static final int INVALID_CANCELATION_REASON_ID = 999999999;
-
-    // City
-    public static final int INVALID_CITY_ID = 999999999;
-
     // CompanyActivityKind
     public static final int INVALID_COMPANY_ACTIVITY_KIND_ID = 999999999;
-
-    // CountryRegion
-    public static final int INVALID_COUNTRY_REGION_ID = 999999999;
-
-    // Country
-    public static final int INVALID_COUNTRY_ID = 999999999;
-
-    // EconomicsSector
-    public static final int INVALID_ECONOMICS_SECTOR_ID = 999999999;
-
-    // IndentityCardType
-    public static final int INVALID_IDENTITY_CARD_TYPE_ID = 999999999;
 
     // InsuranceCompany
     public static final int INVALID_INSURANCE_COMPANY_ID = 999999999;
 
-    // MaritalStatus
-    public static final int INVALID_MARITAL_STATUS_ID = 999999999;
-
-    // Sex
-    public static final int INVALID_SEX_ID = 999999999;
-
     // User
     public static final int INVALID_USER_ID = 999999999;
-
-    // InsuranceAgeExpirience
-    public static final int INVALID_INSURANCE_AGE_EXPIRIENCE_ID = 999999999;
 
     // InsuranceClassType
     public static final int VALID_INSURANCE_CLASS_TYPE_ID = 14;
@@ -56,9 +29,6 @@ public final class TestConstants {
     public static final int VALID_SUBJECT_PERSON_ID = 14132412; // Evsyukovs ID
     public static final InsuranceClassType VALID_CLASS_TYPE_FOR_CLIENT = InsuranceClassType.CLASS_13; // Evsyukovs
 												      // Class
-    public static final int INVALID_VEHICLE_AGE_CLASS_ID = 999999999;
-    public static final int INVALID_VEHICLE_CLASS_ID = 999999999;
-
     // VehicleManufacturer
     public static final int VALID_VEHICLE_MANUFACTURER_ID = 45755; // INFINTI
 								   // FX35
@@ -93,8 +63,4 @@ public final class TestConstants {
     // Policy
     public static final Integer INVALID_POLICY_ID = 1;
     public static final String INVALID_POLICY_NUMBER = "ZZZ";
-
-    // KZCity
-    public static final int INVALID_KZ_CITY_ID = 666;
-
 }
