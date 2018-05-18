@@ -10,7 +10,6 @@ import org.junit.Test;
 import com.lapsa.insurance.elements.CancelationReason;
 import com.lapsa.insurance.elements.IdentityCardType;
 import com.lapsa.insurance.elements.InsuredAgeAndExpirienceClass;
-import com.lapsa.insurance.elements.MaritalStatus;
 import com.lapsa.insurance.elements.VehicleAgeClass;
 import com.lapsa.insurance.elements.VehicleClass;
 import com.lapsa.international.country.Country;
@@ -25,7 +24,6 @@ import tech.lapsa.esbd.beans.dao.elements.mapping.InsuredAgeAndExpirienceClassMa
 import tech.lapsa.esbd.beans.dao.elements.mapping.KZAreaMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.KZCityMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.KZEconomicSectorMapping;
-import tech.lapsa.esbd.beans.dao.elements.mapping.MaritalStatusMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.VehicleAgeClassMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.VehicleClassMapping;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfItem;
@@ -188,27 +186,6 @@ public class MappingTestCase extends BaseTestCase {
 		    item.getCode(), // 3
 		    item.getID(), // 4
 		    KZEconomicSector.class.getSimpleName() // 5
-	    ), dict, not(nullValue()));
-	}
-    }
-
-    private static final String DICT_MARITAL_STATUS = "HOUSEHOLD_POSITION";
-
-    @Test
-    public void testMaritalStatusMapping() {
-	final ArrayOfItem items = getSoap().getItems(getSessionId(), DICT_MARITAL_STATUS);
-	assertThat(items, not(nullValue()));
-	final Iterator<Item> i = items.getItem().iterator();
-	while (i.hasNext()) {
-	    final Item item = i.next();
-	    final MaritalStatus dict = MaritalStatusMapping.getInstance().forId(item.getID());
-	    assertThat(String.format(
-		    "ESBD  dictionary '%1$s' name = '%2$s' with code = '%3$s' and id = '%4$s' present, but %5$s enum variable is missing",
-		    DICT_MARITAL_STATUS, // 1
-		    item.getName(), // 2
-		    item.getCode(), // 3
-		    item.getID(), // 4
-		    MaritalStatus.class.getSimpleName() // 5
 	    ), dict, not(nullValue()));
 	}
     }
