@@ -14,7 +14,6 @@ import com.lapsa.insurance.elements.VehicleAgeClass;
 import com.lapsa.insurance.elements.VehicleClass;
 import com.lapsa.international.country.Country;
 import com.lapsa.kz.country.KZArea;
-import com.lapsa.kz.country.KZCity;
 import com.lapsa.kz.economic.KZEconomicSector;
 
 import tech.lapsa.esbd.beans.dao.elements.mapping.CancelationReasonMapping;
@@ -22,7 +21,6 @@ import tech.lapsa.esbd.beans.dao.elements.mapping.CountryMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.IdentityCardTypeMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.InsuredAgeAndExpirienceClassMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.KZAreaMapping;
-import tech.lapsa.esbd.beans.dao.elements.mapping.KZCityMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.KZEconomicSectorMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.VehicleAgeClassMapping;
 import tech.lapsa.esbd.beans.dao.elements.mapping.VehicleClassMapping;
@@ -133,38 +131,6 @@ public class MappingTestCase extends BaseTestCase {
 		    item.getCode(), // 3
 		    item.getID(), // 4
 		    KZArea.class.getSimpleName() // 5
-	    ), dict, not(nullValue()));
-	}
-    }
-
-    private static final String DICT_KZ_CITY = "SETTLEMENTS";
-
-    @Test
-    public void testKZCityMapping() {
-	final ArrayOfItem items = getSoap().getItems(getSessionId(), DICT_KZ_CITY);
-	assertThat(items, not(nullValue()));
-	final Iterator<Item> i = items.getItem().iterator();
-	while (i.hasNext()) {
-	    final Item item = i.next();
-	    final KZCity dict = KZCityMapping.getInstance().forId(item.getID());
-	    if (KZCityMapping.getInstance().isException(item.getID())) {
-		if (dict != null)
-		    fail(String.format(
-			    "ESBD dictionary '%1$s' name = '%2$s' with code '%3$s' and id = '%4$s' exceptions vs real values exception",
-			    DICT_KZ_CITY, // 1
-			    item.getName(), // 2
-			    item.getCode(), // 3
-			    item.getID() // 4
-		    ));
-		continue;
-	    }
-	    assertThat(String.format(
-		    "ESBD  dictionary '%1$s' name = '%2$s' with code = '%3$s' and id = '%4$s' present, but %5$s enum variable is missing",
-		    DICT_KZ_CITY, // 1
-		    item.getName(), // 2
-		    item.getCode(), // 3
-		    item.getID(), // 4
-		    KZCity.class.getSimpleName() // 5
 	    ), dict, not(nullValue()));
 	}
     }
