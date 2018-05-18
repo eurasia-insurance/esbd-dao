@@ -9,6 +9,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
 import com.lapsa.insurance.elements.CancelationReason;
+import com.lapsa.insurance.elements.PersonType;
 
 import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter;
 import tech.lapsa.esbd.beans.dao.entities.Util;
@@ -16,9 +17,8 @@ import tech.lapsa.esbd.dao.dict.BranchEntity;
 import tech.lapsa.esbd.dao.dict.BranchEntityService.BranchEntityServiceLocal;
 import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
-import tech.lapsa.esbd.dao.dict.PersonTypeEntity;
-import tech.lapsa.esbd.dao.dict.PersonTypeEntityService.PersonTypeEntityServiceLocal;
 import tech.lapsa.esbd.dao.elements.CancelationReasonService.CancelationReasonServiceLocal;
+import tech.lapsa.esbd.dao.elements.PersonTypeService.PersonTypeServiceLocal;
 import tech.lapsa.esbd.dao.entities.CancelationInfo;
 import tech.lapsa.esbd.dao.entities.InsuredDriverEntity;
 import tech.lapsa.esbd.dao.entities.InsuredVehicleEntity;
@@ -119,7 +119,7 @@ public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<Pol
 			    id,
 			    personTypeService::getById,
 			    "insurantPersonType",
-			    PersonTypeEntity.class,
+			    PersonType.class,
 			    source.getCLIENTFORMID()));
 		}
 	    }
@@ -268,7 +268,7 @@ public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<Pol
     private SubjectEntityServiceLocal subjectService;
 
     @EJB
-    private PersonTypeEntityServiceLocal personTypeService;
+    private PersonTypeServiceLocal personTypeService;
 
     @EJB
     private CancelationReasonServiceLocal cancelationReasonTypeService;
