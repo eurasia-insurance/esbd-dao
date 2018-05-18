@@ -10,7 +10,6 @@ import javax.ejb.Stateless;
 
 import com.lapsa.insurance.elements.CancelationReason;
 
-import tech.lapsa.esbd.beans.dao.TemporalUtil;
 import tech.lapsa.esbd.beans.dao.entities.EsbdAttributeConverter;
 import tech.lapsa.esbd.beans.dao.entities.Util;
 import tech.lapsa.esbd.dao.dict.BranchEntity;
@@ -18,6 +17,7 @@ import tech.lapsa.esbd.dao.dict.BranchEntityService.BranchEntityServiceLocal;
 import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
 import tech.lapsa.esbd.dao.elements.CancelationReasonService.CancelationReasonServiceLocal;
+import tech.lapsa.esbd.dao.entities.CancelationInfo;
 import tech.lapsa.esbd.dao.entities.InsuredDriverEntity;
 import tech.lapsa.esbd.dao.entities.InsuredVehicleEntity;
 import tech.lapsa.esbd.dao.entities.PolicyEntity;
@@ -121,14 +121,15 @@ public class PolicyEntityEsbdConverterBean implements EsbdAttributeConverter<Pol
 		// RESCINDING_REASON_ID s:int Идентификатор причины расторжения
 		if (MyStrings.nonEmpty(source.getRESCINDINGDATE())
 			|| MyNumbers.positive(source.getRESCINDINGREASONID()))
-		    builder.withCancelation(
-			    TemporalUtil.dateToLocalDate(source.getRESCINDINGDATE()),
-			    Util.reqField(PolicyEntity.class,
+		    CancelationInfo.builder()
+			    .withDateOf(dateToLocalDate(source.getRESCINDINGDATE()))
+			    .withReason(Util.reqField(PolicyEntity.class,
 				    id,
 				    cancelationReasonTypeService::getById,
 				    "cancelationReasonType",
 				    CancelationReason.class,
-				    source.getRESCINDINGREASONID()));
+				    source.getRESCINDINGREASONID()))
+			    .buildTo(builder::withCancelation);
 	    }
 
 	    {
