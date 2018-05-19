@@ -108,7 +108,7 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 
 	    {
 		// EXPERIENCE s:int Стаж вождения
-		builder.withDrivingExpirience(source.getEXPERIENCE());
+		builder.withDrivingExpirience(MyOptionals.of(source.getEXPERIENCE()));
 	    }
 
 	    {
