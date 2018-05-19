@@ -65,11 +65,11 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 
 	    final InsuredDriverEntityBuilder builder = InsuredDriverEntity.builder();
 
-	    final int id = source.getPOLICYID();
+	    final int id = source.getDRIVERID();
 
 	    {
 		// DRIVER_ID s:int Идентификатор водителя
-		builder.withId(MyOptionals.of(source.getPOLICYID()).orElse(null));
+		builder.withId(MyOptionals.of(id).orElse(null));
 	    }
 
 	    {
