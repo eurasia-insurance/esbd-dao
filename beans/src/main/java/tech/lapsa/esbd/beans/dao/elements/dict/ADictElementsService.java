@@ -21,7 +21,8 @@ public abstract class ADictElementsService<T extends Enum<T>> implements Element
     private final Function<Integer, T> converter;
     private final Class<T> entityClazz;
 
-    ADictElementsService(final Class<?> serviceClazz, final Function<Integer, T> converter, final Class<T> entityClazz) {
+    ADictElementsService(final Class<?> serviceClazz, final Function<Integer, T> converter,
+	    final Class<T> entityClazz) {
 	this.logger = MyLogger.newBuilder() //
 		.withNameOf(MyObjects.requireNonNull(serviceClazz, "serviceClazz")) //
 		.build();

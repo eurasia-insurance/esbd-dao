@@ -7,9 +7,9 @@ import java.util.stream.Stream;
 
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
-import tech.lapsa.esbd.dao.entities.complex.SubjectEntity;
 import tech.lapsa.esbd.dao.entities.complex.GeneralSubjectEntityService.GeneralSubjectEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.GeneralSubjectEntityService.GeneralSubjectEntityServiceRemote;
+import tech.lapsa.esbd.dao.entities.complex.SubjectEntity;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfClient;
 import tech.lapsa.esbd.jaxws.wsimport.Client;
 import tech.lapsa.java.commons.function.MyCollectors;
