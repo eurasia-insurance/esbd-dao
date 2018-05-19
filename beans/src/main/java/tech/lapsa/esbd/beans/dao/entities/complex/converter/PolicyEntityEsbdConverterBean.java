@@ -18,10 +18,10 @@ import tech.lapsa.esbd.dao.elements.dict.PaymentTypeService.PaymentTypeServiceLo
 import tech.lapsa.esbd.dao.elements.dict.PersonTypeService.PersonTypeServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.InsuranceAgentEntity;
 import tech.lapsa.esbd.dao.entities.complex.InsuranceAgentEntityService.InsuranceAgentEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.complex.InsuredDriverEntity;
-import tech.lapsa.esbd.dao.entities.complex.InsuredVehicleEntity;
+import tech.lapsa.esbd.dao.entities.complex.PolicyDriverEntity;
 import tech.lapsa.esbd.dao.entities.complex.PolicyEntity;
 import tech.lapsa.esbd.dao.entities.complex.PolicyEntity.PolicyEntityBuilder;
+import tech.lapsa.esbd.dao.entities.complex.PolicyVehicleEntity;
 import tech.lapsa.esbd.dao.entities.complex.SubjectEntity;
 import tech.lapsa.esbd.dao.entities.complex.SubjectEntityService.SubjectEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.UserEntity;
@@ -318,7 +318,7 @@ public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<Po
     @EJB
     private PolicyDriverEntityEsbdConverterBean policyDriverEntityConverter;
 
-    private InsuredDriverEntity _convertPolicyVehicle(Driver source) {
+    private PolicyDriverEntity _convertPolicyVehicle(Driver source) {
 	try {
 	    return policyDriverEntityConverter.convertToEntityAttribute(source);
 	} catch (EsbdConversionException e) {
@@ -329,7 +329,7 @@ public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<Po
     @EJB
     private PolicyVehicleEntityEsbdConverterBean policyVehicleEntityConverter;
 
-    private InsuredVehicleEntity _convertPolicyVehicle(PoliciesTF source) {
+    private PolicyVehicleEntity _convertPolicyVehicle(PoliciesTF source) {
 	try {
 	    return policyVehicleEntityConverter.convertToEntityAttribute(source);
 	} catch (EsbdConversionException e) {

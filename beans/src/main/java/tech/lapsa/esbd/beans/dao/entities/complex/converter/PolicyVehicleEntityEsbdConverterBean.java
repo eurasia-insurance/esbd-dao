@@ -14,11 +14,11 @@ import tech.lapsa.esbd.beans.dao.entities.complex.Util;
 import tech.lapsa.esbd.dao.elements.dict.KZAreaService.KZAreaServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.VehicleAgeClassService.VehicleAgeClassServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.VehicleClassService.VehicleClassServiceLocal;
-import tech.lapsa.esbd.dao.entities.complex.InsuredVehicleEntity;
+import tech.lapsa.esbd.dao.entities.complex.PolicyVehicleEntity;
+import tech.lapsa.esbd.dao.entities.complex.PolicyVehicleEntity.PolicyVehicleEntityBuilder;
 import tech.lapsa.esbd.dao.entities.complex.UserEntity;
-import tech.lapsa.esbd.dao.entities.complex.VehicleEntity;
-import tech.lapsa.esbd.dao.entities.complex.InsuredVehicleEntity.InsuredVehicleEntityBuilder;
 import tech.lapsa.esbd.dao.entities.complex.UserEntityService.UserEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.VehicleEntity;
 import tech.lapsa.esbd.dao.entities.complex.VehicleEntityService.VehicleEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
@@ -30,7 +30,7 @@ import tech.lapsa.java.commons.function.MyStrings;
 
 @Stateless
 @LocalBean
-public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConverter<InsuredVehicleEntity, PoliciesTF> {
+public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConverter<PolicyVehicleEntity, PoliciesTF> {
 
     @EJB
     private VehicleEntityServiceLocal vehicleService;
@@ -51,16 +51,16 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
     private InsuranceCompanyEntityServiceLocal insuranceCompanyService;
 
     @Override
-    public PoliciesTF convertToEsbdValue(InsuredVehicleEntity source) throws EsbdConversionException {
+    public PoliciesTF convertToEsbdValue(PolicyVehicleEntity source) throws EsbdConversionException {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public InsuredVehicleEntity convertToEntityAttribute(PoliciesTF source) throws EsbdConversionException {
+    public PolicyVehicleEntity convertToEntityAttribute(PoliciesTF source) throws EsbdConversionException {
 	try {
 
-	    final InsuredVehicleEntityBuilder builder = InsuredVehicleEntity.builder();
+	    final PolicyVehicleEntityBuilder builder = PolicyVehicleEntity.builder();
 
 	    final int id = source.getPOLICYTFID();
 
@@ -75,7 +75,7 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 
 	    {
 		// TF_ID s:int Идентификатор ТС
-		builder.withVehicle(Util.reqField(InsuredVehicleEntity.class,
+		builder.withVehicle(Util.reqField(PolicyVehicleEntity.class,
 			id,
 			vehicleService::getById,
 			"vehicle",
@@ -85,7 +85,7 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 
 	    {
 		// TF_TYPE_ID s:int Идентификатор типа ТС (обязательно)
-		builder.withVehicleClass(Util.reqField(InsuredVehicleEntity.class,
+		builder.withVehicleClass(Util.reqField(PolicyVehicleEntity.class,
 			id,
 			vehicleClassService::getById,
 			"vehicleClass",
@@ -95,7 +95,7 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 
 	    {
 		// TF_AGE_ID s:int Идентификатор возраста ТС (обязательно)
-		builder.withVehicleAgeClass(Util.reqField(InsuredVehicleEntity.class,
+		builder.withVehicleAgeClass(Util.reqField(PolicyVehicleEntity.class,
 			id,
 			vehicleAgeClassService::getById,
 			"vehicleAgeClass",
@@ -115,7 +115,7 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 			.withCertificateNumber(source.getTFREGISTRATIONCERTIFICATE())
 			.withDateOfIssue(dateToLocalDate(source.getGIVEDATE()))
 			.withRegistrationMajorCity(source.getBIGCITYBOOL() == 1)
-			.withRegistrationRegion(Util.reqField(InsuredVehicleEntity.class,
+			.withRegistrationRegion(Util.reqField(PolicyVehicleEntity.class,
 				id,
 				countryRegionService::getById,
 				"certificate.registrationRegion",
@@ -142,7 +142,7 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 		// INPUT_DATE s:string Дата\время ввода записи в систему
 		RecordOperationInfo.builder()
 			.withInstant(optTemporalToInstant(source.getINPUTDATE()).orElse(null))
-			.withAuthor(Util.reqField(InsuredVehicleEntity.class,
+			.withAuthor(Util.reqField(PolicyVehicleEntity.class,
 				id,
 				userService::getById,
 				"created.author",
@@ -159,7 +159,7 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 		if (MyStrings.nonEmpty(source.getRECORDCHANGEDAT()))
 		    RecordOperationInfo.builder()
 			    .withInstant(optTemporalToInstant(source.getRECORDCHANGEDAT()).orElse(null))
-			    .withAuthor(Util.reqField(InsuredVehicleEntity.class,
+			    .withAuthor(Util.reqField(PolicyVehicleEntity.class,
 				    id,
 				    userService::getById,
 				    "modified.author",
@@ -170,7 +170,7 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 
 	    {
 		// SYSTEM_DELIMITER_ID s:int Идентификатор страховой компании
-		builder.withInsurer(Util.reqField(InsuredVehicleEntity.class,
+		builder.withInsurer(Util.reqField(PolicyVehicleEntity.class,
 			id,
 			insuranceCompanyService::getById,
 			"insurer",
