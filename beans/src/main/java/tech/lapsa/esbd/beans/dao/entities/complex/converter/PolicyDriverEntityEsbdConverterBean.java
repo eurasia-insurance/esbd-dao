@@ -193,7 +193,7 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 			    .withCertificateValidFrom(dateToLocalDate(source.getINVALIDCERTIFICATEBEGDATE())) //
 			    .withCertificateValidTill(dateToLocalDate(source.getINVALIDCERTIFICATEENDDATE())) //
 			    .buildTo(builder::withHandicappedInfo);
-	    }
+	    }	
 
 	    {
 		// CREATED_BY_USER_ID s:int Идентификатор пользователя,
