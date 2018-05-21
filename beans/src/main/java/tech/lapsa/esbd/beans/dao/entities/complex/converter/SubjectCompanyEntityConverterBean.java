@@ -47,12 +47,14 @@ public class SubjectCompanyEntityConverterBean
 
 	    {
 		// MAIN_CHIEF s:string Первый руководитель
-		builder.withHeadName(source.getMAINCHIEF());
+		MyOptionals.of(source.getMAINCHIEF())
+			.ifPresent(builder::withHeadName);
 	    }
 
 	    {
 		// MAIN_ACCOUNTANT s:string Главный бухгалтер
-		builder.withAccountantName(source.getMAINACCOUNTANT());
+		MyOptionals.of(source.getMAINACCOUNTANT())
+			.ifPresent(builder::withAccountantName);
 	    }
 
 	    {
