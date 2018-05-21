@@ -75,15 +75,15 @@ public class SubjectPersonEntityConverterBean
 	    // DOCUMENT_GIVED_BY s:string Документ выдан
 	    // DOCUMENT_GIVED_DATE s:string Дата выдачи документа
 	    IdentityCardInfo.builder() //
-		    .withNumber(MyOptionals.of(source.getDOCUMENTNUMBER()))
-		    .withDateOfIssue(MyOptionals.of(dateToLocalDate(source.getDOCUMENTGIVEDDATE())))
+		    .withNumber(source.getDOCUMENTNUMBER())
+		    .withDateOfIssue(dateToLocalDate(source.getDOCUMENTGIVEDDATE()))
 		    .withIssuingAuthority(source.getDOCUMENTGIVEDBY()) //
-		    .withIdentityCardType(Util.optField(SubjectPersonEntity.class,
+		    .withIdentityCardType(Util.reqField(SubjectPersonEntity.class,
 			    id,
 			    identityCardTypes::getById,
 			    "identityCard.identityCardType",
 			    IdentityCardType.class,
-			    MyOptionals.of(source.getDOCUMENTTYPEID())))
+			    source.getDOCUMENTTYPEID()))
 		    .buildTo(builder::withIdentityCard);
 
 	    return builder.build();
