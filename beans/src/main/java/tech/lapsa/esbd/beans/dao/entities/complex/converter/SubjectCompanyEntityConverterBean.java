@@ -60,12 +60,14 @@ public class SubjectCompanyEntityConverterBean
 	    {
 		// ACTIVITY_KIND_ID s:int Вид деятельности (справочник
 		// ACTIVITY_KINDS)
-		builder.withCompanyActivityKind(Util.optFieldIgnoreFieldNotFound(SubjectCompanyEntity.class,
+		// TODO check
+		// builder.withCompanyActivityKind(Util.optFieldIgnoreFieldNotFound(SubjectCompanyEntity.class,
+		builder.withCompanyActivityKind(Util.reqField(SubjectCompanyEntity.class,
 			id,
 			companyActivityKinds::getById,
 			"companyActivityKind",
 			CompanyActivityKindEntity.class,
-			MyOptionals.of(source.getACTIVITYKINDID())));
+			source.getACTIVITYKINDID()));
 	    }
 
 	    return builder.build();
