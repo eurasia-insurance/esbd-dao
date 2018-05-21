@@ -59,14 +59,14 @@ public class SubjectPersonEntityConverterBean
 		PersonalInfo.builder()
 			.withName(source.getFirstName())
 			.withSurename(source.getLastName())
-			.withPatronymic(source.getMiddleName())
+			.withPatronymic(MyOptionals.of(source.getMiddleName()))
 			.withDayOfBirth(dateToLocalDate(source.getBorn()))
-			.withGender(Util.optField(SubjectPersonEntity.class,
+			.withGender(Util.reqField(SubjectPersonEntity.class,
 				id,
 				genders::getById,
 				"personal.gender",
 				Sex.class,
-				MyOptionals.of(source.getSexID())))
+				source.getSexID()))
 			.buildTo(builder::withPersonal);
 	    }
 
