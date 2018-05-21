@@ -83,7 +83,7 @@ public class ASubjectEntityEsdbdConverter {
 
 	{
 	    // RESIDENT_BOOL s:int Признак резидентства (обязательно)
-	    builder.withResident(source.getRESIDENTBOOL() == 1);
+	    builder.withResident(Boolean.valueOf(source.getRESIDENTBOOL() == 1));
 	}
 
 	{
