@@ -13,10 +13,10 @@ import tech.lapsa.esbd.beans.dao.entities.complex.converter.InsuranceAgentEntity
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.entities.complex.InsuranceAgentEntity;
 import tech.lapsa.esbd.dao.entities.complex.InsuranceAgentEntityService;
 import tech.lapsa.esbd.dao.entities.complex.InsuranceAgentEntityService.InsuranceAgentEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.InsuranceAgentEntityService.InsuranceAgentEntityServiceRemote;
+import tech.lapsa.esbd.domain.complex.InsuranceAgentEntity;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfMIDDLEMAN;
 import tech.lapsa.esbd.jaxws.wsimport.MIDDLEMAN;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;

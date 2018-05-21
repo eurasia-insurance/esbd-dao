@@ -19,7 +19,7 @@ import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.elements.nondict.InsuranceClassTypeService;
 import tech.lapsa.esbd.dao.elements.nondict.InsuranceClassTypeService.InsuranceClassTypeServiceLocal;
 import tech.lapsa.esbd.dao.elements.nondict.InsuranceClassTypeService.InsuranceClassTypeServiceRemote;
-import tech.lapsa.esbd.dao.entities.complex.SubjectPersonEntity;
+import tech.lapsa.esbd.domain.complex.SubjectPersonEntity;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyNumbers;
 import tech.lapsa.java.commons.function.MyObjects;

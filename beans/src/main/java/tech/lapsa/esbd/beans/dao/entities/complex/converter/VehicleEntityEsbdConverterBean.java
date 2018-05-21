@@ -11,10 +11,10 @@ import com.lapsa.insurance.elements.SteeringWheelLocation;
 import com.lapsa.insurance.elements.VehicleClass;
 
 import tech.lapsa.esbd.dao.elements.dict.VehicleClassService.VehicleClassServiceLocal;
-import tech.lapsa.esbd.dao.entities.complex.VehicleEntity;
-import tech.lapsa.esbd.dao.entities.complex.VehicleEntity.VehicleEntityBuilder;
-import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntity;
 import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService.VehicleModelEntityServiceLocal;
+import tech.lapsa.esbd.domain.complex.VehicleEntity;
+import tech.lapsa.esbd.domain.complex.VehicleEntity.VehicleEntityBuilder;
+import tech.lapsa.esbd.domain.complex.VehicleModelEntity;
 import tech.lapsa.esbd.jaxws.wsimport.TF;
 import tech.lapsa.java.commons.function.MyOptionals;
 

@@ -18,10 +18,10 @@ import tech.lapsa.esbd.beans.dao.entities.complex.converter.UserEntityEsbdConver
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.entities.complex.UserEntity;
 import tech.lapsa.esbd.dao.entities.complex.UserEntityService;
 import tech.lapsa.esbd.dao.entities.complex.UserEntityService.UserEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.UserEntityService.UserEntityServiceRemote;
+import tech.lapsa.esbd.domain.complex.UserEntity;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfUser;
 import tech.lapsa.esbd.jaxws.wsimport.User;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;

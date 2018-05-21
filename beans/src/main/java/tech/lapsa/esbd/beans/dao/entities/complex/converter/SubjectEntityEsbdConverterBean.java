@@ -4,7 +4,7 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
-import tech.lapsa.esbd.dao.entities.complex.SubjectEntity;
+import tech.lapsa.esbd.domain.complex.SubjectEntity;
 import tech.lapsa.esbd.jaxws.wsimport.Client;
 
 @Stateless

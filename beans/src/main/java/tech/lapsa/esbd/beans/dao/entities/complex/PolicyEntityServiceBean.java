@@ -14,10 +14,10 @@ import tech.lapsa.esbd.beans.dao.entities.complex.converter.PolicyEntityEsbdConv
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.entities.complex.PolicyEntity;
 import tech.lapsa.esbd.dao.entities.complex.PolicyEntityService;
 import tech.lapsa.esbd.dao.entities.complex.PolicyEntityService.PolicyEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.PolicyEntityService.PolicyEntityServiceRemote;
+import tech.lapsa.esbd.domain.complex.PolicyEntity;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfPolicy;
 import tech.lapsa.esbd.jaxws.wsimport.Policy;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;

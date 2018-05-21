@@ -3,8 +3,8 @@ package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
-import tech.lapsa.esbd.dao.entities.complex.VehicleManufacturerEntity;
-import tech.lapsa.esbd.dao.entities.complex.VehicleManufacturerEntity.VehicleManufacturerEntityBuilder;
+import tech.lapsa.esbd.domain.complex.VehicleManufacturerEntity;
+import tech.lapsa.esbd.domain.complex.VehicleManufacturerEntity.VehicleManufacturerEntityBuilder;
 import tech.lapsa.esbd.jaxws.wsimport.VOITUREMARK;
 import tech.lapsa.java.commons.function.MyOptionals;
 
