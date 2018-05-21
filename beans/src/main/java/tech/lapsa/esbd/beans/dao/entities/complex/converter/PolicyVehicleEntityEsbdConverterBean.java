@@ -27,6 +27,7 @@ import tech.lapsa.esbd.dao.entities.embeded.VehicleCertificateInfo;
 import tech.lapsa.esbd.jaxws.wsimport.PoliciesTF;
 import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.function.MyStrings;
+import tech.lapsa.kz.vehicle.VehicleRegNumber;
 
 @Stateless
 @LocalBean
@@ -121,7 +122,7 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 				"certificate.registrationRegion",
 				KZArea.class,
 				source.getREGIONID()))
-			.withRegistrationNumber(source.getTFNUMBER())
+			.withRegistrationNumber(VehicleRegNumber.assertValid(source.getTFNUMBER()))
 			.buildTo(builder::withCertificate);
 	    }
 
