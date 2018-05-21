@@ -1,6 +1,5 @@
 package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
-import static tech.lapsa.esbd.beans.dao.TemporalUtil.*;
 import static tech.lapsa.esbd.beans.dao.entities.complex.Util.*;
 
 import javax.ejb.EJB;
@@ -11,6 +10,7 @@ import com.lapsa.insurance.elements.InsuranceClassType;
 import com.lapsa.insurance.elements.InsuredAgeAndExpirienceClass;
 import com.lapsa.insurance.elements.MaritalStatus;
 
+import tech.lapsa.esbd.beans.dao.TemporalUtil;
 import tech.lapsa.esbd.dao.elements.dict.InsuredAgeAndExpirienceClassService.InsuredAgeAndExpirienceClassServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.MaritalStatusService.MaritalStatusServiceLocal;
 import tech.lapsa.esbd.dao.elements.nondict.InsuranceClassTypeService.InsuranceClassTypeServiceLocal;
@@ -23,11 +23,17 @@ import tech.lapsa.esbd.dao.entities.complex.UserEntityService.UserEntityServiceL
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.embeded.DriverLicenseInfo;
+import tech.lapsa.esbd.dao.entities.embeded.DriverLicenseInfo.DriverLicenseInfoBuilder;
 import tech.lapsa.esbd.dao.entities.embeded.GPWParticipantInfo;
+import tech.lapsa.esbd.dao.entities.embeded.GPWParticipantInfo.GPWParticipantInfoBuilder;
 import tech.lapsa.esbd.dao.entities.embeded.HandicappedInfo;
+import tech.lapsa.esbd.dao.entities.embeded.HandicappedInfo.HandicappedInfoBuilder;
 import tech.lapsa.esbd.dao.entities.embeded.PensionerInfo;
+import tech.lapsa.esbd.dao.entities.embeded.PensionerInfo.PensionerInfoBuilder;
 import tech.lapsa.esbd.dao.entities.embeded.PrivilegerInfo;
+import tech.lapsa.esbd.dao.entities.embeded.PrivilegerInfo.PrivilegerInfoBuilder;
 import tech.lapsa.esbd.dao.entities.embeded.RecordOperationInfo;
+import tech.lapsa.esbd.dao.entities.embeded.RecordOperationInfo.RecordOperationInfoBuilder;
 import tech.lapsa.esbd.jaxws.wsimport.Driver;
 import tech.lapsa.java.commons.function.MyOptionals;
 
@@ -120,10 +126,16 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 		// DRIVER_CERTIFICATE s:string Номер водительского удостоверения
 		// DRIVER_CERTIFICATE_DATE s:string Дата выдачи водительского
 		// удостоверения
-		DriverLicenseInfo.builder() //
-			.withDateOfIssue(dateToLocalDate(source.getDRIVERCERTIFICATEDATE())) //
-			.withNumber(source.getDRIVERCERTIFICATE()) //
-			.buildTo(builder::withDriverLicense);
+		final DriverLicenseInfoBuilder b1 = DriverLicenseInfo.builder();
+
+		MyOptionals.of(source.getDRIVERCERTIFICATEDATE())
+			.map(TemporalUtil::dateToLocalDate)
+			.ifPresent(b1::withDateOfIssue);
+
+		MyOptionals.of(source.getDRIVERCERTIFICATE())
+			.ifPresent(b1::withNumber);
+
+		b1.buildTo(builder::withDriverLicense);
 	    }
 
 	    {
@@ -139,66 +151,89 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 
 	    {
 		// PRIVELEGER_BOOL s:int Признак приравненного лица
-		// PRIVELEDGER_TYPE s:string Тип приравненного лица
-		// PRIVELEDGER_CERTIFICATE s:string Удостоверение приравненного
-		// лица
-		// PRIVELEDGER_CERTIFICATE_DATE s:string Дата выдачи
-		// удостоверения
-		// приравненного лица
-		final boolean privileger = source.getPRIVELEGERBOOL() == 1;
-		if (privileger)
-		    PrivilegerInfo.builder() //
-			    .withType(source.getPRIVELEDGERTYPE())
-			    .withCertificateNumber(source.getPRIVELEDGERCERTIFICATE()) //
-			    .withCertificateDateOfIssue(
-				    dateToLocalDate(source.getPRIVELEDGERCERTIFICATEDATE())) //
-			    .buildTo(builder::withPrivilegerInfo);
+		if (source.getPRIVELEGERBOOL() == 1) {
+		    // PRIVELEDGER_TYPE s:string Тип приравненного лица
+		    // PRIVELEDGER_CERTIFICATE s:string Удостоверение
+		    // приравненного лица
+		    // PRIVELEDGER_CERTIFICATE_DATE s:string Дата выдачи
+		    // удостоверения приравненного лица
+		    final PrivilegerInfoBuilder b1 = PrivilegerInfo.builder();
+
+		    MyOptionals.of(source.getPRIVELEDGERTYPE())
+			    .ifPresent(b1::withType);
+
+		    MyOptionals.of(source.getPRIVELEDGERCERTIFICATE())
+			    .ifPresent(b1::withCertificateNumber);
+
+		    MyOptionals.of(source.getPRIVELEDGERCERTIFICATEDATE())
+			    .map(TemporalUtil::dateToLocalDate)
+			    .ifPresent(b1::withCertificateDateOfIssue);
+
+		    b1.buildTo(builder::withPrivilegerInfo);
+		}
 	    }
 
 	    {
 		// WOW_BOOL s:int Признак участника ВОВ
-		// WOW_CERTIFICATE s:string Удостоверение участника ВОВ
-		// WOW_CERTIFICATE_DATE s:string Дата выдачи удостоверения
-		// участника
-		// ВОВ
-		final boolean gpwParticipant = source.getWOWBOOL() == 1;
-		if (gpwParticipant)
-		    GPWParticipantInfo.builder() //
-			    .withCertificateDateOfIssue(dateToLocalDate(source.getWOWCERTIFICATEDATE())) //
-			    .withCertificateNumber(source.getWOWCERTIFICATE()) //
-			    .buildTo(builder::withGpwParticipantInfo);
+		if (source.getWOWBOOL() == 1) {
+		    // WOW_CERTIFICATE s:string Удостоверение участника ВОВ
+		    // WOW_CERTIFICATE_DATE s:string Дата выдачи удостоверения
+		    // участника ВОВ
+		    final GPWParticipantInfoBuilder b1 = GPWParticipantInfo.builder();
+
+		    MyOptionals.of(source.getWOWCERTIFICATE())
+			    .ifPresent(b1::withCertificateNumber);
+
+		    MyOptionals.of(source.getWOWCERTIFICATEDATE())
+			    .map(TemporalUtil::dateToLocalDate)
+			    .ifPresent(b1::withCertificateDateOfIssue);
+
+		    b1.buildTo(builder::withGpwParticipantInfo);
+		}
 	    }
 
 	    {
 		// PENSIONER_BOOL s:int Признак пенсионера
-		// PENSIONER_CERTIFICATE s:string Удостоверение пенсионера
-		// PENSIONER_CERTIFICATE_DATE s:string Дата выдачи удостоверения
-		// пенсионера
-		final boolean pensioner = source.getPENSIONERBOOL() == 1;
-		if (pensioner)
-		    PensionerInfo.builder() //
-			    .withCertificateNumber(source.getPENSIONERCERTIFICATE()) //
-			    .withCertiticateDateOfIssue(
-				    dateToLocalDate(source.getPENSIONERCERTIFICATEDATE())) //
-			    .buildTo(builder::withPensionerInfo);
+		if (source.getPENSIONERBOOL() == 1) {
+		    // PENSIONER_CERTIFICATE s:string Удостоверение пенсионера
+		    // PENSIONER_CERTIFICATE_DATE s:string Дата выдачи
+		    // удостоверения пенсионера
+		    final PensionerInfoBuilder b1 = PensionerInfo.builder();
+
+		    MyOptionals.of(source.getPENSIONERCERTIFICATE())
+			    .ifPresent(b1::withCertificateNumber);
+
+		    MyOptionals.of(source.getPENSIONERCERTIFICATEDATE())
+			    .map(TemporalUtil::dateToLocalDate)
+			    .ifPresent(b1::withCertiticateDateOfIssue);
+
+		    b1.buildTo(builder::withPensionerInfo);
+		}
 	    }
 
 	    {
 		// INVALID_BOOL s:int Признак инвалида
-		// INVALID_CERTIFICATE s:string Удостоверение инвалида
-		// INVALID_CERTIFICATE_BEG_DATE s:string Дата выдачи
-		// удостоверения
-		// инвалида
-		// INVALID_CERTIFICATE_END_DATE s:string Дата завершения
-		// удостоверения
-		// инвалида
-		final boolean handicapped = source.getINVALIDBOOL() == 1;
-		if (handicapped)
-		    HandicappedInfo.builder() //
-			    .withCertificateNumber(source.getINVALIDCERTIFICATE()) //
-			    .withCertificateValidFrom(dateToLocalDate(source.getINVALIDCERTIFICATEBEGDATE())) //
-			    .withCertificateValidTill(dateToLocalDate(source.getINVALIDCERTIFICATEENDDATE())) //
-			    .buildTo(builder::withHandicappedInfo);
+		if (source.getINVALIDBOOL() == 1) {
+		    // INVALID_CERTIFICATE s:string Удостоверение инвалида
+		    // INVALID_CERTIFICATE_BEG_DATE s:string Дата выдачи
+		    // удостоверения инвалида
+		    // INVALID_CERTIFICATE_END_DATE s:string Дата завершения
+		    // удостоверения инвалида
+		    final HandicappedInfoBuilder b1 = HandicappedInfo.builder();
+
+		    MyOptionals.of(source.getINVALIDCERTIFICATE())
+			    .ifPresent(b1::withCertificateNumber);
+
+		    MyOptionals.of(source.getINVALIDCERTIFICATEBEGDATE())
+			    .map(TemporalUtil::dateToLocalDate)
+			    .ifPresent(b1::withCertificateValidFrom);
+
+		    MyOptionals.of(source.getINVALIDCERTIFICATEENDDATE())
+			    .map(TemporalUtil::dateToLocalDate)
+			    .ifPresent(b1::withCertificateValidTill);
+
+		    b1.buildTo(builder::withHandicappedInfo);
+		}
 	    }
 
 	    {
@@ -206,15 +241,21 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 		// создавшего
 		// запись
 		// INPUT_DATE s:string Дата\время ввода записи в систему
-		RecordOperationInfo.builder()
-			.withInstant(optTemporalToInstant(source.getINPUTDATE()).orElse(null))
-			.withAuthor(reqField(PolicyDriverEntity.class,
-				id,
-				userService::getById,
-				"created.author",
-				UserEntity.class,
-				source.getCREATEDBYUSERID()))
-			.buildTo(builder::withCreated);
+		final RecordOperationInfoBuilder b1 = RecordOperationInfo.builder();
+
+		MyOptionals.of(source.getINPUTDATE())
+			.flatMap(TemporalUtil::optTemporalToInstant)
+			.ifPresent(b1::withInstant);
+
+		optField(PolicyDriverEntity.class,
+			id,
+			userService::getById,
+			"created.author",
+			UserEntity.class,
+			MyOptionals.of(source.getCREATEDBYUSERID()))
+				.ifPresent(b1::withAuthor);
+
+		b1.buildTo(builder::withCreated);
 	    }
 
 	    {
@@ -222,15 +263,21 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 		// CHANGED_BY_USER_ID s:int Идентификатор пользователя,
 		// изменившего
 		// запись
-		RecordOperationInfo.builder()
-			.withInstant(optTemporalToInstant(source.getRECORDCHANGEDAT()).orElse(null))
-			.withAuthor(reqField(PolicyDriverEntity.class,
-				id,
-				userService::getById,
-				"modified.author",
-				UserEntity.class,
-				source.getCHANGEDBYUSERID()))
-			.buildTo(builder::withModified);
+		final RecordOperationInfoBuilder b1 = RecordOperationInfo.builder();
+
+		MyOptionals.of(source.getRECORDCHANGEDAT())
+			.flatMap(TemporalUtil::optTemporalToInstant)
+			.ifPresent(b1::withInstant);
+
+		optField(PolicyDriverEntity.class,
+			id,
+			userService::getById,
+			"modified.author",
+			UserEntity.class,
+			MyOptionals.of(source.getCHANGEDBYUSERID()))
+				.ifPresent(b1::withAuthor);
+
+		b1.buildTo(builder::withModified);
 	    }
 
 	    {

@@ -15,7 +15,9 @@ import tech.lapsa.esbd.dao.elements.dict.KZEconomicSectorService.KZEconomicSecto
 import tech.lapsa.esbd.dao.entities.complex.SubjectEntity;
 import tech.lapsa.esbd.dao.entities.complex.SubjectEntity.SubjectEntityBuilder;
 import tech.lapsa.esbd.dao.entities.embeded.ContactInfo;
+import tech.lapsa.esbd.dao.entities.embeded.ContactInfo.ContactInfoBuilder;
 import tech.lapsa.esbd.dao.entities.embeded.OriginInfo;
+import tech.lapsa.esbd.dao.entities.embeded.OriginInfo.OriginInfoBuilder;
 import tech.lapsa.esbd.jaxws.wsimport.Client;
 import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.kz.taxpayer.TaxpayerNumber;
@@ -43,20 +45,25 @@ public class ASubjectEntityEsdbdConverter {
 	{
 	    // COUNTRY_ID s:int Страна (справочник COUNTRIES)
 	    // SETTLEMENT_ID s:int Населенный пункт (справочник SETTLEMENTS)
-	    OriginInfo.builder() //
-		    .withCountry(optField(SubjectEntity.class,
-			    id,
-			    countries::getById,
-			    "origin.country",
-			    Country.class,
-			    MyOptionals.of(source.getCOUNTRYID())))
-		    .withCity(optField(SubjectEntity.class,
-			    id,
-			    cities::getById,
-			    "origin.city",
-			    KZCity.class,
-			    MyOptionals.of(source.getSETTLEMENTID())))
-		    .buildTo(builder::withOrigin);
+	    final OriginInfoBuilder b1 = OriginInfo.builder();
+
+	    optField(SubjectEntity.class,
+		    id,
+		    countries::getById,
+		    "origin.country",
+		    Country.class,
+		    MyOptionals.of(source.getCOUNTRYID()))
+			    .ifPresent(b1::withCountry);
+
+	    optField(SubjectEntity.class,
+		    id,
+		    cities::getById,
+		    "origin.city",
+		    KZCity.class,
+		    MyOptionals.of(source.getSETTLEMENTID()))
+			    .ifPresent(b1::withCity);
+
+	    b1.buildTo(builder::withOrigin);
 	}
 
 	{
@@ -64,13 +71,22 @@ public class ASubjectEntityEsdbdConverter {
 	    // EMAIL s:string Адрес электронной почты
 	    // Address s:string Адрес
 	    // WWW s:string Сайт
-	    ContactInfo.builder() //
-		    .withPhone(MyOptionals.of(source.getPHONES())
-			    .map(PhoneNumber::assertValid)) //
-		    .withHomeAdress(MyOptionals.of(source.getAddress())) //
-		    .withEmail(MyOptionals.of(source.getEMAIL())) //
-		    .withSiteUrl(MyOptionals.of(source.getWWW()))
-		    .buildTo(builder::withContact);
+	    final ContactInfoBuilder b1 = ContactInfo.builder();
+
+	    MyOptionals.of(source.getPHONES())
+		    .map(PhoneNumber::assertValid)
+		    .ifPresent(b1::withPhone);
+
+	    MyOptionals.of(source.getAddress())
+		    .ifPresent(b1::withHomeAdress);
+
+	    MyOptionals.of(source.getEMAIL())
+		    .ifPresent(b1::withEmail);
+
+	    MyOptionals.of(source.getWWW())
+		    .ifPresent(b1::withSiteUrl);
+
+	    b1.buildTo(builder::withContact);
 	}
 
 	{

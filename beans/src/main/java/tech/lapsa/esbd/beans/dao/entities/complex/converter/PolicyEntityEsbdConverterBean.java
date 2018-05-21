@@ -1,6 +1,5 @@
 package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
-import static tech.lapsa.esbd.beans.dao.TemporalUtil.*;
 import static tech.lapsa.esbd.beans.dao.entities.complex.Util.*;
 
 import java.util.List;
@@ -32,7 +31,9 @@ import tech.lapsa.esbd.dao.entities.dict.BranchEntityService.BranchEntityService
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.embeded.CancelationInfo;
+import tech.lapsa.esbd.dao.entities.embeded.CancelationInfo.CancelationInfoBuilder;
 import tech.lapsa.esbd.dao.entities.embeded.RecordOperationInfo;
+import tech.lapsa.esbd.dao.entities.embeded.RecordOperationInfo.RecordOperationInfoBuilder;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfDriver;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfPoliciesTF;
 import tech.lapsa.esbd.jaxws.wsimport.Driver;
@@ -160,18 +161,26 @@ public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<Po
 	    }
 
 	    {
-		// RESCINDING_DATE s:string Дата расторжения полиса
-		// RESCINDING_REASON_ID s:int Идентификатор причины расторжения
-		if (MyStrings.nonEmpty(source.getRESCINDINGDATE()))
-		    CancelationInfo.builder()
-			    .withDateOf(dateToLocalDate(source.getRESCINDINGDATE()))
-			    .withReason(reqField(PolicyEntity.class,
-				    id,
-				    cancelationReasonTypeService::getById,
-				    "cancelationReasonType",
-				    CancelationReason.class,
-				    source.getRESCINDINGREASONID()))
-			    .buildTo(builder::withCancelation);
+		if (MyStrings.nonEmpty(source.getRESCINDINGDATE())) {
+		    // RESCINDING_DATE s:string Дата расторжения полиса
+		    // RESCINDING_REASON_ID s:int Идентификатор причины
+		    // расторжения
+		    final CancelationInfoBuilder b1 = CancelationInfo.builder();
+
+		    MyOptionals.of(source.getRESCINDINGDATE())
+			    .map(TemporalUtil::dateToLocalDate)
+			    .ifPresent(b1::withDateOf);
+
+		    optField(PolicyEntity.class,
+			    id,
+			    cancelationReasonTypeService::getById,
+			    "cancelationReasonType",
+			    CancelationReason.class,
+			    MyOptionals.of(source.getRESCINDINGREASONID()))
+				    .ifPresent(b1::withReason);
+
+		    b1.buildTo(builder::withCancelation);
+		}
 	    }
 
 	    {
@@ -241,34 +250,46 @@ public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<Po
 		// полис
 		// INPUT_DATE s:string Дата\время ввода полиса в систему
 		// INPUT_DATE_TIME s:string Дата\время ввода полиса в систему
-		RecordOperationInfo.builder()
-			.withInstant(datetimeToInstant(source.getINPUTDATETIME()))
-			.withAuthor(reqField(PolicyEntity.class,
-				id,
-				userService::getById,
-				"created.author",
-				UserEntity.class,
-				source.getCREATEDBYUSERID()))
-			.buildTo(builder::withCreated);
+		final RecordOperationInfoBuilder b1 = RecordOperationInfo.builder();
+
+		MyOptionals.of(source.getINPUTDATETIME())
+			.flatMap(TemporalUtil::optTemporalToInstant)
+			.ifPresent(b1::withInstant);
+
+		optField(PolicyEntity.class,
+			id,
+			userService::getById,
+			"created.author",
+			UserEntity.class,
+			MyOptionals.of(source.getCREATEDBYUSERID()))
+				.ifPresent(b1::withAuthor);
+
+		b1.buildTo(builder::withCreated);
 	    }
 
 	    {
-		// RECORD_CHANGED_AT s:string Дата\время изменения полиса
-		// RECORD_CHANGED_AT_DATETIME s:string Дата\время изменения
-		// полиса
-		// CHANGED_BY_USER_ID s:int Идентификатор пользователя,
-		// изменившего
-		// полис
-		if (MyStrings.nonEmpty(source.getRECORDCHANGEDATDATETIME()))
-		    RecordOperationInfo.builder()
-			    .withInstant(datetimeToInstant(source.getRECORDCHANGEDATDATETIME()))
-			    .withAuthor(reqField(PolicyEntity.class,
-				    id,
-				    userService::getById,
-				    "modified.author",
-				    UserEntity.class,
-				    source.getCHANGEDBYUSERID()))
-			    .buildTo(builder::withModified);
+		if (MyStrings.nonEmpty(source.getRECORDCHANGEDATDATETIME())) {
+		    // RECORD_CHANGED_AT s:string Дата\время изменения полиса
+		    // RECORD_CHANGED_AT_DATETIME s:string Дата\время изменения
+		    // полиса
+		    // CHANGED_BY_USER_ID s:int Идентификатор пользователя,
+		    // изменившего полис
+		    final RecordOperationInfoBuilder b1 = RecordOperationInfo.builder();
+
+		    MyOptionals.of(source.getRECORDCHANGEDATDATETIME())
+			    .flatMap(TemporalUtil::optTemporalToInstant)
+			    .ifPresent(b1::withInstant);
+
+		    optField(PolicyEntity.class,
+			    id,
+			    userService::getById,
+			    "modified.author",
+			    UserEntity.class,
+			    MyOptionals.of(source.getCHANGEDBYUSERID()))
+				    .ifPresent(b1::withAuthor);
+
+		    b1.buildTo(builder::withModified);
+		}
 	    }
 
 	    // ScheduledPayments tns:ArrayOfSCHEDULED_PAYMENT Плановые
@@ -295,8 +316,7 @@ public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<Po
 			.ifPresent(builder::withDateOfPayment);
 	    }
 
-	    final PolicyEntity res = builder.build();
-	    return res;
+	    return builder.build();
 
 	} catch (final IllegalArgumentException e) {
 	    // it should not happens

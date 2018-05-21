@@ -48,71 +48,7 @@ public final class Util {
 	return new IllegalArgumentException(message);
     }
 
-    // requireField
-
-    public static <T, F, FI> void requireField(final T target,
-	    final Object targetId,
-	    final ThrowingFunction<FI, F> fieldGeter,
-	    final Consumer<F> fieldSeter,
-	    final String fieldName,
-	    final Class<F> fieldClazz,
-	    final FI fieldId) {
-	final F fieldObject;
-	try {
-	    fieldObject = fieldGeter.apply(fieldId);
-	} catch (final Exception e) {
-	    final String message = MyStrings.format(
-		    "Error fetching %1$s(%2$s).%3$s -> %4$s(%5$s) '%6$s'",
-		    target.getClass().getSimpleName(), // 1,
-		    targetId, // 2
-		    fieldName, // 3
-		    fieldClazz.getSimpleName(), // 4
-		    fieldId, // 5
-		    e.getMessage() // 6
-	    );
-	    throw new IllegalArgumentException(message, e);
-	}
-	fieldSeter.accept(fieldObject);
-    }
-
-    public static <T, F, FI> F reqField(final Class<T> targetClazz,
-	    final Object targetId,
-	    final ThrowingFunction<FI, F> entityGeter,
-	    final String fieldName,
-	    final Class<F> fieldClazz,
-	    final FI fieldId,
-	    final Predicate<Throwable> ignoreException) {
-
-	F fieldObject = null;
-	try {
-	    fieldObject = entityGeter.apply(fieldId);
-	} catch (final Exception e) {
-	    if (ignoreException == null || !ignoreException.test(e)) {
-		final String message = MyStrings.format(
-			"Error fetching %1$s(%2$s).%3$s -> %4$s(%5$s) '%6$s'",
-			targetClazz.getSimpleName(), // 1,
-			targetId, // 2
-			fieldName, // 3
-			fieldClazz.getSimpleName(), // 4
-			fieldId, // 5
-			e.getMessage() // 6
-		);
-		throw new IllegalArgumentException(message, e);
-	    }
-	}
-	return fieldObject;
-    }
-
-    public static <T, F, FI> F reqField(final Class<T> targetClazz,
-	    final Object targetId,
-	    final ThrowingFunction<FI, F> fieldGeter,
-	    final String fieldName,
-	    final Class<F> fieldClazz,
-	    final FI fieldId) {
-	return reqField(targetClazz, targetId, fieldGeter, fieldName, fieldClazz, fieldId, null);
-    }
-
-    // optionalField
+    // optField
 
     public static <T, F, FI> Optional<F> optField(final Class<T> targetClazz,
 	    final Object targetId,

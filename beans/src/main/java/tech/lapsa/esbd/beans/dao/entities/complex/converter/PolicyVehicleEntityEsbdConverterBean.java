@@ -1,6 +1,5 @@
 package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
-import static tech.lapsa.esbd.beans.dao.TemporalUtil.*;
 import static tech.lapsa.esbd.beans.dao.entities.complex.Util.*;
 
 import javax.ejb.EJB;
@@ -11,6 +10,7 @@ import com.lapsa.insurance.elements.VehicleAgeClass;
 import com.lapsa.insurance.elements.VehicleClass;
 import com.lapsa.kz.country.KZArea;
 
+import tech.lapsa.esbd.beans.dao.TemporalUtil;
 import tech.lapsa.esbd.dao.elements.dict.KZAreaService.KZAreaServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.VehicleAgeClassService.VehicleAgeClassServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.VehicleClassService.VehicleClassServiceLocal;
@@ -23,7 +23,9 @@ import tech.lapsa.esbd.dao.entities.complex.VehicleEntityService.VehicleEntitySe
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.embeded.RecordOperationInfo;
+import tech.lapsa.esbd.dao.entities.embeded.RecordOperationInfo.RecordOperationInfoBuilder;
 import tech.lapsa.esbd.dao.entities.embeded.VehicleCertificateInfo;
+import tech.lapsa.esbd.dao.entities.embeded.VehicleCertificateInfo.VehicleCertificateInfoBuilder;
 import tech.lapsa.esbd.jaxws.wsimport.PoliciesTF;
 import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.function.MyStrings;
@@ -116,18 +118,30 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 		// (обязательно)
 		// BIG_CITY_BOOL s:int Признак города областного значения
 		// (обязательно)
-		VehicleCertificateInfo.builder() //
-			.withCertificateNumber(source.getTFREGISTRATIONCERTIFICATE())
-			.withDateOfIssue(dateToLocalDate(source.getGIVEDATE()))
-			.withRegistrationMajorCity(source.getBIGCITYBOOL() == 1)
-			.withRegistrationRegion(reqField(PolicyVehicleEntity.class,
-				id,
-				countryRegionService::getById,
-				"certificate.registrationRegion",
-				KZArea.class,
-				source.getREGIONID()))
-			.withRegistrationNumber(VehicleRegNumber.assertValid(source.getTFNUMBER()))
-			.buildTo(builder::withCertificate);
+		final VehicleCertificateInfoBuilder b1 = VehicleCertificateInfo.builder();
+
+		MyOptionals.of(source.getTFREGISTRATIONCERTIFICATE())
+			.ifPresent(b1::withCertificateNumber);
+
+		MyOptionals.of(source.getGIVEDATE())
+			.map(TemporalUtil::dateToLocalDate)
+			.ifPresent(b1::withDateOfIssue);
+
+		b1.withRegistrationMajorCity(source.getBIGCITYBOOL() == 1);
+
+		optField(PolicyVehicleEntity.class,
+			id,
+			countryRegionService::getById,
+			"certificate.registrationRegion",
+			KZArea.class,
+			MyOptionals.of(source.getREGIONID()))
+				.ifPresent(b1::withRegistrationRegion);
+
+		MyOptionals.of(source.getTFNUMBER())
+			.map(VehicleRegNumber::assertValid)
+			.ifPresent(b1::withRegistrationNumber);
+
+		b1.buildTo(builder::withCertificate);
 	    }
 
 	    {
@@ -144,35 +158,46 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 
 	    {
 		// CREATED_BY_USER_ID s:int Идентификатор пользователя,
-		// создавшего
-		// запись
+		// создавшего запись
 		// INPUT_DATE s:string Дата\время ввода записи в систему
-		RecordOperationInfo.builder()
-			.withInstant(optTemporalToInstant(source.getINPUTDATE()).orElse(null))
-			.withAuthor(reqField(PolicyVehicleEntity.class,
-				id,
-				userService::getById,
-				"created.author",
-				UserEntity.class,
-				source.getCREATEDBYUSERID()))
-			.buildTo(builder::withCreated);
+		final RecordOperationInfoBuilder b1 = RecordOperationInfo.builder();
+
+		MyOptionals.of(source.getINPUTDATE())
+			.flatMap(TemporalUtil::optTemporalToInstant)
+			.ifPresent(b1::withInstant);
+
+		optField(PolicyVehicleEntity.class,
+			id,
+			userService::getById,
+			"created.author",
+			UserEntity.class,
+			MyOptionals.of(source.getCREATEDBYUSERID()))
+				.ifPresent(b1::withAuthor);
+
+		b1.buildTo(builder::withCreated);
 	    }
 
 	    {
-		// RECORD_CHANGED_AT s:string Дата\время изменения записи
-		// CHANGED_BY_USER_ID s:int Идентификатор пользователя,
-		// изменившего
-		// запись
-		if (MyStrings.nonEmpty(source.getRECORDCHANGEDAT()))
-		    RecordOperationInfo.builder()
-			    .withInstant(optTemporalToInstant(source.getRECORDCHANGEDAT()).orElse(null))
-			    .withAuthor(reqField(PolicyVehicleEntity.class,
-				    id,
-				    userService::getById,
-				    "modified.author",
-				    UserEntity.class,
-				    source.getCHANGEDBYUSERID()))
-			    .buildTo(builder::withModified);
+		if (MyStrings.nonEmpty(source.getRECORDCHANGEDAT())) {
+		    // RECORD_CHANGED_AT s:string Дата\время изменения записи
+		    // CHANGED_BY_USER_ID s:int Идентификатор пользователя,
+		    // изменившего запись
+		    final RecordOperationInfoBuilder b1 = RecordOperationInfo.builder();
+
+		    MyOptionals.of(source.getRECORDCHANGEDAT())
+			    .flatMap(TemporalUtil::optTemporalToInstant)
+			    .ifPresent(b1::withInstant);
+
+		    optField(PolicyVehicleEntity.class,
+			    id,
+			    userService::getById,
+			    "modified.author",
+			    UserEntity.class,
+			    MyOptionals.of(source.getCHANGEDBYUSERID()))
+				    .ifPresent(b1::withAuthor);
+
+		    b1.buildTo(builder::withModified);
+		}
 	    }
 
 	    {
