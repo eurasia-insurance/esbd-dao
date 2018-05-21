@@ -65,9 +65,9 @@ public class ASubjectEntityEsdbdConverter {
 	    ContactInfo.builder() //
 		    .withPhone(MyOptionals.of(source.getPHONES())
 			    .map(PhoneNumber::assertValid)) //
-		    .withHomeAdress(source.getAddress()) //
-		    .withEmail(source.getEMAIL()) //
-		    .withSiteUrl(source.getWWW())
+		    .withHomeAdress(MyOptionals.of(source.getAddress())) //
+		    .withEmail(MyOptionals.of(source.getEMAIL())) //
+		    .withSiteUrl(MyOptionals.of(source.getWWW()))
 		    .buildTo(builder::withContact);
 	}
 
