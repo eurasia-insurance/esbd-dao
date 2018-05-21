@@ -105,11 +105,18 @@ public abstract class ADictionaryEntityService<T extends ADictEntity>
     }
 
     protected T convert(final Item source) {
-	return newBuilderSupplier.get()
-		.withId(MyOptionals.of(source.getID()).orElse(null))
-		.withCode(source.getCode())
-		.withName(source.getName())
-		.build();
+	final DictionaryEntityBuilder<T> builder = newBuilderSupplier.get();
+
+	MyOptionals.of(source.getID())
+		.ifPresent(builder::withId);
+
+	MyOptionals.of(source.getCode())
+		.ifPresent(builder::withCode);
+
+	MyOptionals.of(source.getName())
+		.ifPresent(builder::withName);
+
+	return builder.build();
     }
 
 }
