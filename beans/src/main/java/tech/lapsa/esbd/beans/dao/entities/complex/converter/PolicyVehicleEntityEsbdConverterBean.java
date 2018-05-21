@@ -128,12 +128,14 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 
 	    {
 		// PURPOSE s:string Цель использования ТС
-		builder.withVehiclePurpose(source.getPURPOSE());
+		MyOptionals.of(source.getPURPOSE())
+			.ifPresent(builder::withVehiclePurpose);
 	    }
 
 	    {
 		// ODOMETER s:int Показания одометра
-		builder.withCurrentOdometerValue(source.getODOMETER());
+		MyOptionals.ofPositive(source.getODOMETER())
+			.ifPresent(builder::withCurrentOdometerValue);
 	    }
 
 	    {
