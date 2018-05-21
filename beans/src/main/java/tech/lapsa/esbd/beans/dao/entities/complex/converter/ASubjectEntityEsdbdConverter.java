@@ -73,12 +73,14 @@ public class ASubjectEntityEsdbdConverter {
 
 	{
 	    // TPRN s:string РНН
-	    builder.withTaxPayerNumber(source.getTPRN());
+	    MyOptionals.of(source.getTPRN())
+		    .ifPresent(builder::withTaxPayerNumber);
 	}
 
 	{
 	    // DESCRIPTION s:string Примечание
-	    builder.withComments(source.getDESCRIPTION());
+	    MyOptionals.of(source.getDESCRIPTION())
+		    .ifPresent(builder::withComments);
 	}
 
 	{
