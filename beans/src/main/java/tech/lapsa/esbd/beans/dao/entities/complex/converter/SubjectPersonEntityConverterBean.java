@@ -1,6 +1,7 @@
 package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
 import static tech.lapsa.esbd.beans.dao.TemporalUtil.*;
+import static tech.lapsa.esbd.beans.dao.entities.complex.Util.*;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -9,7 +10,6 @@ import javax.ejb.Stateless;
 import com.lapsa.insurance.elements.IdentityCardType;
 import com.lapsa.insurance.elements.Sex;
 
-import tech.lapsa.esbd.beans.dao.entities.complex.Util;
 import tech.lapsa.esbd.dao.elements.dict.GenderService.GenderServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.IdentityCardTypeService.IdentityCardTypeServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.SubjectEntity.SubjectEntityBuilder;
@@ -61,7 +61,7 @@ public class SubjectPersonEntityConverterBean
 			.withSurename(source.getLastName())
 			.withPatronymic(MyOptionals.of(source.getMiddleName()))
 			.withDayOfBirth(dateToLocalDate(source.getBorn()))
-			.withGender(Util.reqField(SubjectPersonEntity.class,
+			.withGender(reqField(SubjectPersonEntity.class,
 				id,
 				genders::getById,
 				"personal.gender",
@@ -78,7 +78,7 @@ public class SubjectPersonEntityConverterBean
 		    .withNumber(source.getDOCUMENTNUMBER())
 		    .withDateOfIssue(dateToLocalDate(source.getDOCUMENTGIVEDDATE()))
 		    .withIssuingAuthority(source.getDOCUMENTGIVEDBY()) //
-		    .withIdentityCardType(Util.reqField(SubjectPersonEntity.class,
+		    .withIdentityCardType(reqField(SubjectPersonEntity.class,
 			    id,
 			    identityCardTypes::getById,
 			    "identityCard.identityCardType",

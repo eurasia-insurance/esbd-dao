@@ -1,5 +1,7 @@
 package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
+import static tech.lapsa.esbd.beans.dao.entities.complex.Util.*;
+
 import java.util.Calendar;
 
 import javax.ejb.EJB;
@@ -7,7 +9,6 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import tech.lapsa.esbd.beans.dao.entities.complex.Util;
 import tech.lapsa.esbd.dao.entities.complex.SubjectEntity;
 import tech.lapsa.esbd.dao.entities.complex.SubjectEntityService.SubjectEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.UserEntity;
@@ -49,57 +50,69 @@ public class UserEntityEsbdConverterBean implements AEsbdAttributeConverter<User
 
 	    {
 		// ID s:int Идентификатор пользователя
-		builder.withId(MyOptionals.of(id).orElse(null));
+		MyOptionals.of(id)
+			.ifPresent(builder::withId);
 	    }
 
 	    {
 		// Name s:string Имя пользователя
-		builder.withLogin(source.getName());
+		MyOptionals.of(source.getName())
+			.ifPresent(builder::withLogin);
 	    }
 
 	    {
 		// Branch_ID s:int Филиал пользователя (справочник BRANCHES)
-		builder.withBranch(Util.optField(UserEntity.class,
+		optField(UserEntity.class,
 			id,
 			branchService::getById,
 			"branch",
 			BranchEntity.class,
-			MyOptionals.of(source.getBranchID())));
+			MyOptionals.of(source.getBranchID()))
+				.ifPresent(builder::withBranch);
 	    }
 
 	    {
 		// CLIENT_ID s:int Клиент пользователя (справочник CLIENTS)
-		builder.withSubject(Util.optField(UserEntity.class,
+		optField(UserEntity.class,
 			id,
 			subjectService::getById,
 			"subject",
 			SubjectEntity.class,
-			MyOptionals.of(source.getCLIENTID())));
+			MyOptionals.of(source.getCLIENTID()))
+				.ifPresent(builder::withSubject);
 	    }
 
 	    {
 		// SYSTEM_DELIMITER_ID s:int Разделитель учета (справочник
 		// SYSTEM_DELIMITER)
-		builder.withOrganization(Util.reqField(UserEntity.class,
+		optField(UserEntity.class,
 			id,
 			insuranceCompanyService::getById,
 			"organization",
 			InsuranceCompanyEntity.class,
-			source.getSYSTEMDELIMITERID()));
+			MyOptionals.of(source.getSYSTEMDELIMITERID()))
+				.ifPresent(builder::withOrganization);
 	    }
 
-	    // IsAuthenticated s:int Пользователь аутентифицирован
-	    builder.withAuthentificated(source.getIsAuthenticated() == 1);
+	    {
+		// IsAuthenticated s:int Пользователь аутентифицирован
+		builder.withAuthentificated(source.getIsAuthenticated() == 1);
+	    }
 
-	    // SessionID s:string Идентификатор текущей сессии пользователя
-	    builder.withLastSesionId(source.getSessionID());
+	    {
+		// SessionID s:string Идентификатор текущей сессии пользователя
+		MyOptionals.of(source.getSessionID())
+			.ifPresent(builder::withLastSesionId);
+	    }
 
-	    // LastRequestTime s:string Время последнего действия пользователя
-	    builder.withLastActivity(MyOptionals.of(source.getLastRequestTime())
-		    .map(XMLGregorianCalendar::toGregorianCalendar)
-		    .map(Calendar::toInstant));
-
-	    // ErrorMessage s:string Описание ошибки аутентификации
+	    {
+		// LastRequestTime s:string Время последнего действия
+		// пользователя
+		MyOptionals.of(source.getLastRequestTime())
+			.map(XMLGregorianCalendar::toGregorianCalendar)
+			.map(Calendar::toInstant)
+			.ifPresent(builder::withLastActivity);
+	    }
 
 	    return builder.build();
 

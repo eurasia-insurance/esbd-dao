@@ -1,6 +1,7 @@
 package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
 import static tech.lapsa.esbd.beans.dao.TemporalUtil.*;
+import static tech.lapsa.esbd.beans.dao.entities.complex.Util.*;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import com.lapsa.insurance.elements.CancelationReason;
 import com.lapsa.insurance.elements.PaymentType;
 import com.lapsa.insurance.elements.PersonType;
 
-import tech.lapsa.esbd.beans.dao.entities.complex.Util;
+import tech.lapsa.esbd.beans.dao.TemporalUtil;
 import tech.lapsa.esbd.dao.elements.dict.CancelationReasonService.CancelationReasonServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.PaymentTypeService.PaymentTypeServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.PersonTypeService.PersonTypeServiceLocal;
@@ -61,100 +62,110 @@ public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<Po
 
 	    {
 		// POLICY_ID s:int Идентификатор полиса (обязательно)
-		builder.withId(MyOptionals.of(id).orElse(null));
+		MyOptionals.of(id)
+			.ifPresent(builder::withId);
 	    }
 
 	    {
 		// GLOBAL_ID s:string Уникальный глобальный идентификатор полиса
-		builder.withNumber(source.getGLOBALID());
+		MyOptionals.of(source.getGLOBALID())
+			.ifPresent(builder::withNumber);
 	    }
 
 	    {
 		// POLICY_NUMBER s:string Номер полиса (обязательно)
-		builder.withInternalNumber(source.getPOLICYNUMBER());
+		MyOptionals.of(source.getPOLICYNUMBER())
+			.ifPresent(builder::withInternalNumber);
 	    }
 
 	    {
 		// DATE_BEG s:string Дата начала действия полиса (обязательно)
-		builder.withValidFrom(dateToLocalDate(source.getDATEBEG()));
+		MyOptionals.of(source.getDATEBEG())
+			.map(TemporalUtil::dateToLocalDate)
+			.ifPresent(builder::withValidFrom);
 	    }
 
 	    {
 		// DATE_END s:string Дата окончания действия полиса
 		// (обязательно)
-		builder.withValidTill(dateToLocalDate(source.getDATEEND()));
+		MyOptionals.of(source.getDATEEND())
+			.map(TemporalUtil::dateToLocalDate)
+			.ifPresent(builder::withValidTill);
 	    }
 
 	    {
 		// PREMIUM s:double Страховая премия (обязательно)
-		builder.withActualPremium(MyOptionals.of(source.getPREMIUM()).orElse(null));
+		MyOptionals.of(source.getPREMIUM())
+			.ifPresent(builder::withActualPremium);
 	    }
 
 	    {
 		// CALCULATED_PREMIUM s:double Страховая премия рассчитанная
 		// системой
-		builder.withCalculatedPremium(MyOptionals.of(source.getCALCULATEDPREMIUM()).orElse(null));
+		MyOptionals.of(source.getCALCULATEDPREMIUM())
+			.ifPresent(builder::withCalculatedPremium);
 	    }
 
 	    {
 		// SYSTEM_DELIMITER_ID s:int Идентификатор страховой компании
-		builder.withInsurer(Util.reqField(PolicyEntity.class,
+		optField(PolicyEntity.class,
 			id,
 			insuranceCompanyService::getById,
 			"insurer",
 			InsuranceCompanyEntity.class,
-			source.getSYSTEMDELIMITERID()));
+			MyOptionals.of(source.getSYSTEMDELIMITERID()))
+				.ifPresent(builder::withInsurer);
 	    }
 
 	    {
 		// CLIENT_ID s:int Идентификатор страхователя (обязательно)
-		builder.withInsurant(Util.reqField(PolicyEntity.class,
+		optField(PolicyEntity.class,
 			id,
 			subjectService::getById,
 			"insurant",
 			SubjectEntity.class,
-			source.getCLIENTID()));
+			MyOptionals.of(source.getCLIENTID()))
+				.ifPresent(builder::withInsurant);
 	    }
 
 	    {
 		// CLIENT_FORM_ID s:int Форма клиента (справочник CLIENT_FORMS)
-		if (MyNumbers.nonZero(source.getCLIENTFORMID())) {
-		    builder.withInsurantPersonType(Util.reqField(PolicyEntity.class,
-			    id,
-			    personTypeService::getById,
-			    "insurantPersonType",
-			    PersonType.class,
-			    source.getCLIENTFORMID()));
-		}
+		optField(PolicyEntity.class,
+			id,
+			personTypeService::getById,
+			"insurantPersonType",
+			PersonType.class,
+			MyOptionals.of(source.getCLIENTFORMID()))
+				.ifPresent(builder::withInsurantPersonType);
 	    }
 
 	    {
 		// MIDDLEMAN_ID s:int Посредник (Идентификатор)
-		if (MyNumbers.nonZero(source.getMIDDLEMANID())) {
-		    builder.withInsuranceAgent(Util.reqField(PolicyEntity.class,
-			    id,
-			    insuranceAgentService::getById,
-			    "insuranceAgent",
-			    InsuranceAgentEntity.class,
-			    source.getMIDDLEMANID()));
-		}
+		optField(PolicyEntity.class,
+			id,
+			insuranceAgentService::getById,
+			"insuranceAgent",
+			InsuranceAgentEntity.class,
+			MyOptionals.of(source.getMIDDLEMANID()))
+				.ifPresent(builder::withInsuranceAgent);
 
 		// MIDDLEMAN_CONTRACT_NUMBER s:string Номер договора посредника
 	    }
 
 	    {
 		// POLICY_DATE s:string Дата полиса
-		builder.withDateOfIssue(dateToLocalDate(source.getPOLICYDATE()));
+		MyOptionals.of(source.getPOLICYDATE())
+			.map(TemporalUtil::dateToLocalDate)
+			.ifPresent(builder::withDateOfIssue);
 	    }
 
 	    {
 		// RESCINDING_DATE s:string Дата расторжения полиса
 		// RESCINDING_REASON_ID s:int Идентификатор причины расторжения
-		if (MyStrings.nonEmpty(source.getRESCINDINGDATE())
-			|| MyNumbers.positive(source.getRESCINDINGREASONID()))
+		if (MyStrings.nonEmpty(source.getRESCINDINGDATE()))
 		    CancelationInfo.builder()
 			    .withDateOf(dateToLocalDate(source.getRESCINDINGDATE()))
-			    .withReason(Util.reqField(PolicyEntity.class,
+			    .withReason(reqField(PolicyEntity.class,
 				    id,
 				    cancelationReasonTypeService::getById,
 				    "cancelationReasonType",
@@ -165,12 +176,13 @@ public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<Po
 
 	    {
 		// BRANCH_ID s:int Филиал (обязательно)
-		builder.withBranch(Util.reqField(PolicyEntity.class,
+		optField(PolicyEntity.class,
 			id,
 			branchService::getById,
 			"branch",
 			BranchEntity.class,
-			source.getBRANCHID()));
+			MyOptionals.of(source.getBRANCHID()))
+				.ifPresent(builder::withBranch);
 	    }
 
 	    {
@@ -178,12 +190,13 @@ public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<Po
 		// REWRITE_POLICY_ID s:int Ссылка на переоформляемый полис
 		final boolean reissued = source.getREWRITEBOOL() == 1;
 		if (reissued)
-		    builder.withReissuedPolicyId(MyNumbers.requirePositive(source.getREWRITEPOLICYID()));
+		    builder.withReissuedPolicyId(MyNumbers.requireNonZero(source.getREWRITEPOLICYID()));
 	    }
 
 	    {
 		// DESCRIPTION s:string Комментарии к полису
-		builder.withComments(source.getDESCRIPTION());
+		MyOptionals.of(source.getDESCRIPTION())
+			.ifPresent(builder::withComments);
 	    }
 
 	    {
@@ -192,7 +205,7 @@ public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<Po
 			.map(Policy::getDrivers) //
 			.map(ArrayOfDriver::getDriver) //
 			.map(List::stream) //
-			.orElseThrow(() -> Util.requireNonEmtyList(PolicyEntity.class, id, "InsuredDrivers")) //
+			.orElseThrow(() -> requireNonEmtyList(PolicyEntity.class, id, "InsuredDrivers")) //
 			.peek(x -> MyNumbers.requireEqualsMsg(id, x.getPOLICYID(),
 				"%1$s.POLICYID (%3$s) and %2$s.POLICYID (%4$s) are not equals",
 				Policy.class.getName(),
@@ -211,7 +224,7 @@ public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<Po
 			.map(Policy::getPoliciesTF) //
 			.map(ArrayOfPoliciesTF::getPoliciesTF) //
 			.map(List::stream) //
-			.orElseThrow(() -> Util.requireNonEmtyList(PolicyEntity.class, id, "InsuredVehicles")) //
+			.orElseThrow(() -> requireNonEmtyList(PolicyEntity.class, id, "InsuredVehicles")) //
 			.peek(x -> MyNumbers.requireEqualsMsg(id, x.getPOLICYID(),
 				"%1$s.POLICYID (%3$s) and %2$s.POLICYID (%4$s) are not equals",
 				Policy.class.getName(),
@@ -230,7 +243,7 @@ public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<Po
 		// INPUT_DATE_TIME s:string Дата\время ввода полиса в систему
 		RecordOperationInfo.builder()
 			.withInstant(datetimeToInstant(source.getINPUTDATETIME()))
-			.withAuthor(Util.reqField(PolicyEntity.class,
+			.withAuthor(reqField(PolicyEntity.class,
 				id,
 				userService::getById,
 				"created.author",
@@ -249,7 +262,7 @@ public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<Po
 		if (MyStrings.nonEmpty(source.getRECORDCHANGEDATDATETIME()))
 		    RecordOperationInfo.builder()
 			    .withInstant(datetimeToInstant(source.getRECORDCHANGEDATDATETIME()))
-			    .withAuthor(Util.reqField(PolicyEntity.class,
+			    .withAuthor(reqField(PolicyEntity.class,
 				    id,
 				    userService::getById,
 				    "modified.author",
@@ -266,18 +279,20 @@ public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<Po
 	    {
 		// PAYMENT_ORDER_TYPE_ID s:int Порядок оплаты (Идентификатор)
 		// PAYMENT_ORDER_TYPE s:string Порядок оплаты
-		builder.withPaymentType(Util.reqField(PolicyEntity.class,
+		optField(PolicyEntity.class,
 			id,
 			paymentTypeService::getById,
 			"paymentType",
 			PaymentType.class,
-			source.getPAYMENTORDERTYPEID()));
+			MyOptionals.of(source.getPAYMENTORDERTYPEID()))
+				.ifPresent(builder::withPaymentType);
 	    }
 
 	    {
 		// PAYMENT_DATE s:string Дата оплаты
-		if (MyStrings.nonEmpty(source.getPAYMENTDATE()))
-		    builder.withDateOfPayment(dateToLocalDate(source.getPAYMENTDATE()));
+		MyOptionals.of(source.getPAYMENTDATE())
+			.map(TemporalUtil::dateToLocalDate)
+			.ifPresent(builder::withDateOfPayment);
 	    }
 
 	    final PolicyEntity res = builder.build();
@@ -322,7 +337,7 @@ public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<Po
 	try {
 	    return policyDriverEntityConverter.convertToEntityAttribute(source);
 	} catch (EsbdConversionException e) {
-	    throw Util.esbdConversionExceptionToEJBException(e);
+	    throw esbdConversionExceptionToEJBException(e);
 	}
     }
 
@@ -333,7 +348,7 @@ public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<Po
 	try {
 	    return policyVehicleEntityConverter.convertToEntityAttribute(source);
 	} catch (EsbdConversionException e) {
-	    throw Util.esbdConversionExceptionToEJBException(e);
+	    throw esbdConversionExceptionToEJBException(e);
 	}
     }
 

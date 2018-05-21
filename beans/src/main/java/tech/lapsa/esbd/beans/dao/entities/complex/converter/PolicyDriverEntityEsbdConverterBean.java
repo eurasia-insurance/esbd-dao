@@ -1,6 +1,7 @@
 package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
 import static tech.lapsa.esbd.beans.dao.TemporalUtil.*;
+import static tech.lapsa.esbd.beans.dao.entities.complex.Util.*;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -10,7 +11,6 @@ import com.lapsa.insurance.elements.InsuranceClassType;
 import com.lapsa.insurance.elements.InsuredAgeAndExpirienceClass;
 import com.lapsa.insurance.elements.MaritalStatus;
 
-import tech.lapsa.esbd.beans.dao.entities.complex.Util;
 import tech.lapsa.esbd.dao.elements.dict.InsuredAgeAndExpirienceClassService.InsuredAgeAndExpirienceClassServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.MaritalStatusService.MaritalStatusServiceLocal;
 import tech.lapsa.esbd.dao.elements.nondict.InsuranceClassTypeService.InsuranceClassTypeServiceLocal;
@@ -69,7 +69,8 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 
 	    {
 		// DRIVER_ID s:int Идентификатор водителя
-		builder.withId(MyOptionals.of(id).orElse(null));
+		MyOptionals.of(id)
+			.ifPresent(builder::withId);
 	    }
 
 	    {
@@ -78,37 +79,41 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 
 	    {
 		// CLIENT_ID s:int Идентификатор клиента (обязательно)
-		builder.withInsuredPerson(Util.reqField(PolicyDriverEntity.class,
+		optField(PolicyDriverEntity.class,
 			id,
 			subjectPersonService::getById,
 			"insuredPerson",
 			SubjectPersonEntity.class,
-			source.getCLIENTID()));
+			MyOptionals.of(source.getCLIENTID()))
+				.ifPresent(builder::withInsuredPerson);
 	    }
 
 	    {
 		// HOUSEHOLD_POSITION_ID s:int Идентификатор семейного положения
-		builder.withMaritalStatus(Util.reqField(PolicyDriverEntity.class,
+		optField(PolicyDriverEntity.class,
 			id,
 			maritalStatusService::getById,
 			"maritalStatus",
 			MaritalStatus.class,
-			source.getHOUSEHOLDPOSITIONID()));
+			MyOptionals.of(source.getHOUSEHOLDPOSITIONID()))
+				.ifPresent(builder::withMaritalStatus);
 	    }
 
 	    {
 		// AGE_EXPERIENCE_ID s:int Идентификатор возраста\стажа вождения
-		builder.withInsuredAgeExpirienceClass(Util.reqField(PolicyDriverEntity.class,
+		optField(PolicyDriverEntity.class,
 			id,
 			driverExpirienceClassificationService::getById,
 			"insuredAgeExpirienceClass",
 			InsuredAgeAndExpirienceClass.class,
-			source.getAGEEXPERIENCEID()));
+			MyOptionals.of(source.getAGEEXPERIENCEID()))
+				.ifPresent(builder::withInsuredAgeExpirienceClass);
 	    }
 
 	    {
 		// EXPERIENCE s:int Стаж вождения
-		builder.withDrivingExpirience(MyOptionals.of(source.getEXPERIENCE()));
+		MyOptionals.of(source.getEXPERIENCE())
+			.ifPresent(builder::withDrivingExpirience);
 	    }
 
 	    {
@@ -123,12 +128,13 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 
 	    {
 		// getClassId
-		builder.withInsuraceClassType(Util.reqField(PolicyDriverEntity.class,
+		optField(PolicyDriverEntity.class,
 			id,
 			insuranceClassTypeService::getById,
 			"insuraceClassType",
 			InsuranceClassType.class,
-			source.getClassId()));
+			MyOptionals.of(source.getClassId()))
+				.ifPresent(builder::withInsuraceClassType);
 	    }
 
 	    {
@@ -193,7 +199,7 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 			    .withCertificateValidFrom(dateToLocalDate(source.getINVALIDCERTIFICATEBEGDATE())) //
 			    .withCertificateValidTill(dateToLocalDate(source.getINVALIDCERTIFICATEENDDATE())) //
 			    .buildTo(builder::withHandicappedInfo);
-	    }	
+	    }
 
 	    {
 		// CREATED_BY_USER_ID s:int Идентификатор пользователя,
@@ -202,7 +208,7 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 		// INPUT_DATE s:string Дата\время ввода записи в систему
 		RecordOperationInfo.builder()
 			.withInstant(optTemporalToInstant(source.getINPUTDATE()).orElse(null))
-			.withAuthor(Util.reqField(PolicyDriverEntity.class,
+			.withAuthor(reqField(PolicyDriverEntity.class,
 				id,
 				userService::getById,
 				"created.author",
@@ -218,7 +224,7 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 		// запись
 		RecordOperationInfo.builder()
 			.withInstant(optTemporalToInstant(source.getRECORDCHANGEDAT()).orElse(null))
-			.withAuthor(Util.reqField(PolicyDriverEntity.class,
+			.withAuthor(reqField(PolicyDriverEntity.class,
 				id,
 				userService::getById,
 				"modified.author",
@@ -229,13 +235,15 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 
 	    {
 		// SYSTEM_DELIMITER_ID s:int Идентификатор страховой компании
-		builder.withInsurer(Util.reqField(PolicyDriverEntity.class,
+		optField(PolicyDriverEntity.class,
 			id,
 			insuranceCompanyService::getById,
 			"insurer",
 			InsuranceCompanyEntity.class,
-			source.getSYSTEMDELIMITERID()));
+			MyOptionals.of(source.getSYSTEMDELIMITERID()))
+				.ifPresent(builder::withInsurer);
 	    }
+
 	    return builder.build();
 
 	} catch (final IllegalArgumentException e) {

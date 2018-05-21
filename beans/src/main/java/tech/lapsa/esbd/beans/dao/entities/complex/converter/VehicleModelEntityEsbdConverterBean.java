@@ -1,10 +1,11 @@
 package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
+import static tech.lapsa.esbd.beans.dao.entities.complex.Util.*;
+
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
-import tech.lapsa.esbd.beans.dao.entities.complex.Util;
 import tech.lapsa.esbd.dao.entities.complex.VehicleManufacturerEntity;
 import tech.lapsa.esbd.dao.entities.complex.VehicleManufacturerEntityService.VehicleManufacturerEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntity;
@@ -36,22 +37,25 @@ public class VehicleModelEntityEsbdConverterBean
 
 	    {
 		// ID s:int Идентификатор модели
-		builder.withId(MyOptionals.of(id).orElse(null));
+		MyOptionals.of(id)
+			.ifPresent(builder::withId);
 	    }
 
 	    {
 		// NAME s:string Наименование модели
-		builder.withName(source.getNAME());
+		MyOptionals.of(source.getNAME())
+			.ifPresent(builder::withName);
 	    }
 
 	    {
 		// VOITURE_MARK_ID s:int Идентификатор марки ТС
-		builder.withManufacturer(Util.reqField(VehicleModelEntity.class,
+		optField(VehicleModelEntity.class,
 			id,
 			vehicleManufacturerService::getById,
 			"manufacturer",
 			VehicleManufacturerEntity.class,
-			source.getVOITUREMARKID()));
+			MyOptionals.of(source.getVOITUREMARKID()))
+				.ifPresent(builder::withManufacturer);
 	    }
 
 	    return builder.build();

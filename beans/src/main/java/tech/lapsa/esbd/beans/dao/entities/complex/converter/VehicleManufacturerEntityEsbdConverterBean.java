@@ -29,12 +29,14 @@ public class VehicleManufacturerEntityEsbdConverterBean
 
 	    {
 		// ID s:int Идентификатор
-		builder.withId(MyOptionals.of(id).orElse(null));
+		MyOptionals.of(id)
+			.ifPresent(builder::withId);
 	    }
 
 	    {
 		// NAME s:string Наименование марки
-		builder.withName(source.getNAME());
+		MyOptionals.of(source.getNAME())
+			.ifPresent(builder::withName);
 	    }
 
 	    {

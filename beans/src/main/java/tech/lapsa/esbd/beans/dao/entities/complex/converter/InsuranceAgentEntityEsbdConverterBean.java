@@ -29,7 +29,8 @@ public class InsuranceAgentEntityEsbdConverterBean
 
 	    {
 		// ID s:int Идентификатор
-		builder.withId(MyOptionals.of(id).orElse(null));
+		MyOptionals.of(id)
+			.ifPresent(builder::withId);
 	    }
 
 	    return builder.build();

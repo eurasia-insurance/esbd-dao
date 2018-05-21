@@ -1,5 +1,7 @@
 package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
+import static tech.lapsa.esbd.beans.dao.entities.complex.Util.*;
+
 import javax.ejb.EJB;
 
 import com.lapsa.international.country.Country;
@@ -7,7 +9,6 @@ import com.lapsa.international.phone.PhoneNumber;
 import com.lapsa.kz.country.KZCity;
 import com.lapsa.kz.economic.KZEconomicSector;
 
-import tech.lapsa.esbd.beans.dao.entities.complex.Util;
 import tech.lapsa.esbd.dao.elements.dict.CountryService.CountryServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.KZCityService.KZCityServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.KZEconomicSectorService.KZEconomicSectorServiceLocal;
@@ -35,20 +36,21 @@ public class ASubjectEntityEsdbdConverter {
 
 	{
 	    // ID s:int Идентификатор клиента (обязательно)
-	    builder.withId(MyOptionals.of(id).orElse(null));
+	    MyOptionals.of(id)
+		    .ifPresent(builder::withId);
 	}
 
 	{
 	    // COUNTRY_ID s:int Страна (справочник COUNTRIES)
 	    // SETTLEMENT_ID s:int Населенный пункт (справочник SETTLEMENTS)
 	    OriginInfo.builder() //
-		    .withCountry(Util.optField(SubjectEntity.class,
+		    .withCountry(optField(SubjectEntity.class,
 			    id,
 			    countries::getById,
 			    "origin.country",
 			    Country.class,
 			    MyOptionals.of(source.getCOUNTRYID())))
-		    .withCity(Util.optField(SubjectEntity.class,
+		    .withCity(optField(SubjectEntity.class,
 			    id,
 			    cities::getById,
 			    "origin.city",
@@ -90,19 +92,21 @@ public class ASubjectEntityEsdbdConverter {
 
 	{
 	    // IIN s:string ИИН/БИН
-	    builder.withIdNumber(MyOptionals.of(source.getIIN())
-		    .map(TaxpayerNumber::assertValid));
+	    MyOptionals.of(source.getIIN())
+		    .map(TaxpayerNumber::assertValid)
+		    .ifPresent(builder::withIdNumber);
 	}
 
 	{
 	    // ECONOMICS_SECTOR_ID s:int Сектор экономики (справочник
 	    // ECONOMICS_SECTORS)
-	    builder.withEconomicsSector(Util.optField(SubjectEntity.class,
+	    optField(SubjectEntity.class,
 		    id,
 		    economicSectors::getById,
 		    "EconomicsSector",
 		    KZEconomicSector.class,
-		    MyOptionals.of(source.getECONOMICSSECTORID())));
+		    MyOptionals.of(source.getECONOMICSSECTORID()))
+			    .ifPresent(builder::withEconomicsSector);
 	}
     }
 }

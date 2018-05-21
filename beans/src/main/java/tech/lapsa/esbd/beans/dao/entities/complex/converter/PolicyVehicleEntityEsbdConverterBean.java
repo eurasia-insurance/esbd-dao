@@ -1,6 +1,7 @@
 package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
 import static tech.lapsa.esbd.beans.dao.TemporalUtil.*;
+import static tech.lapsa.esbd.beans.dao.entities.complex.Util.*;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -10,7 +11,6 @@ import com.lapsa.insurance.elements.VehicleAgeClass;
 import com.lapsa.insurance.elements.VehicleClass;
 import com.lapsa.kz.country.KZArea;
 
-import tech.lapsa.esbd.beans.dao.entities.complex.Util;
 import tech.lapsa.esbd.dao.elements.dict.KZAreaService.KZAreaServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.VehicleAgeClassService.VehicleAgeClassServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.VehicleClassService.VehicleClassServiceLocal;
@@ -67,7 +67,8 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 
 	    {
 		// POLICY_TF_ID s:int Идентификатор ТС полиса
-		builder.withId(MyOptionals.of(id).orElse(null));
+		MyOptionals.of(id)
+			.ifPresent(builder::withId);
 	    }
 
 	    {
@@ -76,32 +77,35 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 
 	    {
 		// TF_ID s:int Идентификатор ТС
-		builder.withVehicle(Util.reqField(PolicyVehicleEntity.class,
+		optField(PolicyVehicleEntity.class,
 			id,
 			vehicleService::getById,
 			"vehicle",
 			VehicleEntity.class,
-			source.getTFID()));
+			MyOptionals.of(source.getTFID()))
+				.ifPresent(builder::withVehicle);
 	    }
 
 	    {
 		// TF_TYPE_ID s:int Идентификатор типа ТС (обязательно)
-		builder.withVehicleClass(Util.reqField(PolicyVehicleEntity.class,
+		optField(PolicyVehicleEntity.class,
 			id,
 			vehicleClassService::getById,
 			"vehicleClass",
 			VehicleClass.class,
-			source.getTFTYPEID()));
+			MyOptionals.of(source.getTFTYPEID()))
+				.ifPresent(builder::withVehicleClass);
 	    }
 
 	    {
 		// TF_AGE_ID s:int Идентификатор возраста ТС (обязательно)
-		builder.withVehicleAgeClass(Util.reqField(PolicyVehicleEntity.class,
+		optField(PolicyVehicleEntity.class,
 			id,
 			vehicleAgeClassService::getById,
 			"vehicleAgeClass",
 			VehicleAgeClass.class,
-			source.getTFAGEID()));
+			MyOptionals.of(source.getTFAGEID()))
+				.ifPresent(builder::withVehicleAgeClass);
 	    }
 
 	    {
@@ -116,7 +120,7 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 			.withCertificateNumber(source.getTFREGISTRATIONCERTIFICATE())
 			.withDateOfIssue(dateToLocalDate(source.getGIVEDATE()))
 			.withRegistrationMajorCity(source.getBIGCITYBOOL() == 1)
-			.withRegistrationRegion(Util.reqField(PolicyVehicleEntity.class,
+			.withRegistrationRegion(reqField(PolicyVehicleEntity.class,
 				id,
 				countryRegionService::getById,
 				"certificate.registrationRegion",
@@ -145,7 +149,7 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 		// INPUT_DATE s:string Дата\время ввода записи в систему
 		RecordOperationInfo.builder()
 			.withInstant(optTemporalToInstant(source.getINPUTDATE()).orElse(null))
-			.withAuthor(Util.reqField(PolicyVehicleEntity.class,
+			.withAuthor(reqField(PolicyVehicleEntity.class,
 				id,
 				userService::getById,
 				"created.author",
@@ -162,7 +166,7 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 		if (MyStrings.nonEmpty(source.getRECORDCHANGEDAT()))
 		    RecordOperationInfo.builder()
 			    .withInstant(optTemporalToInstant(source.getRECORDCHANGEDAT()).orElse(null))
-			    .withAuthor(Util.reqField(PolicyVehicleEntity.class,
+			    .withAuthor(reqField(PolicyVehicleEntity.class,
 				    id,
 				    userService::getById,
 				    "modified.author",
@@ -173,12 +177,13 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 
 	    {
 		// SYSTEM_DELIMITER_ID s:int Идентификатор страховой компании
-		builder.withInsurer(Util.reqField(PolicyVehicleEntity.class,
+		optField(PolicyVehicleEntity.class,
 			id,
 			insuranceCompanyService::getById,
 			"insurer",
 			InsuranceCompanyEntity.class,
-			source.getSYSTEMDELIMITERID()));
+			MyOptionals.of(source.getSYSTEMDELIMITERID()))
+				.ifPresent(builder::withInsurer);
 	    }
 
 	    return builder.build();

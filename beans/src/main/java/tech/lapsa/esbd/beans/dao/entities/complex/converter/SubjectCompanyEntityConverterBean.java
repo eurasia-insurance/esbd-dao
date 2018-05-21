@@ -1,10 +1,11 @@
 package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
+import static tech.lapsa.esbd.beans.dao.entities.complex.Util.*;
+
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
-import tech.lapsa.esbd.beans.dao.entities.complex.Util;
 import tech.lapsa.esbd.dao.entities.complex.SubjectCompanyEntity;
 import tech.lapsa.esbd.dao.entities.complex.SubjectCompanyEntity.SubjectCompanyEntityBuilder;
 import tech.lapsa.esbd.dao.entities.complex.SubjectEntity.SubjectEntityBuilder;
@@ -42,7 +43,8 @@ public class SubjectCompanyEntityConverterBean
 
 	    {
 		// Juridical_Person_Name s:string Наименование (для юр. лица)
-		builder.withCompanyName(source.getJuridicalPersonName());
+		MyOptionals.of(source.getJuridicalPersonName())
+			.ifPresent(builder::withCompanyName);
 	    }
 
 	    {
@@ -60,14 +62,13 @@ public class SubjectCompanyEntityConverterBean
 	    {
 		// ACTIVITY_KIND_ID s:int Вид деятельности (справочник
 		// ACTIVITY_KINDS)
-		// TODO check
-		// builder.withCompanyActivityKind(Util.optFieldIgnoreFieldNotFound(SubjectCompanyEntity.class,
-		builder.withCompanyActivityKind(Util.reqField(SubjectCompanyEntity.class,
+		optFieldIgnoreFieldNotFound(SubjectCompanyEntity.class,
 			id,
 			companyActivityKinds::getById,
 			"companyActivityKind",
 			CompanyActivityKindEntity.class,
-			source.getACTIVITYKINDID()));
+			MyOptionals.of(source.getACTIVITYKINDID()))
+				.ifPresent(builder::withCompanyActivityKind);
 	    }
 
 	    return builder.build();
