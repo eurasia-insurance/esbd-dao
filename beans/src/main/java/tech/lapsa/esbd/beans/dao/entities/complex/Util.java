@@ -2,7 +2,6 @@ package tech.lapsa.esbd.beans.dao.entities.complex;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import javax.ejb.EJBException;
@@ -67,7 +66,7 @@ public final class Util {
 	} catch (final Exception e) {
 	    if (ignoreException == null || !ignoreException.test(e)) {
 		final String message = MyStrings.format(
-			"Error fetching %1$s(%2$s).%3$s -> %4$s(%5$s) '%6$s'",
+			"Error occured on fetching %4$s[ID=%5$s] '%6$s'. Tried to bind to %1$s[ID=%2$s].'%3$s'",
 			targetClazz.getSimpleName(), // 1,
 			targetId, // 2
 			fieldName, // 3
@@ -98,57 +97,6 @@ public final class Util {
 	    final Optional<FI> optFieldId) {
 	return optField(targetClazz, targetId, fieldGeter, fieldName, fieldClazz, optFieldId,
 		e -> (e instanceof NotFound));
-    }
-
-    public static <T, F, FI> void optionalField(final T target,
-	    final Object targetId,
-	    final ThrowingFunction<FI, F> fieldGeter,
-	    final Consumer<F> fieldSeter,
-	    final String fieldName,
-	    final Class<F> fieldClazz,
-	    final Optional<FI> optFieldId,
-	    final Predicate<Throwable> ignoreException) {
-	if (optFieldId.isPresent()) {
-	    F fieldObject = null;
-	    try {
-		fieldObject = fieldGeter.apply(optFieldId.get());
-	    } catch (final Exception e) {
-		if (ignoreException == null || !ignoreException.test(e)) {
-		    final String message = MyStrings.format(
-			    "Error fetching %1$s(%2$s).%3$s -> %4$s(%5$s) '%6$s'",
-			    target.getClass().getSimpleName(), // 1,
-			    targetId, // 2
-			    fieldName, // 3
-			    fieldClazz.getSimpleName(), // 4
-			    optFieldId.get(), // 5
-			    e.getMessage() // 6
-		    );
-		    throw new IllegalArgumentException(message, e);
-		}
-	    }
-	    fieldSeter.accept(fieldObject);
-	}
-    }
-
-    public static <T, F, FI> void optionalFieldIgnoreFieldNotFound(final T target,
-	    final Object targetId,
-	    final ThrowingFunction<FI, F> fieldGeter,
-	    final Consumer<F> fieldSeter,
-	    final String fieldName,
-	    final Class<F> fieldClazz,
-	    final Optional<FI> optFieldId) {
-	optionalField(target, targetId, fieldGeter, fieldSeter, fieldName, fieldClazz, optFieldId,
-		e -> (e instanceof NotFound));
-    }
-
-    public static <T, F, FI> void optionalField(final T target,
-	    final Object targetId,
-	    final ThrowingFunction<FI, F> fieldGeter,
-	    final Consumer<F> fieldSeter,
-	    final String fieldName,
-	    final Class<F> fieldClazz,
-	    final Optional<FI> optFieldId) {
-	optionalField(target, targetId, fieldGeter, fieldSeter, fieldName, fieldClazz, optFieldId, null);
     }
 
     public static EJBException esbdConversionExceptionToEJBException(EsbdConversionException e) {
