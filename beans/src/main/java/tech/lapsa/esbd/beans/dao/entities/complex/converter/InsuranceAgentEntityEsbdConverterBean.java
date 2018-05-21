@@ -3,8 +3,8 @@ package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
-import tech.lapsa.esbd.dao.entities.complex.InsuranceAgentEntity;
-import tech.lapsa.esbd.dao.entities.complex.InsuranceAgentEntity.InsuranceAgentEntityBuilder;
+import tech.lapsa.esbd.domain.complex.InsuranceAgentEntity;
+import tech.lapsa.esbd.domain.complex.InsuranceAgentEntity.InsuranceAgentEntityBuilder;
 import tech.lapsa.esbd.jaxws.wsimport.MIDDLEMAN;
 import tech.lapsa.java.commons.function.MyOptionals;
 

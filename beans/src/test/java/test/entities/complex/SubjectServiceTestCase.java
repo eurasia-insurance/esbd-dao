@@ -10,10 +10,10 @@ import org.junit.Test;
 import com.lapsa.insurance.elements.SubjectType;
 
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.entities.complex.SubjectCompanyEntity;
-import tech.lapsa.esbd.dao.entities.complex.SubjectEntity;
 import tech.lapsa.esbd.dao.entities.complex.SubjectEntityService.SubjectEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.complex.SubjectPersonEntity;
+import tech.lapsa.esbd.domain.complex.SubjectCompanyEntity;
+import tech.lapsa.esbd.domain.complex.SubjectEntity;
+import tech.lapsa.esbd.domain.complex.SubjectPersonEntity;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.kz.taxpayer.TaxpayerNumber;
 import test.ArquillianBaseTestCase;

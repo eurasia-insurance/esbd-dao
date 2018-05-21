@@ -6,10 +6,10 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
-import tech.lapsa.esbd.dao.entities.complex.VehicleManufacturerEntity;
 import tech.lapsa.esbd.dao.entities.complex.VehicleManufacturerEntityService.VehicleManufacturerEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntity;
-import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntity.VehicleModelEntityBuilder;
+import tech.lapsa.esbd.domain.complex.VehicleManufacturerEntity;
+import tech.lapsa.esbd.domain.complex.VehicleModelEntity;
+import tech.lapsa.esbd.domain.complex.VehicleModelEntity.VehicleModelEntityBuilder;
 import tech.lapsa.esbd.jaxws.wsimport.VOITUREMODEL;
 import tech.lapsa.java.commons.function.MyOptionals;
 

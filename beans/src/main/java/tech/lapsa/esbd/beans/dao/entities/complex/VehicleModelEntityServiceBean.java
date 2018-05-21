@@ -15,11 +15,11 @@ import tech.lapsa.esbd.beans.dao.entities.complex.converter.VehicleModelEntityEs
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.entities.complex.VehicleManufacturerEntity;
-import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntity;
 import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService;
 import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService.VehicleModelEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService.VehicleModelEntityServiceRemote;
+import tech.lapsa.esbd.domain.complex.VehicleManufacturerEntity;
+import tech.lapsa.esbd.domain.complex.VehicleModelEntity;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfVOITUREMODEL;
 import tech.lapsa.esbd.jaxws.wsimport.VOITUREMODEL;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;

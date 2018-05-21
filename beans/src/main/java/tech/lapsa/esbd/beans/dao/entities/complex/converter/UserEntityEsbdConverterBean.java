@@ -9,14 +9,14 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import tech.lapsa.esbd.dao.entities.complex.SubjectEntity;
 import tech.lapsa.esbd.dao.entities.complex.SubjectEntityService.SubjectEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.complex.UserEntity;
-import tech.lapsa.esbd.dao.entities.complex.UserEntity.UserEntityBuilder;
-import tech.lapsa.esbd.dao.entities.dict.BranchEntity;
 import tech.lapsa.esbd.dao.entities.dict.BranchEntityService.BranchEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
+import tech.lapsa.esbd.domain.complex.SubjectEntity;
+import tech.lapsa.esbd.domain.complex.UserEntity;
+import tech.lapsa.esbd.domain.complex.UserEntity.UserEntityBuilder;
+import tech.lapsa.esbd.domain.dict.BranchEntity;
+import tech.lapsa.esbd.domain.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.jaxws.wsimport.User;
 import tech.lapsa.java.commons.function.MyOptionals;
 
