@@ -72,19 +72,20 @@ public class UserEntityEsbdConverterBean implements AEsbdAttributeConverter<User
 		builder.withSubject(Util.optField(UserEntity.class,
 			id,
 			subjectService::getById,
-			"subject", SubjectEntity.class,
+			"subject",
+			SubjectEntity.class,
 			MyOptionals.of(source.getCLIENTID())));
 	    }
 
 	    {
 		// SYSTEM_DELIMITER_ID s:int Разделитель учета (справочник
 		// SYSTEM_DELIMITER)
-		builder.withOrganization(Util.optField(UserEntity.class,
+		builder.withOrganization(Util.reqField(UserEntity.class,
 			id,
 			insuranceCompanyService::getById,
 			"organization",
 			InsuranceCompanyEntity.class,
-			MyOptionals.of(source.getSYSTEMDELIMITERID())));
+			source.getSYSTEMDELIMITERID()));
 	    }
 
 	    // IsAuthenticated s:int Пользователь аутентифицирован
