@@ -39,11 +39,9 @@ public class ASubjectEntityEsdbdConverter {
 	}
 
 	{
-	    // RESIDENT_BOOL s:int Признак резидентства (обязательно)
 	    // COUNTRY_ID s:int Страна (справочник COUNTRIES)
 	    // SETTLEMENT_ID s:int Населенный пункт (справочник SETTLEMENTS)
 	    OriginInfo.builder() //
-		    .withResident(source.getRESIDENTBOOL() == 1)
 		    .withCountry(Util.optField(SubjectEntity.class,
 			    id,
 			    countries::getById,
