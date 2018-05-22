@@ -111,7 +111,7 @@ public class VehicleEntityEsbdConverterBean implements AEsbdAttributeConverter<V
 	    {
 		// BORN s:string Год выпуска (обязательно)
 		// BORN_MONTH s:int Месяц выпуска ТС
-		MyOptionals.of(yearMonthToLocalDate(source.getBORN(), source.getBORNMONTH()))
+		optYearMonthToLocalDate(source.getBORN(), source.getBORNMONTH())
 			.ifPresent(builder::withRealeaseDate);
 	    }
 

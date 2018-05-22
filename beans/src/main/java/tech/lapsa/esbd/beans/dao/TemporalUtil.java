@@ -8,7 +8,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
+import java.util.OptionalInt;
 
+import tech.lapsa.java.commons.function.MyNumbers;
 import tech.lapsa.java.commons.function.MyObjects;
 import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.function.MyStrings;
@@ -69,8 +71,36 @@ public final class TemporalUtil {
     }
 
     public static LocalDate yearMonthToLocalDate(final String yearS, final int month) {
-	final int year = Integer.parseInt(yearS);
-	return LocalDate.of(year, month, 1);
+
+	final OptionalInt optYear;
+
+	{
+	    final Optional<Integer> temp = MyOptionals.of(yearS)
+		    .map(Integer::parseInt)
+		    .filter(MyNumbers::positive);
+	    optYear = temp.isPresent()
+		    ? OptionalInt.of(temp.get())
+		    : OptionalInt.empty();
+	}
+
+	final OptionalInt optMonth;
+
+	{
+	    final Optional<Integer> temp = MyOptionals.of(month)
+		    .filter(MyNumbers::positive)
+		    .filter(x -> x <= 12);
+	    optMonth = temp.isPresent()
+		    ? OptionalInt.of(temp.get())
+		    : OptionalInt.empty();
+	}
+
+	return optYear.isPresent()
+		? LocalDate.of(optYear.getAsInt(), optMonth.orElse(1), 1)
+		: null;
+    }
+
+    public static Optional<LocalDate> optYearMonthToLocalDate(final String yearS, final int month) {
+	return MyOptionals.of(yearMonthToLocalDate(yearS, month));
     }
 
     // from java to esbd
