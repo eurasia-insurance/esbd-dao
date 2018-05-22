@@ -6,10 +6,11 @@ import tech.lapsa.esbd.dao.entities.dict.BranchEntityService;
 import tech.lapsa.esbd.dao.entities.dict.BranchEntityService.BranchEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.dict.BranchEntityService.BranchEntityServiceRemote;
 import tech.lapsa.esbd.domain.dict.BranchEntity;
+import tech.lapsa.esbd.domain.dict.BranchEntity.BranchEntityBuilder;
 
 @Singleton(name = BranchEntityService.BEAN_NAME)
 public class BranchEntityServiceBean
-	extends ADictionaryEntityService<BranchEntity>
+	extends ADictionaryEntityService<BranchEntity, BranchEntityBuilder>
 	implements BranchEntityServiceLocal, BranchEntityServiceRemote {
 
     private static final String DICT_NAME = "BRANCHES";

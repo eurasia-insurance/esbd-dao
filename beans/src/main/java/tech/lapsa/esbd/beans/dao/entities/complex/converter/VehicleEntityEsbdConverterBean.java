@@ -15,6 +15,8 @@ import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService.VehicleMod
 import tech.lapsa.esbd.domain.complex.VehicleEntity;
 import tech.lapsa.esbd.domain.complex.VehicleEntity.VehicleEntityBuilder;
 import tech.lapsa.esbd.domain.complex.VehicleModelEntity;
+import tech.lapsa.esbd.domain.embedded.VehicleEngineInfo;
+import tech.lapsa.esbd.domain.embedded.VehicleEngineInfo.VehicleEngineInfoBuilder;
 import tech.lapsa.esbd.jaxws.wsimport.TF;
 import tech.lapsa.java.commons.function.MyOptionals;
 
@@ -94,12 +96,16 @@ public class VehicleEntityEsbdConverterBean implements AEsbdAttributeConverter<V
 		// ENGINE_VOLUME s:int Объем двигателя (куб.см.)
 		// ENGINE_NUMBER s:string Номер двигателя
 		// ENGINE_POWER s:int Мощность двигателя (квт.)
+		final VehicleEngineInfoBuilder b1 = VehicleEngineInfo.builder();
+
 		MyOptionals.of(source.getENGINENUMBER())
-			.ifPresent(builder::withEngineNumber);
+			.ifPresent(b1::withNumber);
 		MyOptionals.of(source.getENGINEVOLUME())
-			.ifPresent(builder::withEngineVolume);
+			.ifPresent(b1::withVolume);
 		MyOptionals.of(source.getENGINEPOWER())
-			.ifPresent(builder::withEnginePower);
+			.ifPresent(b1::withPower);
+
+		b1.buildTo(builder::withEngine);
 	    }
 
 	    {
@@ -111,7 +117,7 @@ public class VehicleEntityEsbdConverterBean implements AEsbdAttributeConverter<V
 	    {
 		// BORN s:string Год выпуска (обязательно)
 		// BORN_MONTH s:int Месяц выпуска ТС
-		MyOptionals.of(yearMonthToLocalDate(source.getBORN(), source.getBORNMONTH()))
+		optYearMonthToLocalDate(source.getBORN(), source.getBORNMONTH())
 			.ifPresent(builder::withRealeaseDate);
 	    }
 

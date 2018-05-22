@@ -1,6 +1,8 @@
 package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
-public interface AEsbdAttributeConverter<X, Y> {
+import tech.lapsa.esbd.domain.AEntity;
+
+public interface AEsbdAttributeConverter<X extends AEntity, Y> {
 
     public static class EsbdConversionException extends Exception {
 

@@ -2,6 +2,8 @@ package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
 import static tech.lapsa.esbd.beans.dao.entities.complex.Util.*;
 
+import java.util.Optional;
+
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -28,7 +30,6 @@ import tech.lapsa.esbd.domain.embedded.VehicleCertificateInfo;
 import tech.lapsa.esbd.domain.embedded.VehicleCertificateInfo.VehicleCertificateInfoBuilder;
 import tech.lapsa.esbd.jaxws.wsimport.PoliciesTF;
 import tech.lapsa.java.commons.function.MyOptionals;
-import tech.lapsa.java.commons.function.MyStrings;
 import tech.lapsa.kz.vehicle.VehicleRegNumber;
 
 @Stateless
@@ -157,35 +158,35 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 	    }
 
 	    {
-		// CREATED_BY_USER_ID s:int Идентификатор пользователя,
-		// создавшего запись
-		// INPUT_DATE s:string Дата\время ввода записи в систему
-		final RecordOperationInfoBuilder b1 = RecordOperationInfo.builder();
+		final Optional<String> instant = MyOptionals.of(source.getINPUTDATE());
+		final Optional<Integer> author = MyOptionals.of(source.getCREATEDBYUSERID());
+		if (instant.isPresent() || author.isPresent()) {
 
-		MyOptionals.of(source.getINPUTDATE())
-			.flatMap(TemporalUtil::optTemporalToInstant)
-			.ifPresent(b1::withInstant);
+		    final RecordOperationInfoBuilder b1 = RecordOperationInfo.builder();
 
-		optField(PolicyVehicleEntity.class,
-			id,
-			userService::getById,
-			"created.author",
-			UserEntity.class,
-			MyOptionals.of(source.getCREATEDBYUSERID()))
-				.ifPresent(b1::withAuthor);
+		    instant.flatMap(TemporalUtil::optTemporalToInstant)
+			    .ifPresent(b1::withInstant);
 
-		b1.buildTo(builder::withCreated);
+		    optField(PolicyVehicleEntity.class,
+			    id,
+			    userService::getById,
+			    "created.author",
+			    UserEntity.class,
+			    author)
+				    .ifPresent(b1::withAuthor);
+
+		    b1.buildTo(builder::withCreated);
+		}
 	    }
 
 	    {
-		if (MyStrings.nonEmpty(source.getRECORDCHANGEDAT())) {
-		    // RECORD_CHANGED_AT s:string Дата\время изменения записи
-		    // CHANGED_BY_USER_ID s:int Идентификатор пользователя,
-		    // изменившего запись
+		final Optional<String> instant = MyOptionals.of(source.getRECORDCHANGEDAT());
+		final Optional<Integer> author = MyOptionals.of(source.getCHANGEDBYUSERID());
+		if (instant.isPresent() || author.isPresent()) {
+
 		    final RecordOperationInfoBuilder b1 = RecordOperationInfo.builder();
 
-		    MyOptionals.of(source.getRECORDCHANGEDAT())
-			    .flatMap(TemporalUtil::optTemporalToInstant)
+		    instant.flatMap(TemporalUtil::optTemporalToInstant)
 			    .ifPresent(b1::withInstant);
 
 		    optField(PolicyVehicleEntity.class,
@@ -193,7 +194,7 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 			    userService::getById,
 			    "modified.author",
 			    UserEntity.class,
-			    MyOptionals.of(source.getCHANGEDBYUSERID()))
+			    author)
 				    .ifPresent(b1::withAuthor);
 
 		    b1.buildTo(builder::withModified);
