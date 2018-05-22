@@ -136,7 +136,7 @@ public class InsuranceAgentEntityEsbdConverterBean
 			    author)
 				    .ifPresent(b1::withAuthor);
 
-		    b1.buildTo(builder::withModified);
+		    b1.buildTo(builder::withCreated);
 		}
 	    }
 
