@@ -101,10 +101,10 @@ public class InsuranceAgentEntityEsbdConverterBean
 		optField(InsuranceAgentEntity.class,
 			id,
 			userService::getById,
-			"user",
+			"owner",
 			UserEntity.class,
 			MyOptionals.of(source.getUSERID()))
-				.ifPresent(builder::withUser);
+				.ifPresent(builder::withOwner);
 	    }
 
 	    {
