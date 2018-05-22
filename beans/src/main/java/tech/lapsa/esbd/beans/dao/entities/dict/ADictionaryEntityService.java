@@ -18,7 +18,7 @@ import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.entities.dict.ADictEntityService;
 import tech.lapsa.esbd.domain.dict.ADictEntity;
-import tech.lapsa.esbd.domain.dict.ADictEntity.DictionaryEntityBuilder;
+import tech.lapsa.esbd.domain.dict.ADictEntity.ADictEntityBuilder;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfItem;
 import tech.lapsa.esbd.jaxws.wsimport.Item;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
@@ -29,16 +29,16 @@ import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.function.MyStrings;
 import tech.lapsa.java.commons.logging.MyLogger;
 
-public abstract class ADictionaryEntityService<T extends ADictEntity>
-	implements ADictEntityService<T> {
+public abstract class ADictionaryEntityService<ET extends ADictEntity, BT extends ADictEntityBuilder<ET, BT>>
+	implements ADictEntityService<ET> {
 
     private final MyLogger logger;
     private final String dictionaryName;
-    private final Supplier<DictionaryEntityBuilder<T>> newBuilderSupplier;
+    private final Supplier<BT> newBuilderSupplier;
 
     protected ADictionaryEntityService(final Class<?> serviceClazz,
 	    final String dictionaryName,
-	    final Supplier<DictionaryEntityBuilder<T>> newBuilderSupplier) {
+	    final Supplier<BT> newBuilderSupplier) {
 	this.logger = MyLogger.newBuilder() //
 		.withNameOf(MyObjects.requireNonNull(serviceClazz, "serviceClazz")) //
 		.build();
@@ -49,7 +49,7 @@ public abstract class ADictionaryEntityService<T extends ADictEntity>
     @EJB
     private ConnectionPool pool;
 
-    private Map<Integer, T> allMap;
+    private Map<Integer, ET> allMap;
 
     @PostConstruct
     public void loadDictionary() {
@@ -69,7 +69,7 @@ public abstract class ADictionaryEntityService<T extends ADictEntity>
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public List<T> getAll() {
+    public List<ET> getAll() {
 	try {
 	    return allMap.entrySet() //
 		    .stream() //
@@ -83,7 +83,7 @@ public abstract class ADictionaryEntityService<T extends ADictEntity>
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public T getById(final Integer id) throws IllegalArgument, NotFound {
+    public ET getById(final Integer id) throws IllegalArgument, NotFound {
 	try {
 	    return _getById(id);
 	} catch (final IllegalArgumentException e) {
@@ -96,16 +96,16 @@ public abstract class ADictionaryEntityService<T extends ADictEntity>
 
     // PRIVATE
 
-    private T _getById(final Integer id) throws IllegalArgumentException, NotFound {
+    private ET _getById(final Integer id) throws IllegalArgumentException, NotFound {
 	MyNumbers.requireNonZero(id, "id");
-	final T res = allMap.get(id);
+	final ET res = allMap.get(id);
 	if (res == null)
 	    throw new NotFound(String.format("Dictionary entity with id = '%1$s' is not found", id));
 	return res;
     }
 
-    protected T convert(final Item source) {
-	final DictionaryEntityBuilder<T> builder = newBuilderSupplier.get();
+    protected ET convert(final Item source) {
+	final BT builder = newBuilderSupplier.get();
 
 	MyOptionals.of(source.getID())
 		.ifPresent(builder::withId);

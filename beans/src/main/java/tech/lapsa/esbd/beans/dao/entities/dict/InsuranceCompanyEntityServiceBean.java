@@ -6,10 +6,11 @@ import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService;
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceRemote;
 import tech.lapsa.esbd.domain.dict.InsuranceCompanyEntity;
+import tech.lapsa.esbd.domain.dict.InsuranceCompanyEntity.InsuranceCompanyEntityBuilder;
 
 @Stateless(name = InsuranceCompanyEntityService.BEAN_NAME)
 public class InsuranceCompanyEntityServiceBean
-	extends ADictionaryEntityService<InsuranceCompanyEntity>
+	extends ADictionaryEntityService<InsuranceCompanyEntity, InsuranceCompanyEntityBuilder>
 	implements InsuranceCompanyEntityServiceLocal, InsuranceCompanyEntityServiceRemote {
 
     private static final String DICT_NAME = "INSURANCE_COMPANIES";
