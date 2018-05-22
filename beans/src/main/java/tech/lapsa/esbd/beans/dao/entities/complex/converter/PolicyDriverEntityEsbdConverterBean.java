@@ -24,14 +24,14 @@ import tech.lapsa.esbd.domain.complex.UserEntity;
 import tech.lapsa.esbd.domain.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.domain.embedded.DriverLicenseInfo;
 import tech.lapsa.esbd.domain.embedded.DriverLicenseInfo.DriverLicenseInfoBuilder;
-import tech.lapsa.esbd.domain.embedded.GPWParticipantInfo;
-import tech.lapsa.esbd.domain.embedded.GPWParticipantInfo.GPWParticipantInfoBuilder;
-import tech.lapsa.esbd.domain.embedded.HandicappedInfo;
-import tech.lapsa.esbd.domain.embedded.HandicappedInfo.HandicappedInfoBuilder;
-import tech.lapsa.esbd.domain.embedded.PensionerInfo;
-import tech.lapsa.esbd.domain.embedded.PensionerInfo.PensionerInfoBuilder;
-import tech.lapsa.esbd.domain.embedded.PrivilegerInfo;
-import tech.lapsa.esbd.domain.embedded.PrivilegerInfo.PrivilegerInfoBuilder;
+import tech.lapsa.esbd.domain.embedded.GPWParticipantCertificateInfo;
+import tech.lapsa.esbd.domain.embedded.GPWParticipantCertificateInfo.GPWParticipantCertificateInfoBuilder;
+import tech.lapsa.esbd.domain.embedded.HandicappedCertificateInfo;
+import tech.lapsa.esbd.domain.embedded.HandicappedCertificateInfo.HandicappedCertificateInfoBuilder;
+import tech.lapsa.esbd.domain.embedded.PensionerCertificateInfo;
+import tech.lapsa.esbd.domain.embedded.PensionerCertificateInfo.PensionerCertificateInfoBuilder;
+import tech.lapsa.esbd.domain.embedded.PrivilegerDocumentInfo;
+import tech.lapsa.esbd.domain.embedded.PrivilegerDocumentInfo.PrivilegerDocumentInfoBuilder;
 import tech.lapsa.esbd.domain.embedded.RecordOperationInfo;
 import tech.lapsa.esbd.domain.embedded.RecordOperationInfo.RecordOperationInfoBuilder;
 import tech.lapsa.esbd.jaxws.wsimport.Driver;
@@ -157,17 +157,17 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 		    // приравненного лица
 		    // PRIVELEDGER_CERTIFICATE_DATE s:string Дата выдачи
 		    // удостоверения приравненного лица
-		    final PrivilegerInfoBuilder b1 = PrivilegerInfo.builder();
+		    final PrivilegerDocumentInfoBuilder b1 = PrivilegerDocumentInfo.builder();
 
 		    MyOptionals.of(source.getPRIVELEDGERTYPE())
 			    .ifPresent(b1::withType);
 
 		    MyOptionals.of(source.getPRIVELEDGERCERTIFICATE())
-			    .ifPresent(b1::withCertificateNumber);
+			    .ifPresent(b1::withNumber);
 
 		    MyOptionals.of(source.getPRIVELEDGERCERTIFICATEDATE())
 			    .map(TemporalUtil::dateToLocalDate)
-			    .ifPresent(b1::withCertificateDateOfIssue);
+			    .ifPresent(b1::withDateOfIssue);
 
 		    b1.buildTo(builder::withPrivilegerInfo);
 		}
@@ -179,14 +179,14 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 		    // WOW_CERTIFICATE s:string Удостоверение участника ВОВ
 		    // WOW_CERTIFICATE_DATE s:string Дата выдачи удостоверения
 		    // участника ВОВ
-		    final GPWParticipantInfoBuilder b1 = GPWParticipantInfo.builder();
+		    final GPWParticipantCertificateInfoBuilder b1 = GPWParticipantCertificateInfo.builder();
 
 		    MyOptionals.of(source.getWOWCERTIFICATE())
-			    .ifPresent(b1::withCertificateNumber);
+			    .ifPresent(b1::withNumber);
 
 		    MyOptionals.of(source.getWOWCERTIFICATEDATE())
 			    .map(TemporalUtil::dateToLocalDate)
-			    .ifPresent(b1::withCertificateDateOfIssue);
+			    .ifPresent(b1::withDateOfIssue);
 
 		    b1.buildTo(builder::withGpwParticipantInfo);
 		}
@@ -198,14 +198,14 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 		    // PENSIONER_CERTIFICATE s:string Удостоверение пенсионера
 		    // PENSIONER_CERTIFICATE_DATE s:string Дата выдачи
 		    // удостоверения пенсионера
-		    final PensionerInfoBuilder b1 = PensionerInfo.builder();
+		    final PensionerCertificateInfoBuilder b1 = PensionerCertificateInfo.builder();
 
 		    MyOptionals.of(source.getPENSIONERCERTIFICATE())
-			    .ifPresent(b1::withCertificateNumber);
+			    .ifPresent(b1::withNumber);
 
 		    MyOptionals.of(source.getPENSIONERCERTIFICATEDATE())
 			    .map(TemporalUtil::dateToLocalDate)
-			    .ifPresent(b1::withCertiticateDateOfIssue);
+			    .ifPresent(b1::withDateOfIssue);
 
 		    b1.buildTo(builder::withPensionerInfo);
 		}
@@ -219,18 +219,18 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 		    // удостоверения инвалида
 		    // INVALID_CERTIFICATE_END_DATE s:string Дата завершения
 		    // удостоверения инвалида
-		    final HandicappedInfoBuilder b1 = HandicappedInfo.builder();
+		    final HandicappedCertificateInfoBuilder b1 = HandicappedCertificateInfo.builder();
 
 		    MyOptionals.of(source.getINVALIDCERTIFICATE())
-			    .ifPresent(b1::withCertificateNumber);
+			    .ifPresent(b1::withNumber);
 
 		    MyOptionals.of(source.getINVALIDCERTIFICATEBEGDATE())
 			    .map(TemporalUtil::dateToLocalDate)
-			    .ifPresent(b1::withCertificateValidFrom);
+			    .ifPresent(b1::withValidFrom);
 
 		    MyOptionals.of(source.getINVALIDCERTIFICATEENDDATE())
 			    .map(TemporalUtil::dateToLocalDate)
-			    .ifPresent(b1::withCertificateValidTill);
+			    .ifPresent(b1::withValidTill);
 
 		    b1.buildTo(builder::withHandicappedInfo);
 		}
