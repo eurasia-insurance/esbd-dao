@@ -18,8 +18,7 @@ public class InsuranceAgentServiceTestCase extends ArquillianBaseTestCase {
     @Inject
     private InsuranceAgentEntityServiceLocal service;
 
-    private static final int VALID_ID = 34655; // Vadims Car
-					       // Infiniti
+    private static final int VALID_ID = 34655;
 
     @Test
     public void testGetById() throws IllegalArgument {
