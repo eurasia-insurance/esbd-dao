@@ -145,10 +145,10 @@ public class PolicyDriverEntityEsbdConverterBean implements AEsbdAttributeConver
 		optField(PolicyDriverEntity.class,
 			id,
 			insuranceClassTypeService::getById,
-			"insuraceClassType",
+			"insuranceClassType",
 			InsuranceClassType.class,
 			MyOptionals.of(source.getClassId()))
-				.ifPresent(builder::withInsuraceClassType);
+				.ifPresent(builder::withInsuranceClassType);
 	    }
 
 	    {

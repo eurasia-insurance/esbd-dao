@@ -122,7 +122,7 @@ public class PolicyVehicleEntityEsbdConverterBean implements AEsbdAttributeConve
 		final VehicleCertificateInfoBuilder b1 = VehicleCertificateInfo.builder();
 
 		MyOptionals.of(source.getTFREGISTRATIONCERTIFICATE())
-			.ifPresent(b1::withCertificateNumber);
+			.ifPresent(b1::withNumber);
 
 		MyOptionals.of(source.getGIVEDATE())
 			.map(TemporalUtil::dateToLocalDate)
