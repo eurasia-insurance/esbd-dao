@@ -4,6 +4,7 @@ import javax.ejb.Singleton;
 
 import com.lapsa.insurance.elements.CancelationReason;
 
+import tech.lapsa.esbd.beans.dao.ADictElementsService;
 import tech.lapsa.esbd.beans.dao.elements.dict.mapping.CancelationReasonMapping;
 import tech.lapsa.esbd.dao.elements.dict.CancelationReasonService;
 import tech.lapsa.esbd.dao.elements.dict.CancelationReasonService.CancelationReasonServiceLocal;
@@ -14,7 +15,9 @@ public class CancelationReasonServiceBean
 	extends ADictElementsService<CancelationReason>
 	implements CancelationReasonServiceLocal, CancelationReasonServiceRemote {
 
-    public CancelationReasonServiceBean() {
-	super(CancelationReasonService.class, CancelationReasonMapping.getInstance()::forId, CancelationReason.class);
+    // constructor
+
+    protected CancelationReasonServiceBean() {
+	super(CancelationReasonService.class, CancelationReason.class, CancelationReasonMapping.getInstance()::forId);
     }
 }

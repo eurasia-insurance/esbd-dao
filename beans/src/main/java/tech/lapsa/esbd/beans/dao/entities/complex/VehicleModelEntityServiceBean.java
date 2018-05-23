@@ -2,6 +2,7 @@ package tech.lapsa.esbd.beans.dao.entities.complex;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
 import javax.ejb.EJB;
@@ -10,11 +11,10 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import tech.lapsa.esbd.beans.dao.entities.complex.converter.AEsbdAttributeConverter.EsbdConversionException;
+import tech.lapsa.esbd.beans.dao.AOndemandComplexEntitiesService;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.VehicleModelEntityEsbdConverterBean;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
-import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService;
 import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService.VehicleModelEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService.VehicleModelEntityServiceRemote;
@@ -23,38 +23,32 @@ import tech.lapsa.esbd.domain.complex.VehicleModelEntity;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfVOITUREMODEL;
 import tech.lapsa.esbd.jaxws.wsimport.VOITUREMODEL;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
-import tech.lapsa.java.commons.function.MyCollections;
 import tech.lapsa.java.commons.function.MyCollectors;
-import tech.lapsa.java.commons.function.MyExceptions;
-import tech.lapsa.java.commons.function.MyNumbers;
 import tech.lapsa.java.commons.function.MyObjects;
 import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.function.MyStrings;
-import tech.lapsa.java.commons.logging.MyLogger;
 
 @Stateless(name = VehicleModelEntityService.BEAN_NAME)
 public class VehicleModelEntityServiceBean
-	extends AComplexEntitiesService<VehicleModelEntity, VOITUREMODEL>
+	extends AOndemandComplexEntitiesService<VehicleModelEntity, VOITUREMODEL>
 	implements VehicleModelEntityServiceLocal, VehicleModelEntityServiceRemote {
 
-    private final MyLogger logger = MyLogger.newBuilder() //
-	    .withNameOf(VehicleModelEntityService.class) //
-	    .build();
+    // static finals
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public VehicleModelEntity getById(final Integer id) throws NotFound, IllegalArgument {
-	try {
-	    return _getById(id);
-	} catch (final IllegalArgumentException e) {
-	    throw new IllegalArgument(e);
-	} catch (final EJBException e) {
-	    throw e;
-	} catch (final RuntimeException e) {
-	    logger.WARN.log(e);
-	    throw new EJBException(e.getMessage());
-	}
+    private static final BiFunction<Connection, Integer, List<VOITUREMODEL>> GET_BY_ID_FUNCTION = (con, id) -> {
+	final VOITUREMODEL search = new VOITUREMODEL();
+	search.setID(id.intValue());
+	final ArrayOfVOITUREMODEL models = con.getVoitureModels(search);
+	return models.getVOITUREMODEL();
+    };
+
+    // constructor
+
+    protected VehicleModelEntityServiceBean() {
+	super(VehicleModelEntityService.class, VehicleModelEntity.class, GET_BY_ID_FUNCTION);
     }
+
+    // public
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -87,27 +81,17 @@ public class VehicleModelEntityServiceBean
 	}
     }
 
-    // PRIVATE
+    // injected
 
-    private VehicleModelEntity _getById(final Integer id) throws IllegalArgumentException, NotFound {
-	MyNumbers.requireNonZero(id, "id");
-	final ArrayOfVOITUREMODEL models;
-	try (Connection con = pool.getConnection()) {
-	    final VOITUREMODEL search = new VOITUREMODEL();
-	    search.setID(id.intValue());
-	    models = con.getVoitureModels(search);
-	} catch (ConnectionException e) {
-	    throw new IllegalStateException(e.getMessage());
-	}
+    @EJB
+    private VehicleModelEntityEsbdConverterBean converter;
 
-	final List<VOITUREMODEL> list = MyOptionals.of(models) //
-		.map(ArrayOfVOITUREMODEL::getVOITUREMODEL) //
-		.filter(MyCollections::nonEmpty)
-		.orElseThrow(MyExceptions.supplier(NotFound::new, "%1$s not found with ID = '%2$s'",
-			VehicleModelEntity.class.getSimpleName(), id));
-	final VOITUREMODEL source = Util.requireSingle(list, VehicleModelEntity.class, "ID", id);
-	return conversion(source);
+    @Override
+    protected VehicleModelEntityEsbdConverterBean getConverter() {
+	return converter;
     }
+
+    // private
 
     private List<VehicleModelEntity> _getByName(final String name) throws IllegalArgumentException {
 	MyStrings.requireNonEmpty(name, "name");
@@ -145,19 +129,4 @@ public class VehicleModelEntityServiceBean
 		.map(this::conversion) //
 		.collect(MyCollectors.unmodifiableList());
     }
-
-    // converter
-
-    @EJB
-    private VehicleModelEntityEsbdConverterBean converter;
-
-    @Override
-    VehicleModelEntity conversion(final VOITUREMODEL source) {
-	try {
-	    return converter.convertToEntityAttribute(source);
-	} catch (EsbdConversionException e) {
-	    throw Util.esbdConversionExceptionToEJBException(e);
-	}
-    }
-
 }

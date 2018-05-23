@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import com.lapsa.insurance.elements.MaritalStatus;
 
 import tech.lapsa.esbd.beans.dao.elements.dict.mapping.MaritalStatusMapping;
-import tech.lapsa.esbd.dao.elements.ElementsService;
+import tech.lapsa.esbd.dao.IElementsService;
 import tech.lapsa.esbd.dao.elements.dict.MaritalStatusService.MaritalStatusServiceLocal;
 
 public class MaritalStatusServiceTestCase extends AMappedElementTestCase<MaritalStatus> {
@@ -18,7 +18,7 @@ public class MaritalStatusServiceTestCase extends AMappedElementTestCase<Marital
     }
 
     @Override
-    ElementsService<MaritalStatus> service() {
+    IElementsService<MaritalStatus> service() {
 	return service;
     }
 }

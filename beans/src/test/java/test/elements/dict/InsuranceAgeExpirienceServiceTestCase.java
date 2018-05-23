@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import com.lapsa.insurance.elements.InsuredAgeAndExpirienceClass;
 
 import tech.lapsa.esbd.beans.dao.elements.dict.mapping.InsuredAgeAndExpirienceClassMapping;
-import tech.lapsa.esbd.dao.elements.ElementsService;
+import tech.lapsa.esbd.dao.IElementsService;
 import tech.lapsa.esbd.dao.elements.dict.InsuredAgeAndExpirienceClassService.InsuredAgeAndExpirienceClassServiceLocal;
 
 public class InsuranceAgeExpirienceServiceTestCase extends AMappedElementTestCase<InsuredAgeAndExpirienceClass> {
@@ -19,7 +19,7 @@ public class InsuranceAgeExpirienceServiceTestCase extends AMappedElementTestCas
     }
 
     @Override
-    ElementsService<InsuredAgeAndExpirienceClass> service() {
+    IElementsService<InsuredAgeAndExpirienceClass> service() {
 	return service;
     }
 }

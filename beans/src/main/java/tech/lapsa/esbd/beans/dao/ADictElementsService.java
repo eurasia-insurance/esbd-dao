@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.elements.dict;
+package tech.lapsa.esbd.beans.dao;
 
 import java.util.function.Function;
 
@@ -6,29 +6,41 @@ import javax.ejb.EJBException;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+import tech.lapsa.esbd.beans.dao.elements.dict.mapping.AMapping;
+import tech.lapsa.esbd.dao.IElementsService;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.elements.ElementsService;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyExceptions;
 import tech.lapsa.java.commons.function.MyNumbers;
-import tech.lapsa.java.commons.function.MyObjects;
 import tech.lapsa.java.commons.function.MyOptionals;
-import tech.lapsa.java.commons.logging.MyLogger;
 
-public abstract class ADictElementsService<T extends Enum<T>> implements ElementsService<T> {
+public abstract class ADictElementsService<T extends Enum<T>>
+	extends AService<T>
+	implements IElementsService<T> {
 
-    private final MyLogger logger;
-    private final Function<Integer, T> converter;
-    private final Class<T> entityClazz;
+    // finals
 
-    ADictElementsService(final Class<?> serviceClazz, final Function<Integer, T> converter,
-	    final Class<T> entityClazz) {
-	this.logger = MyLogger.newBuilder() //
-		.withNameOf(MyObjects.requireNonNull(serviceClazz, "serviceClazz")) //
-		.build();
-	this.entityClazz = MyObjects.requireNonNull(entityClazz, "entityClazz");
-	this.converter = MyObjects.requireNonNull(converter, "converter");
+    protected final Function<Integer, T> mapperFunction;
+
+    // constructor
+
+    protected ADictElementsService(final Class<?> serviceClazz,
+	    final Class<T> entityClazz,
+	    final Function<Integer, T> mapperFunction) {
+	super(serviceClazz, entityClazz);
+	assert mapperFunction != null;
+	this.mapperFunction = mapperFunction;
     }
+
+    protected ADictElementsService(final Class<?> serviceClazz,
+	    final Class<T> entityClazz,
+	    final AMapping<Integer, T> mapper) {
+	super(serviceClazz, entityClazz);
+	assert mapper != null;
+	this.mapperFunction = mapper::forId;
+    }
+
+    // public
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -43,12 +55,12 @@ public abstract class ADictElementsService<T extends Enum<T>> implements Element
 	}
     }
 
-    // PRIVATE
+    // private
 
     private T _getById(final Integer id) throws IllegalArgumentException, NotFound {
 	MyNumbers.requireNonZero(id, "id");
-	return MyOptionals.of(converter.apply(id)) //
+	return MyOptionals.of(mapperFunction.apply(id)) //
 		.orElseThrow(
-			MyExceptions.supplier(NotFound::new, "%1$s(%2$s) not found", entityClazz.getSimpleName(), id));
+			MyExceptions.supplier(NotFound::new, "%1$s(%2$s) not found", domainClazz.getSimpleName(), id));
     }
 }

@@ -1,6 +1,8 @@
 package tech.lapsa.esbd.beans.dao.entities.complex;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
 import javax.ejb.EJB;
@@ -9,7 +11,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import tech.lapsa.esbd.beans.dao.entities.complex.converter.AEsbdAttributeConverter.EsbdConversionException;
+import tech.lapsa.esbd.beans.dao.AOndemandComplexEntitiesService;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.PolicyEntityEsbdConverterBean;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
@@ -22,35 +24,29 @@ import tech.lapsa.esbd.jaxws.wsimport.ArrayOfPolicy;
 import tech.lapsa.esbd.jaxws.wsimport.Policy;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyCollectors;
-import tech.lapsa.java.commons.function.MyNumbers;
 import tech.lapsa.java.commons.function.MyObjects;
 import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.function.MyStrings;
-import tech.lapsa.java.commons.logging.MyLogger;
 
 @Stateless(name = PolicyEntityService.BEAN_NAME)
 public class PolicyEntityServiceBean
-	extends AComplexEntitiesService<PolicyEntity, Policy>
+	extends AOndemandComplexEntitiesService<PolicyEntity, Policy>
 	implements PolicyEntityServiceLocal, PolicyEntityServiceRemote {
 
-    private final MyLogger logger = MyLogger.newBuilder() //
-	    .withNameOf(PolicyEntityService.class) //
-	    .build();
+    // static finals
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public PolicyEntity getById(final Integer id) throws NotFound, IllegalArgument {
-	try {
-	    return _getById(id);
-	} catch (final IllegalArgumentException e) {
-	    throw new IllegalArgument(e);
-	} catch (final EJBException e) {
-	    throw e;
-	} catch (final RuntimeException e) {
-	    logger.WARN.log(e);
-	    throw new EJBException(e.getMessage());
-	}
+    private static final BiFunction<Connection, Integer, List<Policy>> GET_BY_ID_FUNCTION = (con, id) -> {
+	final Policy source = con.getPolicyByID(id);
+	return Arrays.asList(source);
+    };
+
+    // constructor
+
+    public PolicyEntityServiceBean() {
+	super(PolicyEntityService.class, PolicyEntity.class, GET_BY_ID_FUNCTION);
     }
+
+    // public
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -82,21 +78,17 @@ public class PolicyEntityServiceBean
 	}
     }
 
-    // PRIVATE
+    // injected
 
-    private PolicyEntity _getById(final Integer id) throws IllegalArgumentException, NotFound {
-	MyNumbers.requireNonZero(id, "id");
-	final Policy source;
-	try (Connection con = pool.getConnection()) {
-	    source = con.getPolicyByID(id);
-	} catch (ConnectionException e) {
-	    throw new IllegalStateException(e.getMessage());
-	}
-	if (source == null)
-	    throw new NotFound(PolicyEntity.class.getSimpleName() + " not found with ID = '" + id + "'");
+    @EJB
+    private PolicyEntityEsbdConverterBean converter;
 
-	return conversion(source);
+    @Override
+    protected PolicyEntityEsbdConverterBean getConverter() {
+	return converter;
     }
+
+    // private
 
     private PolicyEntity _getByNumber(final String number) throws IllegalArgumentException, NotFound {
 	MyStrings.requireNonEmpty(number, "number");
@@ -129,19 +121,5 @@ public class PolicyEntityServiceBean
 		.orElseGet(Stream::empty) //
 		.map(this::conversion) //
 		.collect(MyCollectors.unmodifiableList());
-    }
-
-    // converter
-
-    @EJB
-    private PolicyEntityEsbdConverterBean converter;
-
-    @Override
-    PolicyEntity conversion(Policy source) {
-	try {
-	    return converter.convertToEntityAttribute(source);
-	} catch (EsbdConversionException e) {
-	    throw Util.esbdConversionExceptionToEJBException(e);
-	}
     }
 }

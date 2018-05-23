@@ -13,8 +13,8 @@ import tech.lapsa.esbd.beans.dao.elements.dict.mapping.AMapping;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.connection.ConnectionPool;
+import tech.lapsa.esbd.dao.IElementsService;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.elements.ElementsService;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfItem;
 import tech.lapsa.esbd.jaxws.wsimport.Item;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
@@ -27,7 +27,7 @@ public abstract class AMappedElementTestCase<T extends Enum<T>> extends Arquilli
     final String dictionaryName;
     final int invalidId;
 
-    abstract ElementsService<T> service();
+    abstract IElementsService<T> service();
 
     public AMappedElementTestCase(final Class<T> clazz, AMapping<Integer, T> mapper, String dictionaryName,
 	    int invalidId) {

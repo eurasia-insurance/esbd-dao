@@ -1,6 +1,8 @@
 package tech.lapsa.esbd.beans.dao.entities.complex;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
 import javax.ejb.EJB;
@@ -9,10 +11,8 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import tech.lapsa.esbd.beans.dao.entities.complex.converter.AEsbdAttributeConverter.EsbdConversionException;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.SubjectEntityEsbdConverterBean;
 import tech.lapsa.esbd.connection.Connection;
-import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.entities.complex.SubjectEntityService;
 import tech.lapsa.esbd.dao.entities.complex.SubjectEntityService.SubjectEntityServiceLocal;
@@ -21,9 +21,7 @@ import tech.lapsa.esbd.domain.complex.SubjectEntity;
 import tech.lapsa.esbd.jaxws.wsimport.Client;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyExceptions;
-import tech.lapsa.java.commons.function.MyNumbers;
 import tech.lapsa.java.commons.function.MyOptionals;
-import tech.lapsa.java.commons.logging.MyLogger;
 import tech.lapsa.kz.taxpayer.TaxpayerNumber;
 
 @Stateless(name = SubjectEntityService.BEAN_NAME)
@@ -31,24 +29,20 @@ public class SubjectEntityServiceBean
 	extends ASubjectEntityService<SubjectEntity>
 	implements SubjectEntityServiceLocal, SubjectEntityServiceRemote {
 
-    private final MyLogger logger = MyLogger.newBuilder() //
-	    .withNameOf(SubjectEntityService.class) //
-	    .build();
+    // static finals
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public SubjectEntity getById(final Integer id) throws NotFound, IllegalArgument {
-	try {
-	    return _getById(id);
-	} catch (final IllegalArgumentException e) {
-	    throw new IllegalArgument(e);
-	} catch (final EJBException e) {
-	    throw e;
-	} catch (final RuntimeException e) {
-	    logger.WARN.log(e);
-	    throw new EJBException(e.getMessage());
-	}
+    private static final BiFunction<Connection, Integer, List<Client>> GET_BY_ID_FUNCTION = (con, id) -> {
+	final Client source = con.getClientByID(id.intValue());
+	return Arrays.asList(source);
+    };
+
+    // constructor
+
+    public SubjectEntityServiceBean() {
+	super(SubjectEntityService.class, SubjectEntity.class, GET_BY_ID_FUNCTION);
     }
+
+    // public
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -80,19 +74,17 @@ public class SubjectEntityServiceBean
 	}
     }
 
-    // PRIVATE
+    // injected
 
-    private SubjectEntity _getById(final Integer id) throws IllegalArgumentException, NotFound {
-	MyNumbers.requireNonZero(id, "id");
-	try (Connection con = pool.getConnection()) {
-	    final Client source = con.getClientByID(id.intValue());
-	    if (source == null)
-		throw new NotFound(SubjectEntity.class.getSimpleName() + " not found with ID = '" + id + "'");
-	    return conversion(source);
-	} catch (ConnectionException e) {
-	    throw new IllegalStateException(e.getMessage());
-	}
+    @EJB
+    private SubjectEntityEsbdConverterBean converter;
+
+    @Override
+    protected SubjectEntityEsbdConverterBean getConverter() {
+	return converter;
     }
+
+    // private
 
     private List<SubjectEntity> _getByIdNumber(final TaxpayerNumber taxpayerNumber) throws IllegalArgumentException {
 	return _getByIdNumber(taxpayerNumber, true, true);
@@ -107,17 +99,4 @@ public class SubjectEntityServiceBean
 			SubjectEntity.class.getSimpleName(), taxpayerNumber));
     }
 
-    // converter
-
-    @EJB
-    private SubjectEntityEsbdConverterBean converter;
-
-    @Override
-    SubjectEntity conversion(final Client source) {
-	try {
-	    return converter.convertToEntityAttribute(source);
-	} catch (EsbdConversionException e) {
-	    throw Util.esbdConversionExceptionToEJBException(e);
-	}
-    }
 }

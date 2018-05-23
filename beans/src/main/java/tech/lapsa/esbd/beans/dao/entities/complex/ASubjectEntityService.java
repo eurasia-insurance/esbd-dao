@@ -1,14 +1,16 @@
 package tech.lapsa.esbd.beans.dao.entities.complex;
 
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.stream.IntStream;
 import java.util.stream.IntStream.Builder;
 import java.util.stream.Stream;
 
+import tech.lapsa.esbd.beans.dao.AOndemandComplexEntitiesService;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
-import tech.lapsa.esbd.dao.entities.complex.GeneralSubjectEntityService.GeneralSubjectEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.complex.GeneralSubjectEntityService.GeneralSubjectEntityServiceRemote;
+import tech.lapsa.esbd.dao.entities.complex.ISubjectEntitiesService.ISubjectEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.ISubjectEntitiesService.ISubjectEntityServiceRemote;
 import tech.lapsa.esbd.domain.complex.SubjectEntity;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfClient;
 import tech.lapsa.esbd.jaxws.wsimport.Client;
@@ -18,8 +20,18 @@ import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.kz.taxpayer.TaxpayerNumber;
 
 public abstract class ASubjectEntityService<T extends SubjectEntity>
-	extends AComplexEntitiesService<T, Client>
-	implements GeneralSubjectEntityServiceLocal<T>, GeneralSubjectEntityServiceRemote<T> {
+	extends AOndemandComplexEntitiesService<T, Client>
+	implements ISubjectEntityServiceLocal<T>, ISubjectEntityServiceRemote<T> {
+
+    // constructor
+
+    protected ASubjectEntityService(final Class<?> serviceClazz,
+	    final Class<T> domainClass,
+	    final BiFunction<Connection, Integer, List<Client>> esbdGetListByIdFunction) {
+	super(serviceClazz, domainClass, esbdGetListByIdFunction);
+    }
+
+    // private
 
     List<T> _getByIdNumber(final TaxpayerNumber taxpayerNumber,
 	    final boolean fetchNaturals,

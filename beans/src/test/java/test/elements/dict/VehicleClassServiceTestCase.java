@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import com.lapsa.insurance.elements.VehicleClass;
 
 import tech.lapsa.esbd.beans.dao.elements.dict.mapping.VehicleClassMapping;
-import tech.lapsa.esbd.dao.elements.ElementsService;
+import tech.lapsa.esbd.dao.IElementsService;
 import tech.lapsa.esbd.dao.elements.dict.VehicleClassService.VehicleClassServiceLocal;
 
 public class VehicleClassServiceTestCase extends AMappedElementTestCase<VehicleClass> {
@@ -18,7 +18,7 @@ public class VehicleClassServiceTestCase extends AMappedElementTestCase<VehicleC
     }
 
     @Override
-    ElementsService<VehicleClass> service() {
+    IElementsService<VehicleClass> service() {
 	return service;
     }
 }

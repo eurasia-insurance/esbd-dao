@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import com.lapsa.insurance.elements.PersonType;
 
 import tech.lapsa.esbd.beans.dao.elements.dict.mapping.PersonTypeMapping;
-import tech.lapsa.esbd.dao.elements.ElementsService;
+import tech.lapsa.esbd.dao.IElementsService;
 import tech.lapsa.esbd.dao.elements.dict.PersonTypeService.PersonTypeServiceLocal;
 
 public class PersonTypeServiceTestCase extends AMappedElementTestCase<PersonType> {
@@ -18,7 +18,7 @@ public class PersonTypeServiceTestCase extends AMappedElementTestCase<PersonType
     }
 
     @Override
-    ElementsService<PersonType> service() {
+    IElementsService<PersonType> service() {
 	return service;
     }
 }

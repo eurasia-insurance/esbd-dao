@@ -4,6 +4,7 @@ import javax.ejb.Singleton;
 
 import com.lapsa.insurance.elements.VehicleAgeClass;
 
+import tech.lapsa.esbd.beans.dao.ADictElementsService;
 import tech.lapsa.esbd.beans.dao.elements.dict.mapping.VehicleAgeClassMapping;
 import tech.lapsa.esbd.dao.elements.dict.VehicleAgeClassService;
 import tech.lapsa.esbd.dao.elements.dict.VehicleAgeClassService.VehicleAgeClassServiceLocal;
@@ -14,7 +15,9 @@ public class VehicleAgeClassServiceBean
 	extends ADictElementsService<VehicleAgeClass>
 	implements VehicleAgeClassServiceLocal, VehicleAgeClassServiceRemote {
 
-    public VehicleAgeClassServiceBean() {
-	super(VehicleAgeClassService.class, VehicleAgeClassMapping.getInstance()::forId, VehicleAgeClass.class);
+    // constructor
+
+    protected VehicleAgeClassServiceBean() {
+	super(VehicleAgeClassService.class, VehicleAgeClass.class, VehicleAgeClassMapping.getInstance()::forId);
     }
 }
