@@ -1,9 +1,10 @@
 package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
-import static tech.lapsa.esbd.beans.dao.entities.complex.Util.*;
+import static tech.lapsa.esbd.beans.dao.Util.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -215,7 +216,7 @@ public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<Po
 			.map(Policy::getDrivers) //
 			.map(ArrayOfDriver::getDriver) //
 			.map(List::stream) //
-			.orElseThrow(() -> requireNonEmtyList(PolicyEntity.class, id, "InsuredDrivers")) //
+			.orElseGet(Stream::empty) //
 			.peek(x -> MyNumbers.requireEqualsMsg(id, x.getPOLICYID(),
 				"%1$s.POLICYID (%3$s) and %2$s.POLICYID (%4$s) are not equals",
 				Policy.class.getName(),
@@ -234,7 +235,7 @@ public class PolicyEntityEsbdConverterBean implements AEsbdAttributeConverter<Po
 			.map(Policy::getPoliciesTF) //
 			.map(ArrayOfPoliciesTF::getPoliciesTF) //
 			.map(List::stream) //
-			.orElseThrow(() -> requireNonEmtyList(PolicyEntity.class, id, "InsuredVehicles")) //
+			.orElseGet(Stream::empty) //
 			.peek(x -> MyNumbers.requireEqualsMsg(id, x.getPOLICYID(),
 				"%1$s.POLICYID (%3$s) and %2$s.POLICYID (%4$s) are not equals",
 				Policy.class.getName(),
