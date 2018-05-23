@@ -36,10 +36,10 @@ public class VehicleEntityServiceBean
     // static finals
 
     private static final BiFunction<Connection, Integer, List<TF>> GET_BY_ID_FUNCTION = (con, id) -> {
-	final TF search = new TF();
-	search.setTFID(id.intValue());
-	final ArrayOfTF vehicles = con.getTFByKeyFields(search);
-	return vehicles.getTF();
+	final TF param = new TF();
+	param.setTFID(id.intValue());
+	final ArrayOfTF arrayOf = con.getTFByKeyFields(param);
+	return MyObjects.nullOrGet(arrayOf, ArrayOfTF::getTF);
     };
 
     // constructor

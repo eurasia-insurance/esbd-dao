@@ -37,7 +37,7 @@ public class PolicyEntityServiceBean
 
     private static final BiFunction<Connection, Integer, List<Policy>> GET_BY_ID_FUNCTION = (con, id) -> {
 	final Policy source = con.getPolicyByID(id);
-	return Arrays.asList(source);
+	return MyObjects.nullOrGet(source, Arrays::asList);
     };
 
     // constructor

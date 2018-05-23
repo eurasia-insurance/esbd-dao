@@ -15,6 +15,7 @@ import tech.lapsa.esbd.dao.entities.complex.InsuranceAgentEntityService.Insuranc
 import tech.lapsa.esbd.domain.complex.InsuranceAgentEntity;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfMIDDLEMAN;
 import tech.lapsa.esbd.jaxws.wsimport.MIDDLEMAN;
+import tech.lapsa.java.commons.function.MyObjects;
 
 @Stateless(name = InsuranceAgentEntityService.BEAN_NAME)
 public class InsuranceAgentEntityServiceBean
@@ -24,10 +25,10 @@ public class InsuranceAgentEntityServiceBean
     // static finals
 
     private static final BiFunction<Connection, Integer, List<MIDDLEMAN>> GET_BY_ID_FUNCTION = (con, id) -> {
-	final MIDDLEMAN search = new MIDDLEMAN();
-	search.setMIDDLEMANID(id.intValue());
-	final ArrayOfMIDDLEMAN models = con.getMiddlemenByKeyFields(search);
-	return models.getMIDDLEMAN();
+	final MIDDLEMAN param = new MIDDLEMAN();
+	param.setMIDDLEMANID(id.intValue());
+	final ArrayOfMIDDLEMAN arrayOf = con.getMiddlemenByKeyFields(param);
+	return MyObjects.nullOrGet(arrayOf, ArrayOfMIDDLEMAN::getMIDDLEMAN);
     };
 
     // constructor

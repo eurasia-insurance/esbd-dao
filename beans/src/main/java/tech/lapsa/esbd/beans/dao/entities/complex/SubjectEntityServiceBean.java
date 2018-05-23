@@ -21,6 +21,7 @@ import tech.lapsa.esbd.domain.complex.SubjectEntity;
 import tech.lapsa.esbd.jaxws.wsimport.Client;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyExceptions;
+import tech.lapsa.java.commons.function.MyObjects;
 import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.kz.taxpayer.TaxpayerNumber;
 
@@ -33,7 +34,7 @@ public class SubjectEntityServiceBean
 
     private static final BiFunction<Connection, Integer, List<Client>> GET_BY_ID_FUNCTION = (con, id) -> {
 	final Client source = con.getClientByID(id.intValue());
-	return Arrays.asList(source);
+	return MyObjects.nullOrGet(source, Arrays::asList);
     };
 
     // constructor

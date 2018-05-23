@@ -36,10 +36,10 @@ public class VehicleModelEntityServiceBean
     // static finals
 
     private static final BiFunction<Connection, Integer, List<VOITUREMODEL>> GET_BY_ID_FUNCTION = (con, id) -> {
-	final VOITUREMODEL search = new VOITUREMODEL();
-	search.setID(id.intValue());
-	final ArrayOfVOITUREMODEL models = con.getVoitureModels(search);
-	return models.getVOITUREMODEL();
+	final VOITUREMODEL param = new VOITUREMODEL();
+	param.setID(id.intValue());
+	final ArrayOfVOITUREMODEL arrayOf = con.getVoitureModels(param);
+	return MyObjects.nullOrGet(arrayOf, ArrayOfVOITUREMODEL::getVOITUREMODEL);
     };
 
     // constructor

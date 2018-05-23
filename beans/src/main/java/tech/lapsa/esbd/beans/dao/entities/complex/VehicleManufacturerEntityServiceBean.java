@@ -23,7 +23,7 @@ import tech.lapsa.esbd.jaxws.wsimport.ArrayOfVOITUREMARK;
 import tech.lapsa.esbd.jaxws.wsimport.VOITUREMARK;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyCollectors;
-import tech.lapsa.java.commons.function.MyNumbers;
+import tech.lapsa.java.commons.function.MyObjects;
 import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.function.MyStrings;
 
@@ -35,11 +35,10 @@ public class VehicleManufacturerEntityServiceBean
     // static finals
 
     private static final BiFunction<Connection, Integer, List<VOITUREMARK>> GET_BY_ID_FUNCTION = (con, id) -> {
-	MyNumbers.requireNonZero(id, "id");
-	final VOITUREMARK search = new VOITUREMARK();
-	search.setID(id.intValue());
-	final ArrayOfVOITUREMARK manufacturers = con.getVoitureMarks(search);
-	return manufacturers.getVOITUREMARK();
+	final VOITUREMARK param = new VOITUREMARK();
+	param.setID(id.intValue());
+	final ArrayOfVOITUREMARK arrayOf = con.getVoitureMarks(param);
+	return MyObjects.nullOrGet(arrayOf, ArrayOfVOITUREMARK::getVOITUREMARK);
     };
 
     // constructor

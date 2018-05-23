@@ -1,7 +1,6 @@
 package tech.lapsa.esbd.beans.dao.entities.complex;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
@@ -36,10 +35,10 @@ public class SubjectCompanyEntityServiceBean
     private static final BiFunction<Connection, Integer, List<Client>> GET_BY_ID_FUNCTION = (con, id) -> {
 	final Client source = con.getClientByID(id.intValue());
 	if (source == null)
-	    return Collections.emptyList();
+	    return null;
 	final boolean isLegal = source.getNaturalPersonBool() == 0;
 	if (!isLegal)
-	    return Collections.emptyList();
+	    return null;
 	return Arrays.asList(source);
     };
 
