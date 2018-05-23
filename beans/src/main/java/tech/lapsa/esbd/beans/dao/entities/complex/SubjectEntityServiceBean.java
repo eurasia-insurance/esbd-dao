@@ -1,6 +1,5 @@
 package tech.lapsa.esbd.beans.dao.entities.complex;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
@@ -21,7 +20,6 @@ import tech.lapsa.esbd.domain.complex.SubjectEntity;
 import tech.lapsa.esbd.jaxws.wsimport.Client;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyExceptions;
-import tech.lapsa.java.commons.function.MyObjects;
 import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.kz.taxpayer.TaxpayerNumber;
 
@@ -32,10 +30,8 @@ public class SubjectEntityServiceBean
 
     // static finals
 
-    private static final BiFunction<Connection, Integer, List<Client>> GET_BY_ID_FUNCTION = (con, id) -> {
-	final Client source = con.getClientByID(id.intValue());
-	return MyObjects.nullOrGet(source, Arrays::asList);
-    };
+    private static final BiFunction<Connection, Integer, Client> GET_BY_ID_FUNCTION = (con, id) -> con
+	    .getClientByID(id.intValue());
 
     // constructor
 

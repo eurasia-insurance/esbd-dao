@@ -1,13 +1,15 @@
 package tech.lapsa.esbd.beans.dao;
 
+import static tech.lapsa.esbd.beans.dao.Util.*;
+
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import javax.ejb.EJBException;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import tech.lapsa.esbd.beans.dao.entities.complex.Util;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.dao.IEntitiesService.IEntityServiceLocal;
@@ -15,27 +17,28 @@ import tech.lapsa.esbd.dao.IEntitiesService.IEntityServiceRemote;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.domain.AEntity;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
-import tech.lapsa.java.commons.function.MyCollections;
-import tech.lapsa.java.commons.function.MyExceptions;
 import tech.lapsa.java.commons.function.MyNumbers;
-import tech.lapsa.java.commons.function.MyOptionals;
 
-public abstract class AOndemandComplexEntitiesService<DOMAIN extends AEntity, ESBD>
+public abstract class AOndemandComplexEntitiesService<DOMAIN extends AEntity, ESBD, INTERMEDIATE_TYPE>
 	extends AEntitiesService<DOMAIN, ESBD>
 	implements IEntityServiceLocal<DOMAIN>, IEntityServiceRemote<DOMAIN> {
 
     // finals
 
-    protected final BiFunction<Connection, Integer, List<ESBD>> getByIdFunction;
+    protected final BiFunction<Connection, Integer, INTERMEDIATE_TYPE> getByIdFunction;
+    protected final Function<INTERMEDIATE_TYPE, List<ESBD>> getListFunction;
 
     // constructor
 
     protected AOndemandComplexEntitiesService(final Class<?> serviceClazz,
 	    final Class<DOMAIN> domainClazz,
-	    final BiFunction<Connection, Integer, List<ESBD>> getByIdFunction) {
+	    final BiFunction<Connection, Integer, INTERMEDIATE_TYPE> getByIdFunction,
+	    final Function<INTERMEDIATE_TYPE, List<ESBD>> getListFunction) {
 	super(serviceClazz, domainClazz);
 	assert getByIdFunction != null;
+	assert getListFunction != null;
 	this.getByIdFunction = getByIdFunction;
+	this.getListFunction = getListFunction;
     }
 
     // public
@@ -60,24 +63,16 @@ public abstract class AOndemandComplexEntitiesService<DOMAIN extends AEntity, ES
     private DOMAIN _getById(final Integer id) throws IllegalArgumentException, NotFound {
 	MyNumbers.requireNonZero(id, "id");
 
-	final ESBD source;
-	final List<ESBD> list;
-
+	final INTERMEDIATE_TYPE intermediate;
 	try (Connection con = pool.getConnection()) {
-	    list = getByIdFunction.apply(con, id);
+	    intermediate = getByIdFunction.apply(con, id);
 	} catch (ConnectionException e) {
 	    throw new IllegalStateException(e.getMessage());
 	}
 
-	MyOptionals.of(list)
-		.filter(MyCollections::nonEmpty)
-		.orElseThrow(MyExceptions.supplier(NotFound::new, "%1$s not found with ID = '%2$s'",
-			domainClazz.getSimpleName(), id))
-		.stream()
-		.findFirst()
-		.get();
+	final List<ESBD> list = getListFunction.apply(intermediate);
 
-	source = Util.requireSingle(list, domainClazz, "ID", id);
+	final ESBD source = requireSingle(list, domainClazz, "ID", id);
 
 	return conversion(source);
     }

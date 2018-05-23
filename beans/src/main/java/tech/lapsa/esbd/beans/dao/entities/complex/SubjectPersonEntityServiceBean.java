@@ -1,6 +1,5 @@
 package tech.lapsa.esbd.beans.dao.entities.complex;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
@@ -31,14 +30,14 @@ public class SubjectPersonEntityServiceBean
 
     // static finals
 
-    private static final BiFunction<Connection, Integer, List<Client>> GET_BY_ID_FUNCTION = (con, id) -> {
+    private static final BiFunction<Connection, Integer, Client> GET_BY_ID_FUNCTION = (con, id) -> {
 	final Client source = con.getClientByID(id.intValue());
 	if (source == null)
 	    return null;
 	final boolean isPerson = source.getNaturalPersonBool() == 1;
 	if (!isPerson)
 	    return null;
-	return Arrays.asList(source);
+	return source;
     };
 
     // constructor

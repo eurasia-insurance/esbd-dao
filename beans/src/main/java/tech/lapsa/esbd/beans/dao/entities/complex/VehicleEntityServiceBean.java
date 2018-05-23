@@ -3,6 +3,7 @@ package tech.lapsa.esbd.beans.dao.entities.complex;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import javax.ejb.EJB;
@@ -30,22 +31,23 @@ import tech.lapsa.kz.vehicle.VehicleRegNumber;
 
 @Stateless(name = VehicleEntityService.BEAN_NAME)
 public class VehicleEntityServiceBean
-	extends AOndemandComplexEntitiesService<VehicleEntity, TF>
+	extends AOndemandComplexEntitiesService<VehicleEntity, TF, ArrayOfTF>
 	implements VehicleEntityServiceLocal, VehicleEntityServiceRemote {
 
     // static finals
 
-    private static final BiFunction<Connection, Integer, List<TF>> GET_BY_ID_FUNCTION = (con, id) -> {
+    private static final BiFunction<Connection, Integer, ArrayOfTF> GET_BY_ID_FUNCTION = (con, id) -> {
 	final TF param = new TF();
 	param.setTFID(id.intValue());
-	final ArrayOfTF arrayOf = con.getTFByKeyFields(param);
-	return MyObjects.nullOrGet(arrayOf, ArrayOfTF::getTF);
+	return con.getTFByKeyFields(param);
     };
+
+    private static final Function<ArrayOfTF, List<TF>> GET_LIST_FUNCTION = ArrayOfTF::getTF;
 
     // constructor
 
     protected VehicleEntityServiceBean() {
-	super(VehicleEntityService.class, VehicleEntity.class, GET_BY_ID_FUNCTION);
+	super(VehicleEntityService.class, VehicleEntity.class, GET_BY_ID_FUNCTION, GET_LIST_FUNCTION);
     }
 
     // public

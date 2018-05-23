@@ -2,6 +2,7 @@ package tech.lapsa.esbd.beans.dao.entities.complex;
 
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -15,26 +16,25 @@ import tech.lapsa.esbd.dao.entities.complex.InsuranceAgentEntityService.Insuranc
 import tech.lapsa.esbd.domain.complex.InsuranceAgentEntity;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfMIDDLEMAN;
 import tech.lapsa.esbd.jaxws.wsimport.MIDDLEMAN;
-import tech.lapsa.java.commons.function.MyObjects;
 
 @Stateless(name = InsuranceAgentEntityService.BEAN_NAME)
 public class InsuranceAgentEntityServiceBean
-	extends AOndemandComplexEntitiesService<InsuranceAgentEntity, MIDDLEMAN>
+	extends AOndemandComplexEntitiesService<InsuranceAgentEntity, MIDDLEMAN, ArrayOfMIDDLEMAN>
 	implements InsuranceAgentEntityServiceLocal, InsuranceAgentEntityServiceRemote {
 
     // static finals
 
-    private static final BiFunction<Connection, Integer, List<MIDDLEMAN>> GET_BY_ID_FUNCTION = (con, id) -> {
+    private static final BiFunction<Connection, Integer, ArrayOfMIDDLEMAN> GET_BY_ID_FUNCTION = (con, id) -> {
 	final MIDDLEMAN param = new MIDDLEMAN();
 	param.setMIDDLEMANID(id.intValue());
-	final ArrayOfMIDDLEMAN arrayOf = con.getMiddlemenByKeyFields(param);
-	return MyObjects.nullOrGet(arrayOf, ArrayOfMIDDLEMAN::getMIDDLEMAN);
+	return con.getMiddlemenByKeyFields(param);
     };
+    private static final Function<ArrayOfMIDDLEMAN, List<MIDDLEMAN>> GET_LIST_FUNCTION = ArrayOfMIDDLEMAN::getMIDDLEMAN;
 
     // constructor
 
     public InsuranceAgentEntityServiceBean() {
-	super(InsuranceAgentEntityService.class, InsuranceAgentEntity.class, GET_BY_ID_FUNCTION);
+	super(InsuranceAgentEntityService.class, InsuranceAgentEntity.class, GET_BY_ID_FUNCTION, GET_LIST_FUNCTION);
     }
 
     // injected

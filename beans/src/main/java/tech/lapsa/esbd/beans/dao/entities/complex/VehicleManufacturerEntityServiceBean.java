@@ -3,6 +3,7 @@ package tech.lapsa.esbd.beans.dao.entities.complex;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import javax.ejb.EJB;
@@ -23,28 +24,29 @@ import tech.lapsa.esbd.jaxws.wsimport.ArrayOfVOITUREMARK;
 import tech.lapsa.esbd.jaxws.wsimport.VOITUREMARK;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyCollectors;
-import tech.lapsa.java.commons.function.MyObjects;
 import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.function.MyStrings;
 
 @Stateless(name = VehicleManufacturerEntityService.BEAN_NAME)
 public class VehicleManufacturerEntityServiceBean
-	extends AOndemandComplexEntitiesService<VehicleManufacturerEntity, VOITUREMARK>
+	extends AOndemandComplexEntitiesService<VehicleManufacturerEntity, VOITUREMARK, ArrayOfVOITUREMARK>
 	implements VehicleManufacturerEntityServiceLocal, VehicleManufacturerEntityServiceRemote {
 
     // static finals
 
-    private static final BiFunction<Connection, Integer, List<VOITUREMARK>> GET_BY_ID_FUNCTION = (con, id) -> {
+    private static final BiFunction<Connection, Integer, ArrayOfVOITUREMARK> GET_BY_ID_FUNCTION = (con, id) -> {
 	final VOITUREMARK param = new VOITUREMARK();
 	param.setID(id.intValue());
-	final ArrayOfVOITUREMARK arrayOf = con.getVoitureMarks(param);
-	return MyObjects.nullOrGet(arrayOf, ArrayOfVOITUREMARK::getVOITUREMARK);
+	return con.getVoitureMarks(param);
     };
+
+    private static final Function<ArrayOfVOITUREMARK, List<VOITUREMARK>> GET_LIST_FUNCTION = ArrayOfVOITUREMARK::getVOITUREMARK;
 
     // constructor
 
     protected VehicleManufacturerEntityServiceBean() {
-	super(VehicleManufacturerEntityService.class, VehicleManufacturerEntity.class, GET_BY_ID_FUNCTION);
+	super(VehicleManufacturerEntityService.class, VehicleManufacturerEntity.class, GET_BY_ID_FUNCTION,
+		GET_LIST_FUNCTION);
     }
 
     // public

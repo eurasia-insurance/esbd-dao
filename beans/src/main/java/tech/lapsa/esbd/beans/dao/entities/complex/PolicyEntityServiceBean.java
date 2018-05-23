@@ -3,6 +3,7 @@ package tech.lapsa.esbd.beans.dao.entities.complex;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import javax.ejb.EJB;
@@ -30,20 +31,19 @@ import tech.lapsa.java.commons.function.MyStrings;
 
 @Stateless(name = PolicyEntityService.BEAN_NAME)
 public class PolicyEntityServiceBean
-	extends AOndemandComplexEntitiesService<PolicyEntity, Policy>
+	extends AOndemandComplexEntitiesService<PolicyEntity, Policy, Policy>
 	implements PolicyEntityServiceLocal, PolicyEntityServiceRemote {
 
     // static finals
 
-    private static final BiFunction<Connection, Integer, List<Policy>> GET_BY_ID_FUNCTION = (con, id) -> {
-	final Policy source = con.getPolicyByID(id);
-	return MyObjects.nullOrGet(source, Arrays::asList);
-    };
+    private static final BiFunction<Connection, Integer, Policy> GET_BY_ID_FUNCTION = (con, id) -> con
+	    .getPolicyByID(id);
+    private static final Function<Policy, List<Policy>> GET_LIST_FUNCTION = Arrays::asList;
 
     // constructor
 
     public PolicyEntityServiceBean() {
-	super(PolicyEntityService.class, PolicyEntity.class, GET_BY_ID_FUNCTION);
+	super(PolicyEntityService.class, PolicyEntity.class, GET_BY_ID_FUNCTION, GET_LIST_FUNCTION);
     }
 
     // public

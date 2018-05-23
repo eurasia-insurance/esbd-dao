@@ -2,7 +2,6 @@ package tech.lapsa.esbd.beans.dao;
 
 import javax.ejb.EJB;
 
-import tech.lapsa.esbd.beans.dao.entities.complex.Util;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.AEsbdAttributeConverter;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.AEsbdAttributeConverter.EsbdConversionException;
 import tech.lapsa.esbd.connection.ConnectionPool;

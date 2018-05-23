@@ -3,6 +3,7 @@ package tech.lapsa.esbd.beans.dao.entities.complex;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import javax.ejb.EJB;
@@ -30,22 +31,23 @@ import tech.lapsa.java.commons.function.MyStrings;
 
 @Stateless(name = VehicleModelEntityService.BEAN_NAME)
 public class VehicleModelEntityServiceBean
-	extends AOndemandComplexEntitiesService<VehicleModelEntity, VOITUREMODEL>
+	extends AOndemandComplexEntitiesService<VehicleModelEntity, VOITUREMODEL, ArrayOfVOITUREMODEL>
 	implements VehicleModelEntityServiceLocal, VehicleModelEntityServiceRemote {
 
     // static finals
 
-    private static final BiFunction<Connection, Integer, List<VOITUREMODEL>> GET_BY_ID_FUNCTION = (con, id) -> {
+    private static final BiFunction<Connection, Integer, ArrayOfVOITUREMODEL> GET_BY_ID_FUNCTION = (con, id) -> {
 	final VOITUREMODEL param = new VOITUREMODEL();
 	param.setID(id.intValue());
-	final ArrayOfVOITUREMODEL arrayOf = con.getVoitureModels(param);
-	return MyObjects.nullOrGet(arrayOf, ArrayOfVOITUREMODEL::getVOITUREMODEL);
+	return con.getVoitureModels(param);
     };
+
+    private static final Function<ArrayOfVOITUREMODEL, List<VOITUREMODEL>> GET_LIST_FUNCTION = ArrayOfVOITUREMODEL::getVOITUREMODEL;
 
     // constructor
 
     protected VehicleModelEntityServiceBean() {
-	super(VehicleModelEntityService.class, VehicleModelEntity.class, GET_BY_ID_FUNCTION);
+	super(VehicleModelEntityService.class, VehicleModelEntity.class, GET_BY_ID_FUNCTION, GET_LIST_FUNCTION);
     }
 
     // public
