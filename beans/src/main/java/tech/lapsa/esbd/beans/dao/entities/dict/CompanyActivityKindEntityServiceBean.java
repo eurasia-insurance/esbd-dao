@@ -23,6 +23,7 @@ public class CompanyActivityKindEntityServiceBean
     // constructor
 
     public CompanyActivityKindEntityServiceBean() {
-	super(null, CompanyActivityKindEntity.class, DICT_NAME, CompanyActivityKindEntity::builder);
+	super(CompanyActivityKindEntityService.class, CompanyActivityKindEntity.class, DICT_NAME,
+		CompanyActivityKindEntity::builder);
     }
 }

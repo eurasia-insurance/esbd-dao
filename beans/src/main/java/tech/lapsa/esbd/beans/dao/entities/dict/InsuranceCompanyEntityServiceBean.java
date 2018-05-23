@@ -23,6 +23,7 @@ public class InsuranceCompanyEntityServiceBean
     // constructor
 
     public InsuranceCompanyEntityServiceBean() {
-	super(null, InsuranceCompanyEntity.class, DICT_NAME, InsuranceCompanyEntity::builder);
+	super(InsuranceCompanyEntityService.class, InsuranceCompanyEntity.class, DICT_NAME,
+		InsuranceCompanyEntity::builder);
     }
 }

@@ -23,6 +23,6 @@ public class BranchEntityServiceBean
     // constructor
 
     public BranchEntityServiceBean() {
-	super(null, BranchEntity.class, DICT_NAME, BranchEntity::builder);
+	super(BranchEntityService.class, BranchEntity.class, DICT_NAME, BranchEntity::builder);
     }
 }
