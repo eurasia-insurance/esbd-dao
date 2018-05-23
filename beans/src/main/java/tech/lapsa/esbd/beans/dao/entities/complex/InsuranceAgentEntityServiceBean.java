@@ -29,12 +29,14 @@ public class InsuranceAgentEntityServiceBean
 	param.setMIDDLEMANID(id.intValue());
 	return con.getMiddlemenByKeyFields(param);
     };
+
     private static final Function<ArrayOfMIDDLEMAN, List<MIDDLEMAN>> GET_LIST_FUNCTION = ArrayOfMIDDLEMAN::getMIDDLEMAN;
 
     // constructor
 
-    public InsuranceAgentEntityServiceBean() {
-	super(InsuranceAgentEntityService.class, InsuranceAgentEntity.class, GET_BY_ID_FUNCTION, GET_LIST_FUNCTION);
+    protected InsuranceAgentEntityServiceBean() {
+	super(InsuranceAgentEntityService.class, InsuranceAgentEntity.class, GET_LIST_FUNCTION, true,
+		GET_BY_ID_FUNCTION, null);
     }
 
     // injected

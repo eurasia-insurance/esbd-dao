@@ -1,6 +1,5 @@
 package tech.lapsa.esbd.beans.dao.entities.complex;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -22,17 +21,17 @@ import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.kz.taxpayer.TaxpayerNumber;
 
 public abstract class ASubjectEntityService<T extends SubjectEntity>
-	extends AOndemandComplexEntitiesService<T, Client, Client>
+	extends AOndemandComplexEntitiesService<T, Client, ArrayOfClient>
 	implements ISubjectEntityServiceLocal<T>, ISubjectEntityServiceRemote<T> {
 
-    private static final Function<Client, List<Client>> GET_LIST_FUNCTION = Arrays::asList;
+    private static final Function<ArrayOfClient, List<Client>> GET_LIST_FUNCTION = ArrayOfClient::getClient;
 
     // constructor
 
     protected ASubjectEntityService(final Class<?> serviceClazz,
 	    final Class<T> domainClass,
-	    final BiFunction<Connection, Integer, Client> esbdGetListByIdFunction) {
-	super(serviceClazz, domainClass, esbdGetListByIdFunction, GET_LIST_FUNCTION);
+	    final BiFunction<Connection, Integer, Client> getSingleById) {
+	super(serviceClazz, domainClass, GET_LIST_FUNCTION, false, null, getSingleById);
     }
 
     // private

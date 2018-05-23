@@ -40,6 +40,21 @@ public final class Util {
 	return list.get(0);
     }
 
+    public static <T> T requireSingle(final List<T> list,
+	    final Class<?> clazz) throws NotFound, IllegalStateException {
+
+	if (list == null || list.isEmpty())
+	    throw MyExceptions.format(NotFound::new, "%1$s not found",
+		    clazz.getSimpleName(), // 1
+		    0);
+
+	if (list.size() > 1)
+	    throw MyExceptions.illegalStateFormat("Too many %1$s found (%2$s)",
+		    clazz.getSimpleName(), // 1
+		    list.size());
+	return list.get(0);
+    }
+
     @FunctionalInterface
     public interface ThrowingFunction<T, R> {
 	R apply(T value) throws Exception;
