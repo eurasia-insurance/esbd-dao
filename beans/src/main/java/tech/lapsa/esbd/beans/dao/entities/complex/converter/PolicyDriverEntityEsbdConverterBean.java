@@ -13,9 +13,9 @@ import com.lapsa.insurance.elements.InsuredAgeAndExpirienceClass;
 import com.lapsa.insurance.elements.MaritalStatus;
 
 import tech.lapsa.esbd.beans.dao.TemporalUtil;
+import tech.lapsa.esbd.dao.elements.dict.InsuranceClassTypeService.InsuranceClassTypeServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.InsuredAgeAndExpirienceClassService.InsuredAgeAndExpirienceClassServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.MaritalStatusService.MaritalStatusServiceLocal;
-import tech.lapsa.esbd.dao.elements.nondict.InsuranceClassTypeService.InsuranceClassTypeServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.SubjectPersonEntityService.SubjectPersonEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.UserEntityService.UserEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
