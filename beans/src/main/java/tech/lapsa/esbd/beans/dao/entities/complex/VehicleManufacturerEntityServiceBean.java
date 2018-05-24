@@ -9,7 +9,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import tech.lapsa.esbd.beans.dao.AOndemandComplexEntitiesService;
+import tech.lapsa.esbd.beans.dao.AOndemandComplexEntitiesService.AOndemandComplexIdByIntermediateService;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.VehicleManufacturerEntityEsbdConverterBean;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.dao.entities.complex.VehicleManufacturerEntityService;
@@ -23,7 +23,7 @@ import tech.lapsa.java.commons.function.MyStrings;
 
 @Stateless(name = VehicleManufacturerEntityService.BEAN_NAME)
 public class VehicleManufacturerEntityServiceBean
-	extends AOndemandComplexEntitiesService<VehicleManufacturerEntity, VOITUREMARK, ArrayOfVOITUREMARK>
+	extends AOndemandComplexIdByIntermediateService<VehicleManufacturerEntity, VOITUREMARK, ArrayOfVOITUREMARK>
 	implements VehicleManufacturerEntityServiceLocal, VehicleManufacturerEntityServiceRemote {
 
     // static finals
@@ -39,8 +39,8 @@ public class VehicleManufacturerEntityServiceBean
     // constructor
 
     protected VehicleManufacturerEntityServiceBean() {
-	super(VehicleManufacturerEntityService.class, VehicleManufacturerEntity.class, GET_LIST_FUNCTION, true,
-		GET_BY_ID_FUNCTION, null);
+	super(VehicleManufacturerEntityService.class, VehicleManufacturerEntity.class, GET_LIST_FUNCTION,
+		GET_BY_ID_FUNCTION);
     }
 
     // public
@@ -49,7 +49,7 @@ public class VehicleManufacturerEntityServiceBean
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<VehicleManufacturerEntity> getByName(final String name) throws IllegalArgument {
 	MyStrings.requireNonEmpty(IllegalArgument::new, name, "name");
-	return getManyFromIntermediate(con -> {
+	return manyFromIntermediateArray(con -> {
 	    final VOITUREMARK search = new VOITUREMARK();
 	    search.setNAME(name);
 	    return con.getVoitureMarks(search);

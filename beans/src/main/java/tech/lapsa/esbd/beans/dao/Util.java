@@ -55,6 +55,17 @@ public final class Util {
 	return list.get(0);
     }
 
+    public static <T> T requireFirst(final List<T> list,
+	    final Class<?> clazz) throws NotFound {
+
+	if (list == null || list.isEmpty())
+	    throw MyExceptions.format(NotFound::new, "%1$s not found",
+		    clazz.getSimpleName(), // 1
+		    0);
+
+	return list.get(0);
+    }
+
     @FunctionalInterface
     public interface ThrowingFunction<T, R> {
 	R apply(T value) throws Exception;

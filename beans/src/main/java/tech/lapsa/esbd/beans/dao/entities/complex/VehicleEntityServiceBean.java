@@ -9,7 +9,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import tech.lapsa.esbd.beans.dao.AOndemandComplexEntitiesService;
+import tech.lapsa.esbd.beans.dao.AOndemandComplexEntitiesService.AOndemandComplexIdByIntermediateService;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.VehicleEntityEsbdConverterBean;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.dao.entities.complex.VehicleEntityService;
@@ -25,7 +25,7 @@ import tech.lapsa.kz.vehicle.VehicleRegNumber;
 
 @Stateless(name = VehicleEntityService.BEAN_NAME)
 public class VehicleEntityServiceBean
-	extends AOndemandComplexEntitiesService<VehicleEntity, TF, ArrayOfTF>
+	extends AOndemandComplexIdByIntermediateService<VehicleEntity, TF, ArrayOfTF>
 	implements VehicleEntityServiceLocal, VehicleEntityServiceRemote {
 
     // static finals
@@ -41,7 +41,7 @@ public class VehicleEntityServiceBean
     // constructor
 
     protected VehicleEntityServiceBean() {
-	super(VehicleEntityService.class, VehicleEntity.class, GET_LIST_FUNCTION, true, GET_BY_ID_FUNCTION, null);
+	super(VehicleEntityService.class, VehicleEntity.class, GET_LIST_FUNCTION, GET_BY_ID_FUNCTION);
     }
 
     // public
@@ -50,14 +50,14 @@ public class VehicleEntityServiceBean
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<VehicleEntity> getByRegNumber(final VehicleRegNumber regNumber) throws IllegalArgument {
 	MyObjects.requireNonNull(regNumber, "regNumber"); //
-	return getManyFromIntermediate(con -> con.getTFByNumber(regNumber.getNumber()));
+	return manyFromIntermediateArray(con -> con.getTFByNumber(regNumber.getNumber()));
     }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<VehicleEntity> getByVINCode(final String vinCode) throws IllegalArgument {
 	MyStrings.requireNonEmpty(vinCode, "vinCode");
-	return getManyFromIntermediate(con -> con.getTFByVIN(vinCode));
+	return manyFromIntermediateArray(con -> con.getTFByVIN(vinCode));
     }
 
     // injected

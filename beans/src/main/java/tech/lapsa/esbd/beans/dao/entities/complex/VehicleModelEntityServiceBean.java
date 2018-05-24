@@ -9,7 +9,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import tech.lapsa.esbd.beans.dao.AOndemandComplexEntitiesService;
+import tech.lapsa.esbd.beans.dao.AOndemandComplexEntitiesService.AOndemandComplexIdByIntermediateService;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.VehicleModelEntityEsbdConverterBean;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService;
@@ -25,7 +25,7 @@ import tech.lapsa.java.commons.function.MyStrings;
 
 @Stateless(name = VehicleModelEntityService.BEAN_NAME)
 public class VehicleModelEntityServiceBean
-	extends AOndemandComplexEntitiesService<VehicleModelEntity, VOITUREMODEL, ArrayOfVOITUREMODEL>
+	extends AOndemandComplexIdByIntermediateService<VehicleModelEntity, VOITUREMODEL, ArrayOfVOITUREMODEL>
 	implements VehicleModelEntityServiceLocal, VehicleModelEntityServiceRemote {
 
     // static finals
@@ -41,8 +41,7 @@ public class VehicleModelEntityServiceBean
     // constructor
 
     protected VehicleModelEntityServiceBean() {
-	super(VehicleModelEntityService.class, VehicleModelEntity.class, GET_LIST_FUNCTION, true, GET_BY_ID_FUNCTION,
-		null);
+	super(VehicleModelEntityService.class, VehicleModelEntity.class, GET_LIST_FUNCTION, GET_BY_ID_FUNCTION);
     }
 
     // public
@@ -51,7 +50,7 @@ public class VehicleModelEntityServiceBean
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<VehicleModelEntity> getByName(final String name) throws IllegalArgument {
 	MyStrings.requireNonEmpty(IllegalArgument::new, name, "name");
-	return getManyFromIntermediate(con -> {
+	return manyFromIntermediateArray(con -> {
 	    final VOITUREMODEL search = new VOITUREMODEL();
 	    search.setNAME(name);
 	    return con.getVoitureModels(search);
@@ -63,7 +62,7 @@ public class VehicleModelEntityServiceBean
     public List<VehicleModelEntity> getByManufacturer(final VehicleManufacturerEntity manufacturer)
 	    throws IllegalArgument {
 	MyObjects.requireNonNull(IllegalArgument::new, manufacturer, "manufacturer");
-	return getManyFromIntermediate(con -> {
+	return manyFromIntermediateArray(con -> {
 	    final VOITUREMODEL search = new VOITUREMODEL();
 	    search.setVOITUREMARKID(manufacturer.getId().intValue());
 	    return con.getVoitureModels(search);

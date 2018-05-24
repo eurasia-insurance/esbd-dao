@@ -7,7 +7,7 @@ import java.util.function.Function;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
-import tech.lapsa.esbd.beans.dao.AOndemandComplexEntitiesService;
+import tech.lapsa.esbd.beans.dao.AOndemandComplexEntitiesService.AOndemandComplexIdByIntermediateService;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.InsuranceAgentEntityEsbdConverterBean;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.dao.entities.complex.InsuranceAgentEntityService;
@@ -19,7 +19,7 @@ import tech.lapsa.esbd.jaxws.wsimport.MIDDLEMAN;
 
 @Stateless(name = InsuranceAgentEntityService.BEAN_NAME)
 public class InsuranceAgentEntityServiceBean
-	extends AOndemandComplexEntitiesService<InsuranceAgentEntity, MIDDLEMAN, ArrayOfMIDDLEMAN>
+	extends AOndemandComplexIdByIntermediateService<InsuranceAgentEntity, MIDDLEMAN, ArrayOfMIDDLEMAN>
 	implements InsuranceAgentEntityServiceLocal, InsuranceAgentEntityServiceRemote {
 
     // static finals
@@ -35,8 +35,7 @@ public class InsuranceAgentEntityServiceBean
     // constructor
 
     protected InsuranceAgentEntityServiceBean() {
-	super(InsuranceAgentEntityService.class, InsuranceAgentEntity.class, GET_LIST_FUNCTION, true,
-		GET_BY_ID_FUNCTION, null);
+	super(InsuranceAgentEntityService.class, InsuranceAgentEntity.class, GET_LIST_FUNCTION, GET_BY_ID_FUNCTION);
     }
 
     // injected
