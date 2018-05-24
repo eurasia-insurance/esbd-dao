@@ -11,7 +11,7 @@ import tech.lapsa.esbd.dao.IElementsService;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyExceptions;
-import tech.lapsa.java.commons.function.MyNumbers;
+import tech.lapsa.java.commons.function.MyObjects;
 import tech.lapsa.java.commons.function.MyOptionals;
 
 public abstract class ADictElementsService<T extends Enum<T>>
@@ -58,7 +58,7 @@ public abstract class ADictElementsService<T extends Enum<T>>
     // private
 
     private T _getById(final Integer id) throws IllegalArgumentException, NotFound {
-	MyNumbers.requireNonZero(id, "id");
+	MyObjects.requireNonNull(id, "id");
 	return MyOptionals.of(mapperFunction.apply(id)) //
 		.orElseThrow(
 			MyExceptions.supplier(NotFound::new, "%1$s(%2$s) not found", domainClazz.getSimpleName(), id));
