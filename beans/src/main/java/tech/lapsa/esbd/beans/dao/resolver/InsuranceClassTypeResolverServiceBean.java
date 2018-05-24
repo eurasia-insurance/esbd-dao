@@ -10,6 +10,7 @@ import javax.ejb.TransactionAttributeType;
 
 import com.lapsa.insurance.elements.InsuranceClassType;
 
+import tech.lapsa.esbd.beans.dao.AService;
 import tech.lapsa.esbd.beans.dao.TemporalUtil;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
@@ -22,15 +23,15 @@ import tech.lapsa.esbd.dao.resolver.InsuranceClassTypeResolverService.InsuranceC
 import tech.lapsa.esbd.domain.complex.SubjectPersonEntity;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyObjects;
-import tech.lapsa.java.commons.logging.MyLogger;
 
 @Stateless(name = InsuranceClassTypeResolverService.BEAN_NAME)
 public class InsuranceClassTypeResolverServiceBean
+	extends AService<InsuranceClassType>
 	implements InsuranceClassTypeResolverServiceLocal, InsuranceClassTypeResolverServiceRemote {
 
-    private final MyLogger logger = MyLogger.newBuilder() //
-	    .withNameOf(InsuranceClassTypeResolverService.class) //
-	    .build();
+    public InsuranceClassTypeResolverServiceBean() {
+	super(InsuranceClassTypeResolverService.class, InsuranceClassType.class);
+    }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
