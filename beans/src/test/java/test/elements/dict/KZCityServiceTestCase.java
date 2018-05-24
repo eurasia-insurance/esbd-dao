@@ -14,12 +14,12 @@ import com.lapsa.kz.country.KZCity;
 import tech.lapsa.esbd.beans.dao.elements.dict.mapping.KZCityMapping;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
-import tech.lapsa.esbd.dao.IElementsService;
+import tech.lapsa.esbd.dao.elements.dict.KZCityService;
 import tech.lapsa.esbd.dao.elements.dict.KZCityService.KZCityServiceLocal;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfItem;
 import tech.lapsa.esbd.jaxws.wsimport.Item;
 
-public class KZCityServiceTestCase extends AMappedElementTestCase<KZCity> {
+public class KZCityServiceTestCase extends AMappedElementDictionaryTestCase<KZCity> {
 
     @Inject
     private KZCityServiceLocal service;
@@ -29,7 +29,7 @@ public class KZCityServiceTestCase extends AMappedElementTestCase<KZCity> {
     }
 
     @Override
-    IElementsService<KZCity> service() {
+    protected KZCityService service() {
 	return service;
     }
 

@@ -13,50 +13,25 @@ import tech.lapsa.esbd.beans.dao.elements.dict.mapping.AMapping;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.connection.ConnectionPool;
-import tech.lapsa.esbd.dao.IElementsService;
-import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfItem;
 import tech.lapsa.esbd.jaxws.wsimport.Item;
-import tech.lapsa.java.commons.exceptions.IllegalArgument;
-import test.ArquillianBaseTestCase;
+import test.elements.AMappedElementTestCase;
 
-public abstract class AMappedElementTestCase<T extends Enum<T>> extends ArquillianBaseTestCase {
+public abstract class AMappedElementDictionaryTestCase<T extends Enum<T>> extends AMappedElementTestCase<T> {
 
-    final Class<T> clazz;
-    final AMapping<Integer, T> mapper;
     final String dictionaryName;
-    final int invalidId;
 
-    abstract IElementsService<T> service();
-
-    public AMappedElementTestCase(final Class<T> clazz, AMapping<Integer, T> mapper, String dictionaryName,
+    protected AMappedElementDictionaryTestCase(final Class<T> clazz, AMapping<Integer, T> mapper, String dictionaryName,
 	    int invalidId) {
-	this.clazz = clazz;
-	this.mapper = mapper;
+	super(clazz, mapper, invalidId);
 	this.dictionaryName = dictionaryName;
-	this.invalidId = invalidId;
-    }
-
-    @Test
-    public void testGetById() throws IllegalArgument {
-	for (final int id : mapper.getAllIds())
-	    try {
-		final T res = service().getById(id);
-		assertThat(res, allOf(not(nullValue()), equalTo(mapper.forId(id))));
-	    } catch (final NotFound e) {
-		fail(e.getMessage());
-	    }
-    }
-
-    @Test(expected = NotFound.class)
-    public void testGetById_NotFound() throws NotFound, IllegalArgument {
-	service().getById(invalidId);
     }
 
     @Inject
-    ConnectionPool pool;
+    protected ConnectionPool pool;
 
     @Test
+    @Override
     public void testEveryElementValueMappedToDictionary() throws ConnectionException {
 	final ArrayOfItem items;
 	try (Connection con = pool.getConnection()) {

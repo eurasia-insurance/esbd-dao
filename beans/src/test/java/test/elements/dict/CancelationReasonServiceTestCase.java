@@ -5,10 +5,10 @@ import javax.inject.Inject;
 import com.lapsa.insurance.elements.CancelationReason;
 
 import tech.lapsa.esbd.beans.dao.elements.dict.mapping.CancelationReasonMapping;
-import tech.lapsa.esbd.dao.IElementsService;
+import tech.lapsa.esbd.dao.elements.dict.CancelationReasonService;
 import tech.lapsa.esbd.dao.elements.dict.CancelationReasonService.CancelationReasonServiceLocal;
 
-public class CancelationReasonServiceTestCase extends AMappedElementTestCase<CancelationReason> {
+public class CancelationReasonServiceTestCase extends AMappedElementDictionaryTestCase<CancelationReason> {
 
     @Inject
     private CancelationReasonServiceLocal service;
@@ -18,7 +18,7 @@ public class CancelationReasonServiceTestCase extends AMappedElementTestCase<Can
     }
 
     @Override
-    IElementsService<CancelationReason> service() {
+    protected CancelationReasonService service() {
 	return service;
     }
 }
