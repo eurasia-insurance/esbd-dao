@@ -1,7 +1,6 @@
 package tech.lapsa.esbd.beans.dao.entities.complex;
 
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -12,9 +11,7 @@ import tech.lapsa.esbd.dao.entities.complex.SubjectPersonEntityService;
 import tech.lapsa.esbd.dao.entities.complex.SubjectPersonEntityService.SubjectPersonEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.SubjectPersonEntityService.SubjectPersonEntityServiceRemote;
 import tech.lapsa.esbd.domain.complex.SubjectPersonEntity;
-import tech.lapsa.esbd.jaxws.wsimport.ArrayOfClient;
 import tech.lapsa.esbd.jaxws.wsimport.Client;
-import tech.lapsa.kz.taxpayer.TaxpayerNumber;
 
 @Stateless(name = SubjectPersonEntityService.BEAN_NAME)
 public class SubjectPersonEntityServiceBean
@@ -36,20 +33,7 @@ public class SubjectPersonEntityServiceBean
     // constructor
 
     public SubjectPersonEntityServiceBean() {
-	super(SubjectPersonEntityService.class, SubjectPersonEntity.class, GET_BY_ID_FUNCTION);
-    }
-
-    // private & protected
-
-    @Override
-    protected Function<Connection, ArrayOfClient> criteriaByIdNumber(final TaxpayerNumber idNumber) {
-	assert idNumber != null;
-	return con -> {
-	    final Client search = new Client();
-	    search.setIIN(idNumber.getNumber());
-	    search.setNaturalPersonBool(1);
-	    return con.getClientsByKeyFields(search);
-	};
+	super(SubjectPersonEntityService.class, SubjectPersonEntity.class, GET_BY_ID_FUNCTION, ClientType.PERSON);
     }
 
     // injected
