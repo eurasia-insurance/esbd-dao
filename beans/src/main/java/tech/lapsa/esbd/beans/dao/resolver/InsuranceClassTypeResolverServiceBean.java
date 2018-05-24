@@ -14,7 +14,6 @@ import tech.lapsa.esbd.beans.dao.AService;
 import tech.lapsa.esbd.beans.dao.TemporalUtil;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
-import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.elements.dict.InsuranceClassTypeService.InsuranceClassTypeServiceLocal;
 import tech.lapsa.esbd.dao.resolver.InsuranceClassTypeResolverService;
@@ -61,9 +60,6 @@ public class InsuranceClassTypeResolverServiceBean
     }
 
     // PRIVATE
-
-    @EJB
-    private ConnectionPool pool;
 
     @EJB
     private InsuranceClassTypeServiceLocal classTypes;

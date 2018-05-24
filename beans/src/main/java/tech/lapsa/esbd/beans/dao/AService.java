@@ -1,5 +1,8 @@
 package tech.lapsa.esbd.beans.dao;
 
+import javax.ejb.EJB;
+
+import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.java.commons.logging.MyLogger;
 
 public abstract class AService<T> {
@@ -18,4 +21,9 @@ public abstract class AService<T> {
 		.build();
 	this.domainClazz = domainClazz;
     }
+
+    // injected
+
+    @EJB
+    protected ConnectionPool pool;
 }

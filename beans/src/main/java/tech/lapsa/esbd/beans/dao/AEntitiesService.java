@@ -1,10 +1,7 @@
 package tech.lapsa.esbd.beans.dao;
 
-import javax.ejb.EJB;
-
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.AEsbdAttributeConverter;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.AEsbdAttributeConverter.EsbdConversionException;
-import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.IEntitiesService.IEntityServiceLocal;
 import tech.lapsa.esbd.dao.IEntitiesService.IEntityServiceRemote;
 import tech.lapsa.esbd.domain.AEntity;
@@ -33,9 +30,4 @@ public abstract class AEntitiesService<DOMAIN extends AEntity, ESBD>
 	    throw Util.esbdConversionExceptionToEJBException(e);
 	}
     }
-
-    // pool
-
-    @EJB
-    protected ConnectionPool pool;
 }
