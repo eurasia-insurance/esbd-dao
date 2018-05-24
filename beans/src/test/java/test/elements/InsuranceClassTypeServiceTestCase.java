@@ -41,7 +41,7 @@ public class InsuranceClassTypeServiceTestCase extends AMappedElementTestCase<In
     public void testEveryElementValueMappedToDictionary() throws ConnectionException {
 
 	try (Connection con = pool.getConnection()) {
-	    for (int i = -1000; i <= 1000; i++) {
+	    for (int i = -100; i <= 100; i++) {
 		InsuranceClassType origin;
 		InsuranceClassType resolved;
 
