@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.ejb.EJBException;
 import javax.ejb.TransactionAttribute;
@@ -21,6 +23,7 @@ import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyCollectors;
 import tech.lapsa.java.commons.function.MyNumbers;
 import tech.lapsa.java.commons.function.MyObjects;
+import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.function.MyStreams;
 
 public abstract class AOndemandComplexEntitiesService<DOMAIN extends AEntity, ESBD, INTERMEDIATE_ARRAY>
@@ -147,6 +150,27 @@ public abstract class AOndemandComplexEntitiesService<DOMAIN extends AEntity, ES
 	}
     }
 
+    protected DOMAIN singleFromStream(final Function<Connection, Stream<ESBD>> criteriaFunction)
+	    throws IllegalStateException, NotFound {
+	assert criteriaFunction != null;
+	try {
+	    final Stream<ESBD> stream;
+	    try (Connection con = pool.getConnection()) {
+		stream = criteriaFunction.apply(con);
+	    } catch (ConnectionException e) {
+		throw new IllegalStateException(e.getMessage());
+	    }
+	    final List<ESBD> list = MyObjects.nullOrGet(stream, s -> s.collect(Collectors.toList()));
+	    final ESBD source = requireSingle(list, domainClazz);
+	    return conversion(source);
+	} catch (final EJBException e) {
+	    throw e;
+	} catch (final RuntimeException e) {
+	    logger.WARN.log(e);
+	    throw new EJBException(e.getMessage());
+	}
+    }
+
     protected DOMAIN singleFromSingle(final Function<Connection, ESBD> criteriaFunction)
 	    throws IllegalStateException, NotFound {
 	assert criteriaFunction != null;
@@ -211,6 +235,27 @@ public abstract class AOndemandComplexEntitiesService<DOMAIN extends AEntity, ES
 	}
     }
 
+    protected DOMAIN firstFromStream(final Function<Connection, Stream<ESBD>> criteriaFunction)
+	    throws NotFound {
+	assert criteriaFunction != null;
+	try {
+	    final Stream<ESBD> stream;
+	    try (Connection con = pool.getConnection()) {
+		stream = criteriaFunction.apply(con);
+	    } catch (ConnectionException e) {
+		throw new IllegalStateException(e.getMessage());
+	    }
+	    final List<ESBD> list = MyObjects.nullOrGet(stream, s -> s.collect(Collectors.toList()));
+	    final ESBD source = requireFirst(list, domainClazz);
+	    return conversion(source);
+	} catch (final EJBException e) {
+	    throw e;
+	} catch (final RuntimeException e) {
+	    logger.WARN.log(e);
+	    throw new EJBException(e.getMessage());
+	}
+    }
+
     // many
 
     protected List<DOMAIN> manyFromIntermediateArray(final Function<Connection, INTERMEDIATE_ARRAY> criteriaFunction) {
@@ -244,6 +289,27 @@ public abstract class AOndemandComplexEntitiesService<DOMAIN extends AEntity, ES
 		throw new IllegalStateException(e.getMessage());
 	    }
 	    return MyStreams.orEmptyOf(list)
+		    .map(this::conversion)
+		    .collect(MyCollectors.unmodifiableList());
+	} catch (final EJBException e) {
+	    throw e;
+	} catch (final RuntimeException e) {
+	    logger.WARN.log(e);
+	    throw new EJBException(e.getMessage());
+	}
+    }
+
+    protected List<DOMAIN> manyFromStream(final Function<Connection, Stream<ESBD>> criteriaFunction) {
+	assert criteriaFunction != null;
+	try {
+	    final Stream<ESBD> stream;
+	    try (Connection con = pool.getConnection()) {
+		stream = criteriaFunction.apply(con);
+	    } catch (ConnectionException e) {
+		throw new IllegalStateException(e.getMessage());
+	    }
+	    return MyOptionals.of(stream)
+		    .orElseGet(Stream::empty)
 		    .map(this::conversion)
 		    .collect(MyCollectors.unmodifiableList());
 	} catch (final EJBException e) {
