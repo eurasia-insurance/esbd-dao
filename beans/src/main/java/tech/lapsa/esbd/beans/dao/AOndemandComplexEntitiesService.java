@@ -23,39 +23,53 @@ import tech.lapsa.java.commons.function.MyNumbers;
 import tech.lapsa.java.commons.function.MyObjects;
 import tech.lapsa.java.commons.function.MyStreams;
 
-public abstract class AOndemandComplexEntitiesService<DOMAIN extends AEntity, ESBD, INTERMEDIATE_TYPE>
+public abstract class AOndemandComplexEntitiesService<DOMAIN extends AEntity, ESBD, INTERMEDIATE_ARRAY_TYPE>
 	extends AEntitiesService<DOMAIN, ESBD>
 	implements IEntityServiceLocal<DOMAIN>, IEntityServiceRemote<DOMAIN> {
 
     // finals
 
-    protected final Function<INTERMEDIATE_TYPE, List<ESBD>> intermediateToListConverter;
-    protected final boolean isIdByIntermediate;
+    protected final Function<INTERMEDIATE_ARRAY_TYPE, List<ESBD>> intermediateArrayToListConverter;
+    protected final boolean isGetByIdAsIntermediateArray;
 
-    protected final BiFunction<Connection, Integer, INTERMEDIATE_TYPE> getIntermediateById;
+    protected final BiFunction<Connection, Integer, INTERMEDIATE_ARRAY_TYPE> getIntermediateArrayById;
     protected final BiFunction<Connection, Integer, ESBD> getSingleById;
 
     // constructor
 
-    protected AOndemandComplexEntitiesService(final Class<?> serviceClazz,
+    private AOndemandComplexEntitiesService(final Class<?> serviceClazz,
 	    final Class<DOMAIN> domainClazz,
-	    final Function<INTERMEDIATE_TYPE, List<ESBD>> intermediateToListConverter,
-	    boolean isIdByIntermediate,
-	    final BiFunction<Connection, Integer, INTERMEDIATE_TYPE> getIntermediateById,
+	    final Function<INTERMEDIATE_ARRAY_TYPE, List<ESBD>> intermediateArrayToListConverter,
+	    boolean isGetByIdAsIntermediateArray,
+	    final BiFunction<Connection, Integer, INTERMEDIATE_ARRAY_TYPE> getIntermediateArrayById,
 	    final BiFunction<Connection, Integer, ESBD> getSingleById) {
 	super(serviceClazz, domainClazz);
 
-	assert intermediateToListConverter != null;
-	this.intermediateToListConverter = intermediateToListConverter;
+	assert intermediateArrayToListConverter != null;
+	this.intermediateArrayToListConverter = intermediateArrayToListConverter;
 
-	if (isIdByIntermediate)
-	    assert getIntermediateById != null;
+	if (isGetByIdAsIntermediateArray)
+	    assert getIntermediateArrayById != null;
 	else
 	    assert getSingleById != null;
 
-	this.isIdByIntermediate = isIdByIntermediate;
-	this.getIntermediateById = getIntermediateById;
+	this.isGetByIdAsIntermediateArray = isGetByIdAsIntermediateArray;
+	this.getIntermediateArrayById = getIntermediateArrayById;
 	this.getSingleById = getSingleById;
+    }
+
+    protected AOndemandComplexEntitiesService(final Class<?> serviceClazz,
+	    final Class<DOMAIN> domainClazz,
+	    final BiFunction<Connection, Integer, ESBD> getSingleById,
+	    final Function<INTERMEDIATE_ARRAY_TYPE, List<ESBD>> intermediateArrayToListConverter) {
+	this(serviceClazz, domainClazz, intermediateArrayToListConverter, false, null, getSingleById);
+    }
+
+    protected AOndemandComplexEntitiesService(final Class<?> serviceClazz,
+	    final Class<DOMAIN> domainClazz,
+	    final Function<INTERMEDIATE_ARRAY_TYPE, List<ESBD>> intermediateArrayToListConverter,
+	    final BiFunction<Connection, Integer, INTERMEDIATE_ARRAY_TYPE> getIntermediateArrayById) {
+	this(serviceClazz, domainClazz, intermediateArrayToListConverter, true, getIntermediateArrayById, null);
     }
 
     // public
@@ -63,10 +77,10 @@ public abstract class AOndemandComplexEntitiesService<DOMAIN extends AEntity, ES
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public DOMAIN getById(final Integer id) throws NotFound, IllegalArgument {
+	MyNumbers.requireNonZero(IllegalArgument::new, id, "id");
 	try {
-	    MyNumbers.requireNonZero(IllegalArgument::new, id, "id");
-	    if (isIdByIntermediate)
-		return getOneFromIntermediate(con -> getIntermediateById.apply(con, id));
+	    if (isGetByIdAsIntermediateArray)
+		return getOneFromIntermediateList(con -> getIntermediateArrayById.apply(con, id));
 	    else
 		return getOneFromSingle(con -> getSingleById.apply(con, id));
 	} catch (final EJBException e) {
@@ -79,16 +93,16 @@ public abstract class AOndemandComplexEntitiesService<DOMAIN extends AEntity, ES
 
     // private & protected
 
-    protected DOMAIN getOneFromIntermediate(final Function<Connection, INTERMEDIATE_TYPE> criteriaFunction)
+    protected DOMAIN getOneFromIntermediateList(final Function<Connection, INTERMEDIATE_ARRAY_TYPE> criteriaFunction)
 	    throws NotFound {
 	assert criteriaFunction != null;
-	final INTERMEDIATE_TYPE intermediate;
+	final INTERMEDIATE_ARRAY_TYPE intermediate;
 	try (Connection con = pool.getConnection()) {
 	    intermediate = criteriaFunction.apply(con);
 	} catch (ConnectionException e) {
 	    throw new IllegalStateException(e.getMessage());
 	}
-	final List<ESBD> list = MyObjects.nullOrGet(intermediate, intermediateToListConverter::apply);
+	final List<ESBD> list = MyObjects.nullOrGet(intermediate, intermediateArrayToListConverter::apply);
 	final ESBD source = requireSingle(list, domainClazz);
 	return conversion(source);
     }
@@ -120,15 +134,16 @@ public abstract class AOndemandComplexEntitiesService<DOMAIN extends AEntity, ES
 	return conversion(source);
     }
 
-    protected List<DOMAIN> getManyFromIntermediate(final Function<Connection, INTERMEDIATE_TYPE> criteriaFunction) {
+    protected List<DOMAIN> getManyFromIntermediate(
+	    final Function<Connection, INTERMEDIATE_ARRAY_TYPE> criteriaFunction) {
 	assert criteriaFunction != null;
-	final INTERMEDIATE_TYPE intermediate;
+	final INTERMEDIATE_ARRAY_TYPE intermediate;
 	try (Connection con = pool.getConnection()) {
 	    intermediate = criteriaFunction.apply(con);
 	} catch (ConnectionException e) {
 	    throw new IllegalStateException(e.getMessage());
 	}
-	final List<ESBD> list = MyObjects.nullOrGet(intermediate, intermediateToListConverter::apply);
+	final List<ESBD> list = MyObjects.nullOrGet(intermediate, intermediateArrayToListConverter::apply);
 	return MyStreams.orEmptyOf(list)
 		.map(this::conversion)
 		.collect(MyCollectors.unmodifiableList());
@@ -145,5 +160,36 @@ public abstract class AOndemandComplexEntitiesService<DOMAIN extends AEntity, ES
 	return MyStreams.orEmptyOf(list)
 		.map(this::conversion)
 		.collect(MyCollectors.unmodifiableList());
+    }
+
+    protected DOMAIN getFirstFromIntermediate(final Function<Connection, INTERMEDIATE_ARRAY_TYPE> criteriaFunction)
+	    throws NotFound {
+	assert criteriaFunction != null;
+	final INTERMEDIATE_ARRAY_TYPE intermediate;
+	try (Connection con = pool.getConnection()) {
+	    intermediate = criteriaFunction.apply(con);
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
+	}
+	final List<ESBD> list = MyObjects.nullOrGet(intermediate, intermediateArrayToListConverter::apply);
+	return MyStreams.orEmptyOf(list)
+		.findFirst()
+		.map(this::conversion)
+		.orElseThrow(NotFound::new);
+    }
+
+    protected DOMAIN getFirstFromList(final Function<Connection, List<ESBD>> criteriaFunction)
+	    throws NotFound {
+	assert criteriaFunction != null;
+	final List<ESBD> list;
+	try (Connection con = pool.getConnection()) {
+	    list = criteriaFunction.apply(con);
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
+	}
+	return MyStreams.orEmptyOf(list)
+		.findFirst()
+		.map(this::conversion)
+		.orElseThrow(NotFound::new);
     }
 }
