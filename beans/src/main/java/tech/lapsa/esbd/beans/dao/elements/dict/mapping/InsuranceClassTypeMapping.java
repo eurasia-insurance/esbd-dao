@@ -4,7 +4,7 @@ import static com.lapsa.insurance.elements.InsuranceClassType.*;
 
 import com.lapsa.insurance.elements.InsuranceClassType;
 
-public final class InsuranceClassTypeMapping extends AMapping<String, InsuranceClassType> {
+public final class InsuranceClassTypeMapping extends AMapping<Integer, InsuranceClassType> {
 
     private static final class SingletonHolder {
 	private static final InsuranceClassTypeMapping HOLDER_INSTANCE = new InsuranceClassTypeMapping();
@@ -15,20 +15,20 @@ public final class InsuranceClassTypeMapping extends AMapping<String, InsuranceC
     }
 
     private InsuranceClassTypeMapping() {
-	addMap(CLASS_0, "0");
-	addMap(CLASS_1, "1");
-	addMap(CLASS_2, "2");
-	addMap(CLASS_3, "3");
-	addMap(CLASS_4, "4");
-	addMap(CLASS_5, "5");
-	addMap(CLASS_6, "6");
-	addMap(CLASS_7, "7");
-	addMap(CLASS_8, "8");
-	addMap(CLASS_9, "9");
-	addMap(CLASS_10, "10");
-	addMap(CLASS_11, "11");
-	addMap(CLASS_12, "12");
-	addMap(CLASS_13, "13");
-	addMap(CLASS_M, "M");
+	addMap(CLASS_M, 1);
+	addMap(CLASS_0, 2);
+	addMap(CLASS_1, 3);
+	addMap(CLASS_2, 4);
+	addMap(CLASS_3, 5);
+	addMap(CLASS_4, 6);
+	addMap(CLASS_5, 7);
+	addMap(CLASS_6, 8);
+	addMap(CLASS_7, 9);
+	addMap(CLASS_8, 10);
+	addMap(CLASS_9, 11);
+	addMap(CLASS_10, 12);
+	addMap(CLASS_11, 13);
+	addMap(CLASS_12, 14);
+	addMap(CLASS_13, 15);
     }
 }
