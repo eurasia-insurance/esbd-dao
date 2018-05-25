@@ -4,7 +4,7 @@ import static com.lapsa.insurance.elements.Sex.*;
 
 import com.lapsa.insurance.elements.Sex;
 
-public final class SexMapping extends AMapping<Integer, Sex> {
+public final class SexMapping extends AElementsMapping<Integer, Sex> {
 
     private static final class SingletonHolder {
 	private static final SexMapping HOLDER_INSTANCE = new SexMapping();

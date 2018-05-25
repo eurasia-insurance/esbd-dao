@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class AMapping<T, E> {
+public abstract class AElementsMapping<T, E> {
 
     private final Map<T, E> mapping = new HashMap<>();
     private final Set<T> exceptions = new HashSet<>(0);

@@ -3,7 +3,7 @@ package tech.lapsa.esbd.beans.dao.elements.dict;
 import java.util.function.Function;
 
 import tech.lapsa.esbd.beans.dao.elements.AElementsService;
-import tech.lapsa.esbd.beans.dao.elements.mapping.AMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.AElementsMapping;
 import tech.lapsa.esbd.dao.elements.dict.IDictElementsService;
 
 public abstract class ADictElementsService<T extends Enum<T>>
@@ -20,7 +20,7 @@ public abstract class ADictElementsService<T extends Enum<T>>
 
     protected ADictElementsService(final Class<?> serviceClazz,
 	    final Class<T> entityClazz,
-	    final AMapping<Integer, T> mapper) {
+	    final AElementsMapping<Integer, T> mapper) {
 	super(serviceClazz, entityClazz, mapper);
     }
 }

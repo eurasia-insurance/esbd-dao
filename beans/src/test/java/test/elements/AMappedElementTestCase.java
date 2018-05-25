@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import tech.lapsa.esbd.beans.dao.elements.mapping.AMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.AElementsMapping;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.elements.IElementsService;
@@ -15,12 +15,12 @@ import test.ArquillianBaseTestCase;
 public abstract class AMappedElementTestCase<T extends Enum<T>> extends ArquillianBaseTestCase {
 
     protected final Class<T> clazz;
-    protected final AMapping<Integer, T> mapper;
+    protected final AElementsMapping<Integer, T> mapper;
     protected final int invalidId;
 
     protected abstract IElementsService<T> service();
 
-    public AMappedElementTestCase(final Class<T> clazz, AMapping<Integer, T> mapper, int invalidId) {
+    public AMappedElementTestCase(final Class<T> clazz, AElementsMapping<Integer, T> mapper, int invalidId) {
 	this.clazz = clazz;
 	this.mapper = mapper;
 	this.invalidId = invalidId;

@@ -4,7 +4,7 @@ import static com.lapsa.insurance.elements.PersonType.*;
 
 import com.lapsa.insurance.elements.PersonType;
 
-public final class PersonTypeMapping extends AMapping<Integer, PersonType> {
+public final class PersonTypeMapping extends AElementsMapping<Integer, PersonType> {
 
     private static final class SingletonHolder {
 	private static final PersonTypeMapping HOLDER_INSTANCE = new PersonTypeMapping();

@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
-import tech.lapsa.esbd.beans.dao.elements.mapping.AMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.AElementsMapping;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.connection.ConnectionPool;
@@ -21,7 +21,7 @@ public abstract class AMappedElementDictionaryTestCase<T extends Enum<T>> extend
 
     final String dictionaryName;
 
-    protected AMappedElementDictionaryTestCase(final Class<T> clazz, AMapping<Integer, T> mapper, String dictionaryName,
+    protected AMappedElementDictionaryTestCase(final Class<T> clazz, AElementsMapping<Integer, T> mapper, String dictionaryName,
 	    int invalidId) {
 	super(clazz, mapper, invalidId);
 	this.dictionaryName = dictionaryName;

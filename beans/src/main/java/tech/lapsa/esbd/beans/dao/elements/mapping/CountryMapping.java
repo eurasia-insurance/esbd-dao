@@ -2,7 +2,7 @@ package tech.lapsa.esbd.beans.dao.elements.mapping;
 
 import com.lapsa.international.country.Country;
 
-public final class CountryMapping extends AMapping<Integer, Country> {
+public final class CountryMapping extends AElementsMapping<Integer, Country> {
 
     private static final class SingletonHolder {
 	private static final CountryMapping HOLDER_INSTANCE = new CountryMapping();

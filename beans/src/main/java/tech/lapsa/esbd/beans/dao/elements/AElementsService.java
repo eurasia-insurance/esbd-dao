@@ -7,7 +7,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 import tech.lapsa.esbd.beans.dao.AService;
-import tech.lapsa.esbd.beans.dao.elements.mapping.AMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.AElementsMapping;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.elements.IElementsService;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
@@ -35,7 +35,7 @@ public abstract class AElementsService<T extends Enum<T>>
 
     protected AElementsService(final Class<?> serviceClazz,
 	    final Class<T> entityClazz,
-	    final AMapping<Integer, T> mapper) {
+	    final AElementsMapping<Integer, T> mapper) {
 	super(serviceClazz, entityClazz);
 	assert mapper != null;
 	this.mapperFunction = mapper::forId;
