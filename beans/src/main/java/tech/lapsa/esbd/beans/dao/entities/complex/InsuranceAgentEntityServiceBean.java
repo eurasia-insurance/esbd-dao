@@ -7,7 +7,7 @@ import java.util.function.Function;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
-import tech.lapsa.esbd.beans.dao.AOndemandComplexEntitiesService.AOndemandComplexIdByIntermediateService;
+import tech.lapsa.esbd.beans.dao.entities.AOndemandLoadedEntitiesService.AOndemandComplexIdByIntermediateService;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.InsuranceAgentEntityEsbdConverterBean;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.dao.entities.complex.InsuranceAgentEntityService;

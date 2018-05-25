@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao;
+package tech.lapsa.esbd.beans.dao.entities;
 
 import java.util.List;
 import java.util.Map;
@@ -13,9 +13,9 @@ import javax.ejb.TransactionAttributeType;
 
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
-import tech.lapsa.esbd.dao.IPreloadedEntitiesService.IPreloadedEntitiesServiceLocal;
-import tech.lapsa.esbd.dao.IPreloadedEntitiesService.IPreloadedEntitiesServiceRemote;
 import tech.lapsa.esbd.dao.NotFound;
+import tech.lapsa.esbd.dao.entities.IPreloadedEntitiesService.IPreloadedEntitiesServiceLocal;
+import tech.lapsa.esbd.dao.entities.IPreloadedEntitiesService.IPreloadedEntitiesServiceRemote;
 import tech.lapsa.esbd.domain.AEntity;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyCollectors;
@@ -24,7 +24,7 @@ import tech.lapsa.java.commons.function.MyNumbers;
 import tech.lapsa.java.commons.function.MyObjects;
 import tech.lapsa.java.commons.function.MyOptionals;
 
-public abstract class APreloadedComplexEntitiesService<DOMAIN extends AEntity, ESBD>
+public abstract class APreloadedEntitiesService<DOMAIN extends AEntity, ESBD>
 	extends AEntitiesService<DOMAIN, ESBD>
 	implements IPreloadedEntitiesServiceLocal<DOMAIN>, IPreloadedEntitiesServiceRemote<DOMAIN> {
 
@@ -35,7 +35,7 @@ public abstract class APreloadedComplexEntitiesService<DOMAIN extends AEntity, E
 
     // constructor
 
-    protected APreloadedComplexEntitiesService(final Class<?> serviceClazz,
+    protected APreloadedEntitiesService(final Class<?> serviceClazz,
 	    final Class<DOMAIN> domainClazz,
 	    final Function<Connection, List<ESBD>> getAllFunction,
 	    final Function<ESBD, Integer> entityToIdFunction) {

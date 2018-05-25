@@ -4,8 +4,7 @@ import javax.ejb.Singleton;
 
 import com.lapsa.insurance.elements.MaritalStatus;
 
-import tech.lapsa.esbd.beans.dao.ADictElementsService;
-import tech.lapsa.esbd.beans.dao.elements.dict.mapping.MaritalStatusMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.MaritalStatusMapping;
 import tech.lapsa.esbd.dao.elements.dict.MaritalStatusService;
 import tech.lapsa.esbd.dao.elements.dict.MaritalStatusService.MaritalStatusServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.MaritalStatusService.MaritalStatusServiceRemote;

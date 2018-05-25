@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
-import tech.lapsa.esbd.beans.dao.elements.dict.mapping.AMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.AMapping;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.connection.ConnectionPool;

@@ -1,16 +1,17 @@
-package tech.lapsa.esbd.beans.dao;
+package tech.lapsa.esbd.beans.dao.entities.dict;
 
 import java.util.function.Supplier;
 
+import tech.lapsa.esbd.beans.dao.entities.APreloadedEntitiesService;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.AEsbdAttributeConverter;
-import tech.lapsa.esbd.dao.IDictEntitiesService;
+import tech.lapsa.esbd.dao.entities.dict.IDictEntitiesService;
 import tech.lapsa.esbd.domain.dict.ADictEntity;
 import tech.lapsa.esbd.domain.dict.ADictEntity.ADictEntityBuilder;
 import tech.lapsa.esbd.jaxws.wsimport.Item;
 import tech.lapsa.java.commons.function.MyOptionals;
 
 public abstract class ADictEntitiesService<DOMAIN extends ADictEntity, BT extends ADictEntityBuilder<DOMAIN, BT>>
-	extends APreloadedComplexEntitiesService<DOMAIN, Item>
+	extends APreloadedEntitiesService<DOMAIN, Item>
 	implements IDictEntitiesService<DOMAIN> {
 
     // finals

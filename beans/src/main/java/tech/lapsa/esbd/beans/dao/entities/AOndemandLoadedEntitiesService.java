@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao;
+package tech.lapsa.esbd.beans.dao.entities;
 
 import static tech.lapsa.esbd.beans.dao.Util.*;
 
@@ -15,9 +15,9 @@ import javax.ejb.TransactionAttributeType;
 
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
-import tech.lapsa.esbd.dao.IEntitiesService.IEntityServiceLocal;
-import tech.lapsa.esbd.dao.IEntitiesService.IEntityServiceRemote;
 import tech.lapsa.esbd.dao.NotFound;
+import tech.lapsa.esbd.dao.entities.IEntitiesService.IEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.IEntitiesService.IEntityServiceRemote;
 import tech.lapsa.esbd.domain.AEntity;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyCollectors;
@@ -26,12 +26,12 @@ import tech.lapsa.java.commons.function.MyObjects;
 import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.function.MyStreams;
 
-public abstract class AOndemandComplexEntitiesService<DOMAIN extends AEntity, ESBD, INTERMEDIATE_ARRAY>
+public abstract class AOndemandLoadedEntitiesService<DOMAIN extends AEntity, ESBD, INTERMEDIATE_ARRAY>
 	extends AEntitiesService<DOMAIN, ESBD>
 	implements IEntityServiceLocal<DOMAIN>, IEntityServiceRemote<DOMAIN> {
 
     public static abstract class AOndemandComplexIdByIntermediateService<DOMAIN extends AEntity, ESBD, INTERMEDIATE_ARRAY>
-	    extends AOndemandComplexEntitiesService<DOMAIN, ESBD, INTERMEDIATE_ARRAY>
+	    extends AOndemandLoadedEntitiesService<DOMAIN, ESBD, INTERMEDIATE_ARRAY>
 	    implements IEntityServiceLocal<DOMAIN>, IEntityServiceRemote<DOMAIN> {
 
 	// finals
@@ -61,7 +61,7 @@ public abstract class AOndemandComplexEntitiesService<DOMAIN extends AEntity, ES
     }
 
     public static abstract class AOndemandComplexIdBySingleService<DOMAIN extends AEntity, ESBD, INTERMEDIATE_ARRAY>
-	    extends AOndemandComplexEntitiesService<DOMAIN, ESBD, INTERMEDIATE_ARRAY>
+	    extends AOndemandLoadedEntitiesService<DOMAIN, ESBD, INTERMEDIATE_ARRAY>
 	    implements IEntityServiceLocal<DOMAIN>, IEntityServiceRemote<DOMAIN> {
 
 	// finals
@@ -96,7 +96,7 @@ public abstract class AOndemandComplexEntitiesService<DOMAIN extends AEntity, ES
 
     // constructor
 
-    private AOndemandComplexEntitiesService(final Class<?> serviceClazz,
+    private AOndemandLoadedEntitiesService(final Class<?> serviceClazz,
 	    final Class<DOMAIN> domainClazz,
 	    final Function<INTERMEDIATE_ARRAY, List<ESBD>> intermediateArrayToListConverter) {
 	super(serviceClazz, domainClazz);

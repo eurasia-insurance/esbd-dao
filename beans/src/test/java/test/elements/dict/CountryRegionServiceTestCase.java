@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import com.lapsa.kz.country.KZArea;
 
-import tech.lapsa.esbd.beans.dao.elements.dict.mapping.KZAreaMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.KZAreaMapping;
 import tech.lapsa.esbd.dao.elements.dict.KZAreaService;
 import tech.lapsa.esbd.dao.elements.dict.KZAreaService.KZAreaServiceLocal;
 

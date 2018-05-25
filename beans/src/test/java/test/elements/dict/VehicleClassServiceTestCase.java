@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import com.lapsa.insurance.elements.VehicleClass;
 
-import tech.lapsa.esbd.beans.dao.elements.dict.mapping.VehicleClassMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.VehicleClassMapping;
 import tech.lapsa.esbd.dao.elements.dict.VehicleClassService;
 import tech.lapsa.esbd.dao.elements.dict.VehicleClassService.VehicleClassServiceLocal;
 

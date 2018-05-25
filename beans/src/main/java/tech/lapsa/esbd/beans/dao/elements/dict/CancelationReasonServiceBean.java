@@ -4,8 +4,7 @@ import javax.ejb.Singleton;
 
 import com.lapsa.insurance.elements.CancelationReason;
 
-import tech.lapsa.esbd.beans.dao.ADictElementsService;
-import tech.lapsa.esbd.beans.dao.elements.dict.mapping.CancelationReasonMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.CancelationReasonMapping;
 import tech.lapsa.esbd.dao.elements.dict.CancelationReasonService;
 import tech.lapsa.esbd.dao.elements.dict.CancelationReasonService.CancelationReasonServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.CancelationReasonService.CancelationReasonServiceRemote;

@@ -7,7 +7,7 @@ import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 
-import tech.lapsa.esbd.beans.dao.APreloadedComplexEntitiesService;
+import tech.lapsa.esbd.beans.dao.entities.APreloadedEntitiesService;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.UserEntityEsbdConverterBean;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.dao.entities.complex.UserEntityService;
@@ -19,7 +19,7 @@ import tech.lapsa.esbd.jaxws.wsimport.User;
 @Singleton(name = UserEntityService.BEAN_NAME)
 @Startup
 public class UserEntityServiceBean
-	extends APreloadedComplexEntitiesService<UserEntity, User>
+	extends APreloadedEntitiesService<UserEntity, User>
 	implements UserEntityServiceLocal, UserEntityServiceRemote {
 
     // static finals

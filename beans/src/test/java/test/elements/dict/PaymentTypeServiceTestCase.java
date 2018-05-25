@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import com.lapsa.insurance.elements.PaymentType;
 
-import tech.lapsa.esbd.beans.dao.elements.dict.mapping.PaymentTypeMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.PaymentTypeMapping;
 import tech.lapsa.esbd.dao.elements.dict.PaymentTypeService;
 import tech.lapsa.esbd.dao.elements.dict.PaymentTypeService.PaymentTypeServiceLocal;
 

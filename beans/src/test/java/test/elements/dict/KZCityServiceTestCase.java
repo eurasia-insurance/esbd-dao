@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import com.lapsa.kz.country.KZCity;
 
-import tech.lapsa.esbd.beans.dao.elements.dict.mapping.KZCityMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.KZCityMapping;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.dao.elements.dict.KZCityService;

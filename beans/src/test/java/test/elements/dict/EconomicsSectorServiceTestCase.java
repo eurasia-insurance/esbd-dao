@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import com.lapsa.kz.economic.KZEconomicSector;
 
-import tech.lapsa.esbd.beans.dao.elements.dict.mapping.KZEconomicSectorMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.KZEconomicSectorMapping;
 import tech.lapsa.esbd.dao.elements.dict.KZEconomicSectorService;
 import tech.lapsa.esbd.dao.elements.dict.KZEconomicSectorService.KZEconomicSectorServiceLocal;
 

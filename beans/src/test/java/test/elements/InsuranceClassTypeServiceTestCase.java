@@ -9,13 +9,13 @@ import org.junit.Test;
 
 import com.lapsa.insurance.elements.InsuranceClassType;
 
-import tech.lapsa.esbd.beans.dao.elements.dict.mapping.InsuranceClassTypeMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.InsuranceClassTypeMapping;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.connection.ConnectionPool;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.elements.dict.InsuranceClassTypeService;
-import tech.lapsa.esbd.dao.elements.dict.InsuranceClassTypeService.InsuranceClassTypeServiceLocal;
+import tech.lapsa.esbd.dao.elements.InsuranceClassTypeService;
+import tech.lapsa.esbd.dao.elements.InsuranceClassTypeService.InsuranceClassTypeServiceLocal;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyStrings;
 

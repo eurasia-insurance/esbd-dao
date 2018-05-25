@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.elements.dict.mapping;
+package tech.lapsa.esbd.beans.dao.elements.mapping;
 
 import static com.lapsa.kz.economic.KZEconomicSector.*;
 

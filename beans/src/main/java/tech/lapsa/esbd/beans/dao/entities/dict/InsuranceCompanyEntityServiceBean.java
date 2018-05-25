@@ -3,7 +3,6 @@ package tech.lapsa.esbd.beans.dao.entities.dict;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 
-import tech.lapsa.esbd.beans.dao.ADictEntitiesService;
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService;
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceRemote;

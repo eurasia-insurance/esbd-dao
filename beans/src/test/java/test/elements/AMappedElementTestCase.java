@@ -5,10 +5,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import tech.lapsa.esbd.beans.dao.elements.dict.mapping.AMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.AMapping;
 import tech.lapsa.esbd.connection.ConnectionException;
-import tech.lapsa.esbd.dao.IElementsService;
 import tech.lapsa.esbd.dao.NotFound;
+import tech.lapsa.esbd.dao.elements.IElementsService;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import test.ArquillianBaseTestCase;
 

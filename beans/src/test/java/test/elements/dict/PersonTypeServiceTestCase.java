@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import com.lapsa.insurance.elements.PersonType;
 
-import tech.lapsa.esbd.beans.dao.elements.dict.mapping.PersonTypeMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.PersonTypeMapping;
 import tech.lapsa.esbd.dao.elements.dict.PersonTypeService;
 import tech.lapsa.esbd.dao.elements.dict.PersonTypeService.PersonTypeServiceLocal;
 
