@@ -4,11 +4,11 @@ import javax.inject.Inject;
 
 import com.lapsa.kz.economic.KZEconomicSector;
 
-import tech.lapsa.esbd.beans.dao.elements.dict.mapping.KZEconomicSectorMapping;
-import tech.lapsa.esbd.dao.elements.ElementsService;
+import tech.lapsa.esbd.beans.dao.elements.mapping.KZEconomicSectorMapping;
+import tech.lapsa.esbd.dao.elements.dict.KZEconomicSectorService;
 import tech.lapsa.esbd.dao.elements.dict.KZEconomicSectorService.KZEconomicSectorServiceLocal;
 
-public class EconomicsSectorServiceTestCase extends AMappedElementTestCase<KZEconomicSector> {
+public class EconomicsSectorServiceTestCase extends AMappedElementDictionaryTestCase<KZEconomicSector> {
 
     @Inject
     private KZEconomicSectorServiceLocal service;
@@ -18,7 +18,7 @@ public class EconomicsSectorServiceTestCase extends AMappedElementTestCase<KZEco
     }
 
     @Override
-    ElementsService<KZEconomicSector> service() {
+    protected KZEconomicSectorService service() {
 	return service;
     }
 }

@@ -4,7 +4,7 @@ import javax.ejb.Singleton;
 
 import com.lapsa.insurance.elements.MaritalStatus;
 
-import tech.lapsa.esbd.beans.dao.elements.dict.mapping.MaritalStatusMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.MaritalStatusMapping;
 import tech.lapsa.esbd.dao.elements.dict.MaritalStatusService;
 import tech.lapsa.esbd.dao.elements.dict.MaritalStatusService.MaritalStatusServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.MaritalStatusService.MaritalStatusServiceRemote;
@@ -14,7 +14,9 @@ public class MaritalStatusServiceBean
 	extends ADictElementsService<MaritalStatus>
 	implements MaritalStatusServiceLocal, MaritalStatusServiceRemote {
 
-    public MaritalStatusServiceBean() {
-	super(MaritalStatusService.class, MaritalStatusMapping.getInstance()::forId, MaritalStatus.class);
+    // constructor
+
+    protected MaritalStatusServiceBean() {
+	super(MaritalStatusService.class, MaritalStatus.class, MaritalStatusMapping.getInstance()::forId);
     }
 }

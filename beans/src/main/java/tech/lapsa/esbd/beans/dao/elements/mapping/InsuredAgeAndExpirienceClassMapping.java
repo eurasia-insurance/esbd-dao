@@ -1,10 +1,10 @@
-package tech.lapsa.esbd.beans.dao.elements.dict.mapping;
+package tech.lapsa.esbd.beans.dao.elements.mapping;
 
 import static com.lapsa.insurance.elements.InsuredAgeAndExpirienceClass.*;
 
 import com.lapsa.insurance.elements.InsuredAgeAndExpirienceClass;
 
-public final class InsuredAgeAndExpirienceClassMapping extends AMapping<Integer, InsuredAgeAndExpirienceClass> {
+public final class InsuredAgeAndExpirienceClassMapping extends AElementsMapping<Integer, InsuredAgeAndExpirienceClass> {
 
     private static final class SingletonHolder {
 	private static final InsuredAgeAndExpirienceClassMapping HOLDER_INSTANCE = new InsuredAgeAndExpirienceClassMapping();

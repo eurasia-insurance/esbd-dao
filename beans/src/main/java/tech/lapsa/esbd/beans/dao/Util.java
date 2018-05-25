@@ -1,4 +1,4 @@
-package tech.lapsa.esbd.beans.dao.entities.complex;
+package tech.lapsa.esbd.beans.dao;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +20,18 @@ public final class Util {
     public static <T> T requireSingle(final List<T> list,
 	    final Class<?> clazz,
 	    final String keyName,
-	    final Object key) throws EJBException {
+	    final Object key) throws NotFound, IllegalStateException {
+
+	if (list == null || list.isEmpty())
+	    throw MyExceptions.format(NotFound::new, "%1$s not found with %3$s = '%4$s'",
+		    clazz.getSimpleName(), // 1
+		    0, // 2
+		    keyName, // 3
+		    key // 4
+	    );
+
 	if (list.size() > 1)
-	    throw MyExceptions.illegalArgumentFormat("Too many %1$s (%2$s) with %3$s = '%4$s'",
+	    throw MyExceptions.illegalStateFormat("Too many %1$s found (%2$s) with %3$s = '%4$s'",
 		    clazz.getSimpleName(), // 1
 		    list.size(), // 2
 		    keyName, // 3
@@ -31,20 +40,35 @@ public final class Util {
 	return list.get(0);
     }
 
+    public static <T> T requireSingle(final List<T> list,
+	    final Class<?> clazz) throws NotFound, IllegalStateException {
+
+	if (list == null || list.isEmpty())
+	    throw MyExceptions.format(NotFound::new, "%1$s not found",
+		    clazz.getSimpleName(), // 1
+		    0);
+
+	if (list.size() > 1)
+	    throw MyExceptions.illegalStateFormat("Too many %1$s found (%2$s)",
+		    clazz.getSimpleName(), // 1
+		    list.size());
+	return list.get(0);
+    }
+
+    public static <T> T requireFirst(final List<T> list,
+	    final Class<?> clazz) throws NotFound {
+
+	if (list == null || list.isEmpty())
+	    throw MyExceptions.format(NotFound::new, "%1$s not found",
+		    clazz.getSimpleName(), // 1
+		    0);
+
+	return list.get(0);
+    }
+
     @FunctionalInterface
     public interface ThrowingFunction<T, R> {
 	R apply(T value) throws Exception;
-    }
-
-    public static <T> IllegalArgumentException requireNonEmtyList(final Class<T> targetClazz,
-	    final Object targetId,
-	    final String fieldName) {
-	final String message = MyStrings.format("Error fetching %1$s(%2$s).%3$s -> list is empty",
-		targetClazz, // 1,
-		targetId, // 2
-		fieldName // 3
-	);
-	return new IllegalArgumentException(message);
     }
 
     // optField

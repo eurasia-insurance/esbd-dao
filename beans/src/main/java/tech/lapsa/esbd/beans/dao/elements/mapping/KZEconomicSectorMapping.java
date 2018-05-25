@@ -1,10 +1,10 @@
-package tech.lapsa.esbd.beans.dao.elements.dict.mapping;
+package tech.lapsa.esbd.beans.dao.elements.mapping;
 
 import static com.lapsa.kz.economic.KZEconomicSector.*;
 
 import com.lapsa.kz.economic.KZEconomicSector;
 
-public class KZEconomicSectorMapping extends AMapping<Integer, KZEconomicSector> {
+public class KZEconomicSectorMapping extends AElementsMapping<Integer, KZEconomicSector> {
 
     private static final class SingletonHolder {
 	private static final KZEconomicSectorMapping HOLDER_INSTANCE = new KZEconomicSectorMapping();

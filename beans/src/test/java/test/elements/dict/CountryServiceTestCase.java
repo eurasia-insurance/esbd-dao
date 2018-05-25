@@ -4,11 +4,11 @@ import javax.inject.Inject;
 
 import com.lapsa.international.country.Country;
 
-import tech.lapsa.esbd.beans.dao.elements.dict.mapping.CountryMapping;
-import tech.lapsa.esbd.dao.elements.ElementsService;
+import tech.lapsa.esbd.beans.dao.elements.mapping.CountryMapping;
+import tech.lapsa.esbd.dao.elements.dict.CountryService;
 import tech.lapsa.esbd.dao.elements.dict.CountryService.CountryServiceLocal;
 
-public class CountryServiceTestCase extends AMappedElementTestCase<Country> {
+public class CountryServiceTestCase extends AMappedElementDictionaryTestCase<Country> {
 
     @Inject
     private CountryServiceLocal service;
@@ -18,7 +18,7 @@ public class CountryServiceTestCase extends AMappedElementTestCase<Country> {
     }
 
     @Override
-    ElementsService<Country> service() {
+    protected CountryService service() {
 	return service;
     }
 }

@@ -4,11 +4,11 @@ import javax.inject.Inject;
 
 import com.lapsa.insurance.elements.PaymentType;
 
-import tech.lapsa.esbd.beans.dao.elements.dict.mapping.PaymentTypeMapping;
-import tech.lapsa.esbd.dao.elements.ElementsService;
+import tech.lapsa.esbd.beans.dao.elements.mapping.PaymentTypeMapping;
+import tech.lapsa.esbd.dao.elements.dict.PaymentTypeService;
 import tech.lapsa.esbd.dao.elements.dict.PaymentTypeService.PaymentTypeServiceLocal;
 
-public class PaymentTypeServiceTestCase extends AMappedElementTestCase<PaymentType> {
+public class PaymentTypeServiceTestCase extends AMappedElementDictionaryTestCase<PaymentType> {
 
     @Inject
     private PaymentTypeServiceLocal service;
@@ -18,7 +18,7 @@ public class PaymentTypeServiceTestCase extends AMappedElementTestCase<PaymentTy
     }
 
     @Override
-    ElementsService<PaymentType> service() {
+    protected PaymentTypeService service() {
 	return service;
     }
 }

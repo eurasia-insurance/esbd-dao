@@ -1,10 +1,10 @@
-package tech.lapsa.esbd.beans.dao.elements.dict.mapping;
+package tech.lapsa.esbd.beans.dao.elements.mapping;
 
 import static com.lapsa.insurance.elements.IdentityCardType.*;
 
 import com.lapsa.insurance.elements.IdentityCardType;
 
-public final class IdentityCardTypeMapping extends AMapping<Integer, IdentityCardType> {
+public final class IdentityCardTypeMapping extends AElementsMapping<Integer, IdentityCardType> {
 
     private static final class SingletonHolder {
 	private static final IdentityCardTypeMapping HOLDER_INSTANCE = new IdentityCardTypeMapping();

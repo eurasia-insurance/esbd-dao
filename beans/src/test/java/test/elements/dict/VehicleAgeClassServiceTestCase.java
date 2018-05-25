@@ -4,11 +4,11 @@ import javax.inject.Inject;
 
 import com.lapsa.insurance.elements.VehicleAgeClass;
 
-import tech.lapsa.esbd.beans.dao.elements.dict.mapping.VehicleAgeClassMapping;
-import tech.lapsa.esbd.dao.elements.ElementsService;
+import tech.lapsa.esbd.beans.dao.elements.mapping.VehicleAgeClassMapping;
+import tech.lapsa.esbd.dao.elements.dict.VehicleAgeClassService;
 import tech.lapsa.esbd.dao.elements.dict.VehicleAgeClassService.VehicleAgeClassServiceLocal;
 
-public class VehicleAgeClassServiceTestCase extends AMappedElementTestCase<VehicleAgeClass> {
+public class VehicleAgeClassServiceTestCase extends AMappedElementDictionaryTestCase<VehicleAgeClass> {
 
     @Inject
     private VehicleAgeClassServiceLocal service;
@@ -18,7 +18,7 @@ public class VehicleAgeClassServiceTestCase extends AMappedElementTestCase<Vehic
     }
 
     @Override
-    ElementsService<VehicleAgeClass> service() {
+    protected VehicleAgeClassService service() {
 	return service;
     }
 }
