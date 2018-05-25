@@ -2,7 +2,7 @@ package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
 import tech.lapsa.esbd.domain.AEntity;
 
-public interface AEsbdAttributeConverter<X extends AEntity, Y> {
+public interface AEsbdAttributeConverter<DOMAIN extends AEntity, ESBD> {
 
     public static class EsbdConversionException extends Exception {
 
@@ -26,7 +26,7 @@ public interface AEsbdAttributeConverter<X extends AEntity, Y> {
 
     }
 
-    Y convertToEsbdValue(X source) throws EsbdConversionException;
+    ESBD convertToEsbdValue(DOMAIN source) throws EsbdConversionException;
 
-    X convertToEntityAttribute(Y source) throws EsbdConversionException;
+    DOMAIN convertToEntityAttribute(ESBD source) throws EsbdConversionException;
 }

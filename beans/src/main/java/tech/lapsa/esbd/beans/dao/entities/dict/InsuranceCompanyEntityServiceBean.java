@@ -1,6 +1,7 @@
 package tech.lapsa.esbd.beans.dao.entities.dict;
 
-import javax.ejb.Stateless;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
 
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService;
 import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
@@ -8,14 +9,20 @@ import tech.lapsa.esbd.dao.entities.dict.InsuranceCompanyEntityService.Insurance
 import tech.lapsa.esbd.domain.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.domain.dict.InsuranceCompanyEntity.InsuranceCompanyEntityBuilder;
 
-@Stateless(name = InsuranceCompanyEntityService.BEAN_NAME)
+@Singleton(name = InsuranceCompanyEntityService.BEAN_NAME)
+@Startup
 public class InsuranceCompanyEntityServiceBean
-	extends ADictionaryEntityService<InsuranceCompanyEntity, InsuranceCompanyEntityBuilder>
+	extends ADictEntitiesService<InsuranceCompanyEntity, InsuranceCompanyEntityBuilder>
 	implements InsuranceCompanyEntityServiceLocal, InsuranceCompanyEntityServiceRemote {
+
+    // static finals
 
     private static final String DICT_NAME = "INSURANCE_COMPANIES";
 
+    // constructor
+
     public InsuranceCompanyEntityServiceBean() {
-	super(InsuranceCompanyEntityService.class, DICT_NAME, InsuranceCompanyEntity::builder);
+	super(InsuranceCompanyEntityService.class, InsuranceCompanyEntity.class, DICT_NAME,
+		InsuranceCompanyEntity::builder);
     }
 }

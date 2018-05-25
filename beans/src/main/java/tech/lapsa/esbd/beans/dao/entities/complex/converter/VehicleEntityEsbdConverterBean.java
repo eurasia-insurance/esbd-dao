@@ -1,7 +1,7 @@
 package tech.lapsa.esbd.beans.dao.entities.complex.converter;
 
 import static tech.lapsa.esbd.beans.dao.TemporalUtil.*;
-import static tech.lapsa.esbd.beans.dao.entities.complex.Util.*;
+import static tech.lapsa.esbd.beans.dao.Util.*;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;

@@ -1,10 +1,10 @@
-package tech.lapsa.esbd.beans.dao.elements.dict.mapping;
+package tech.lapsa.esbd.beans.dao.elements.mapping;
 
 import static com.lapsa.insurance.elements.MaritalStatus.*;
 
 import com.lapsa.insurance.elements.MaritalStatus;
 
-public final class MaritalStatusMapping extends AMapping<Integer, MaritalStatus> {
+public final class MaritalStatusMapping extends AElementsMapping<Integer, MaritalStatus> {
 
     private static final class SingletonHolder {
 	private static final MaritalStatusMapping HOLDER_INSTANCE = new MaritalStatusMapping();

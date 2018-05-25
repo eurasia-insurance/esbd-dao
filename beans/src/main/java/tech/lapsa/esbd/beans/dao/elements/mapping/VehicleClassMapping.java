@@ -1,10 +1,10 @@
-package tech.lapsa.esbd.beans.dao.elements.dict.mapping;
+package tech.lapsa.esbd.beans.dao.elements.mapping;
 
 import static com.lapsa.insurance.elements.VehicleClass.*;
 
 import com.lapsa.insurance.elements.VehicleClass;
 
-public final class VehicleClassMapping extends AMapping<Integer, VehicleClass> {
+public final class VehicleClassMapping extends AElementsMapping<Integer, VehicleClass> {
 
     private static final class SingletonHolder {
 	private static final VehicleClassMapping HOLDER_INSTANCE = new VehicleClassMapping();

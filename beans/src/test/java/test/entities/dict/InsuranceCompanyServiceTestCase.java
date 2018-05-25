@@ -32,13 +32,15 @@ public class InsuranceCompanyServiceTestCase extends ArquillianBaseTestCase {
     @Test
     public void testGetById() throws IllegalArgument {
 	final List<InsuranceCompanyEntity> list = service.getAll();
-	for (final InsuranceCompanyEntity i : list)
+	for (final InsuranceCompanyEntity i : list) {
+	    System.out.println(i.getId() + " '" + i.getName() + "'");
 	    try {
 		final InsuranceCompanyEntity res = service.getById(i.getId());
 		assertThat(res, allOf(not(nullValue()), is(i)));
 	    } catch (final NotFound e) {
 		fail(e.getMessage());
 	    }
+	}
     }
 
     private static final int INVALID_ID = 999999999;

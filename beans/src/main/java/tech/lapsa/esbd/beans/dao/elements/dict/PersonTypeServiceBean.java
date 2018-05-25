@@ -4,7 +4,7 @@ import javax.ejb.Singleton;
 
 import com.lapsa.insurance.elements.PersonType;
 
-import tech.lapsa.esbd.beans.dao.elements.dict.mapping.PersonTypeMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.PersonTypeMapping;
 import tech.lapsa.esbd.dao.elements.dict.PersonTypeService;
 import tech.lapsa.esbd.dao.elements.dict.PersonTypeService.PersonTypeServiceLocal;
 import tech.lapsa.esbd.dao.elements.dict.PersonTypeService.PersonTypeServiceRemote;
@@ -14,7 +14,9 @@ public class PersonTypeServiceBean
 	extends ADictElementsService<PersonType>
 	implements PersonTypeServiceLocal, PersonTypeServiceRemote {
 
-    public PersonTypeServiceBean() {
-	super(PersonTypeService.class, PersonTypeMapping.getInstance()::forId, PersonType.class);
+    // constructor
+
+    protected PersonTypeServiceBean() {
+	super(PersonTypeService.class, PersonType.class, PersonTypeMapping.getInstance()::forId);
     }
 }

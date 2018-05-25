@@ -1,64 +1,103 @@
 package tech.lapsa.esbd.beans.dao.entities.complex;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.stream.IntStream;
-import java.util.stream.IntStream.Builder;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Stream;
+import java.util.stream.Stream.Builder;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+
+import tech.lapsa.esbd.beans.dao.entities.AOndemandLoadedEntitiesService.AOndemandComplexIdBySingleService;
 import tech.lapsa.esbd.connection.Connection;
-import tech.lapsa.esbd.connection.ConnectionException;
-import tech.lapsa.esbd.dao.entities.complex.GeneralSubjectEntityService.GeneralSubjectEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.complex.GeneralSubjectEntityService.GeneralSubjectEntityServiceRemote;
+import tech.lapsa.esbd.dao.NotFound;
+import tech.lapsa.esbd.dao.entities.complex.ISubjectEntitiesService.ISubjectEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.complex.ISubjectEntitiesService.ISubjectEntityServiceRemote;
 import tech.lapsa.esbd.domain.complex.SubjectEntity;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfClient;
 import tech.lapsa.esbd.jaxws.wsimport.Client;
-import tech.lapsa.java.commons.function.MyCollectors;
+import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyObjects;
 import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.kz.taxpayer.TaxpayerNumber;
 
 public abstract class ASubjectEntityService<T extends SubjectEntity>
-	extends AComplexEntitiesService<T, Client>
-	implements GeneralSubjectEntityServiceLocal<T>, GeneralSubjectEntityServiceRemote<T> {
+	extends AOndemandComplexIdBySingleService<T, Client, ArrayOfClient>
+	implements ISubjectEntityServiceLocal<T>, ISubjectEntityServiceRemote<T> {
 
-    List<T> _getByIdNumber(final TaxpayerNumber taxpayerNumber,
-	    final boolean fetchNaturals,
-	    final boolean fetchCompanies) {
-	MyObjects.requireNonNull(taxpayerNumber, "taxpayerNumber"); //
-	TaxpayerNumber.requireValid(taxpayerNumber);
+    // static finals
 
-	final int[] residentBools = new int[] { 1, 0 };
+    private static final Function<ArrayOfClient, List<Client>> GET_LIST_FUNCTION = ArrayOfClient::getClient;
+    private static final Comparator<? super Client> CLIENT_BY_ID_COMPARATOR = (x1, x2) -> Integer.compare(x1.getID(),
+	    x2.getID());
 
-	final int[] naturalPersonBools;
-	{
-	    final Builder builder = IntStream.builder();
-	    if (fetchNaturals)
-		builder.add(1);
-	    if (fetchCompanies)
-		builder.add(0);
-	    naturalPersonBools = builder.build().toArray();
+    // finals
+
+    protected final ClientType clientType;
+
+    // constructor
+
+    protected ASubjectEntityService(final Class<?> serviceClazz,
+	    final Class<T> domainClass,
+	    final BiFunction<Connection, Integer, Client> getSingleById,
+	    final ClientType clientType) {
+	super(serviceClazz, domainClass, GET_LIST_FUNCTION, getSingleById);
+	assert clientType != null;
+	this.clientType = clientType;
+    }
+
+    // public
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public List<T> getByIdNumber(final TaxpayerNumber idNumber) throws IllegalArgument {
+	MyObjects.requireNonNull(IllegalArgument::new, idNumber, "idNumber");
+	return manyFromStream(criteriaByIdNumber(idNumber));
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public T getFirstByIdNumber(final TaxpayerNumber idNumber) throws IllegalArgument, NotFound {
+	MyObjects.requireNonNull(IllegalArgument::new, idNumber, "idNumber");
+	return firstFromStream(criteriaByIdNumber(idNumber));
+    }
+
+    // private & protected
+
+    protected enum ClientType {
+	PERSON(new int[] { 1 }), COMPANY(new int[] { 0 }), BOTH(new int[] { 0, 1 });
+
+	private final int[] bools;
+
+	private ClientType(final int[] bools) {
+	    this.bools = bools;
 	}
+    }
 
-	Stream<Client> resStream = Stream.of();
-	try (Connection con = pool.getConnection()) {
-	    for (final int residentBool : residentBools)
-		for (final int naturalPersonBool : naturalPersonBools) {
-		    final Client search = new Client();
-		    search.setIIN(taxpayerNumber.getNumber());
-		    search.setNaturalPersonBool(naturalPersonBool);
-		    search.setRESIDENTBOOL(residentBool);
-		    final ArrayOfClient clients = con.getClientsByKeyFields(search);
-		    resStream = Stream.concat(
-			    resStream,
-			    MyOptionals.of(clients) //
-				    .map(ArrayOfClient::getClient)
-				    .map(List::stream)
-				    .orElseGet(Stream::empty));
+    protected Function<Connection, Stream<Client>> criteriaByIdNumber(final TaxpayerNumber idNumber) {
+	return con -> {
+	    final Client search = new Client();
+	    search.setIIN(idNumber.getNumber());
+
+	    final int[] residents = new int[] { 0, 1 };
+
+	    final Builder<Client> builder = Stream.builder();
+
+	    for (int person : clientType.bools)
+		for (int resident : residents) {
+		    search.setRESIDENTBOOL(resident);
+		    search.setNaturalPersonBool(person);
+		    final ArrayOfClient intermediateArray = con.getClientsByKeyFields(search);
+		    MyOptionals.of(intermediateArray)
+			    .map(GET_LIST_FUNCTION)
+			    .map(List::stream)
+			    .orElseGet(Stream::empty)
+			    .forEach(builder::accept);
 		}
-	} catch (ConnectionException e) {
-	    throw new IllegalStateException(e.getMessage());
-	}
-	return resStream.map(this::conversion)
-		.collect(MyCollectors.unmodifiableList());
+	    return builder.build()
+		    .sorted(CLIENT_BY_ID_COMPARATOR);
+	};
     }
 }
