@@ -9,6 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -16,8 +17,8 @@ import javax.ejb.TransactionAttributeType;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.connection.ConnectionException;
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.entities.IEntitiesService.IEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.IEntitiesService.IEntityServiceRemote;
+import tech.lapsa.esbd.dao.entities.ICachableEntitiesService.ICachableEntityServiceLocal;
+import tech.lapsa.esbd.dao.entities.ICachableEntitiesService.ICachableEntityServiceRemote;
 import tech.lapsa.esbd.domain.AEntity;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import tech.lapsa.java.commons.function.MyCollectors;
@@ -28,11 +29,11 @@ import tech.lapsa.java.commons.function.MyStreams;
 
 public abstract class AOndemandLoadedEntitiesService<DOMAIN extends AEntity, ESBD, INTERMEDIATE_ARRAY>
 	extends AEntitiesService<DOMAIN, ESBD>
-	implements IEntityServiceLocal<DOMAIN>, IEntityServiceRemote<DOMAIN> {
+	implements ICachableEntityServiceLocal<DOMAIN>, ICachableEntityServiceRemote<DOMAIN> {
 
     public static abstract class AOndemandComplexIdByIntermediateService<DOMAIN extends AEntity, ESBD, INTERMEDIATE_ARRAY>
 	    extends AOndemandLoadedEntitiesService<DOMAIN, ESBD, INTERMEDIATE_ARRAY>
-	    implements IEntityServiceLocal<DOMAIN>, IEntityServiceRemote<DOMAIN> {
+	    implements ICachableEntityServiceLocal<DOMAIN>, ICachableEntityServiceRemote<DOMAIN> {
 
 	// finals
 
@@ -55,14 +56,25 @@ public abstract class AOndemandLoadedEntitiesService<DOMAIN extends AEntity, ESB
 	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public DOMAIN getById(final Integer id) throws NotFound, IllegalArgument {
 	    MyNumbers.requireNonZero(IllegalArgument::new, id, "id");
-	    return singleFromIntermediateArray(con -> getIntermediateArrayById.apply(con, id));
+	    return cache.getOrFetchPutById(domainClazz, id,
+		    x -> singleFromIntermediateArray(con -> getIntermediateArrayById.apply(con, x)));
 	}
 
+	@Override
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public DOMAIN getByIdBypassCache(final Integer id) throws NotFound, IllegalArgument {
+	    MyNumbers.requireNonZero(IllegalArgument::new, id, "id");
+	    return cache.fetchAndPutById(domainClazz, id,
+		    x -> singleFromIntermediateArray(con -> getIntermediateArrayById.apply(con, x)));
+	}
     }
+
+    @EJB
+    protected CacheHolderBean cache;
 
     public static abstract class AOndemandComplexIdBySingleService<DOMAIN extends AEntity, ESBD, INTERMEDIATE_ARRAY>
 	    extends AOndemandLoadedEntitiesService<DOMAIN, ESBD, INTERMEDIATE_ARRAY>
-	    implements IEntityServiceLocal<DOMAIN>, IEntityServiceRemote<DOMAIN> {
+	    implements ICachableEntityServiceLocal<DOMAIN>, ICachableEntityServiceRemote<DOMAIN> {
 
 	// finals
 
@@ -85,7 +97,16 @@ public abstract class AOndemandLoadedEntitiesService<DOMAIN extends AEntity, ESB
 	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public DOMAIN getById(final Integer id) throws NotFound, IllegalArgument {
 	    MyNumbers.requireNonZero(IllegalArgument::new, id, "id");
-	    return singleFromSingle(con -> getSingleById.apply(con, id));
+	    return cache.getOrFetchPutById(domainClazz, id,
+		    (x) -> singleFromSingle(con -> getSingleById.apply(con, x)));
+	}
+
+	@Override
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public DOMAIN getByIdBypassCache(final Integer id) throws NotFound, IllegalArgument {
+	    MyNumbers.requireNonZero(IllegalArgument::new, id, "id");
+	    return cache.fetchAndPutById(domainClazz, id,
+		    (x) -> singleFromSingle(con -> getSingleById.apply(con, x)));
 	}
 
     }
