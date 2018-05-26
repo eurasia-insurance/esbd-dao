@@ -2,7 +2,6 @@ package tech.lapsa.javax.caching;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
-import javax.cache.Caching;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
@@ -11,17 +10,18 @@ import tech.lapsa.java.commons.function.MyStrings;
 
 public final class CacheFactory<K, V> {
 
-    private static final CacheManager CACHE_MANAGER = Caching.getCachingProvider().getCacheManager();
+    private final CacheManager cacheManager;
 
     private Class<K> keyType;
     private Class<V> valueType;
     private String name;
 
-    private CacheFactory() {
+    private CacheFactory(CacheManager cacheManager) {
+	this.cacheManager = cacheManager;
     }
 
-    public static <K, V> CacheFactory<K, V> of() {
-	return new CacheFactory<>();
+    public static <K, V> CacheFactory<K, V> of(CacheManager cacheManager) {
+	return new CacheFactory<>(cacheManager);
     }
 
     public CacheFactory<K, V> withKeyClass(final Class<K> keyType) {
@@ -43,7 +43,7 @@ public final class CacheFactory<K, V> {
     public Cache<K, V> buildOrGet() {
 	final String cacheName = MyStrings.format("%1$s-%2$s-%3$s", name, keyType.getCanonicalName(),
 		valueType.getCanonicalName());
-	Cache<K, V> cache = CACHE_MANAGER.getCache(cacheName);
+	Cache<K, V> cache = cacheManager.getCache(cacheName);
 	if (cache == null) {
 	    MutableConfiguration<Object, Object> config = new MutableConfiguration<Object, Object>();
 	    config.setTypes(Object.class, Object.class);
@@ -51,7 +51,11 @@ public final class CacheFactory<K, V> {
 	    config.setStatisticsEnabled(true);
 	    config.setManagementEnabled(true);
 	    config.setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_HOUR));
-	    cache = (Cache<K, V>) CACHE_MANAGER.createCache(cacheName, config);
+	    synchronized (cacheManager) {
+		cache = cacheManager.getCache(cacheName);// another try in locked mode
+		if (cache == null)
+		    cache = (Cache<K, V>) cacheManager.createCache(cacheName, config);
+	    }
 	}
 	return cache;
     }

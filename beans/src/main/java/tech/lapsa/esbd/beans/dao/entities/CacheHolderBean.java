@@ -1,6 +1,9 @@
 package tech.lapsa.esbd.beans.dao.entities;
 
+import javax.annotation.PostConstruct;
 import javax.cache.Cache;
+import javax.cache.CacheManager;
+import javax.cache.Caching;
 import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -15,7 +18,6 @@ import tech.lapsa.javax.caching.CacheFactory;
 @Startup
 @LocalBean
 public class CacheHolderBean {
-
     @FunctionalInterface
     public interface Fetcher<T, R> {
 	R fetch(T t) throws NotFound;
@@ -48,8 +50,15 @@ public class CacheHolderBean {
 
     // private
 
+    private CacheManager manager;
+
+    @PostConstruct
+    public void initCacheManager() {
+	manager = Caching.getCachingProvider().getCacheManager();
+    }
+
     private <T extends AEntity> Cache<Integer, T> idCache(Class<T> entityClazz) {
-	return CacheFactory.<Integer, T> of()
+	return CacheFactory.<Integer, T> of(manager)
 		.withKeyClass(Integer.class)
 		.withValueClass(entityClazz)
 		.withName("idCache")
