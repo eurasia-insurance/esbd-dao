@@ -18,6 +18,7 @@ import tech.lapsa.javax.caching.CacheFactory;
 @Startup
 @LocalBean
 public class CacheHolderBean {
+
     @FunctionalInterface
     public interface Fetcher<T, R> {
 	R fetch(T t) throws NotFound;
