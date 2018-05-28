@@ -39,7 +39,8 @@ public class VehicleModelEntityServiceBean
     // constructor
 
     protected VehicleModelEntityServiceBean() {
-	super(VehicleModelEntityService.class, VehicleModelEntity.class, INTERMEDIATE_TO_LIST_FUNCTION, ESBD_LOOKUP_FUNCTION);
+	super(VehicleModelEntityService.class, VehicleModelEntity.class, INTERMEDIATE_TO_LIST_FUNCTION,
+		ESBD_LOOKUP_FUNCTION);
     }
 
     // public
@@ -48,11 +49,11 @@ public class VehicleModelEntityServiceBean
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<VehicleModelEntity> getByName(final String name) throws IllegalArgument {
 	MyStrings.requireNonEmpty(IllegalArgument::new, name, "name");
-	return manyFromIntermediateArray(con -> {
+	return cacheControl.put(domainClazz, manyFromIntermediateArray(con -> {
 	    final VOITUREMODEL search = new VOITUREMODEL();
 	    search.setNAME(name);
 	    return con.getVoitureModels(search);
-	});
+	}));
     }
 
     @Override
@@ -60,11 +61,11 @@ public class VehicleModelEntityServiceBean
     public List<VehicleModelEntity> getByManufacturer(final VehicleManufacturerEntity manufacturer)
 	    throws IllegalArgument {
 	MyObjects.requireNonNull(IllegalArgument::new, manufacturer, "manufacturer");
-	return manyFromIntermediateArray(con -> {
+	return cacheControl.put(domainClazz, manyFromIntermediateArray(con -> {
 	    final VOITUREMODEL search = new VOITUREMODEL();
 	    search.setVOITUREMARKID(manufacturer.getId().intValue());
 	    return con.getVoitureModels(search);
-	});
+	}));
     }
 
     // injected

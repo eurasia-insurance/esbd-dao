@@ -48,14 +48,15 @@ public class VehicleEntityServiceBean
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<VehicleEntity> getByRegNumber(final VehicleRegNumber regNumber) throws IllegalArgument {
 	MyObjects.requireNonNull(regNumber, "regNumber"); //
-	return manyFromIntermediateArray(con -> con.getTFByNumber(regNumber.getNumber()));
+	return cacheControl.put(domainClazz,
+		manyFromIntermediateArray(con -> con.getTFByNumber(regNumber.getNumber())));
     }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<VehicleEntity> getByVINCode(final String vinCode) throws IllegalArgument {
 	MyStrings.requireNonEmpty(vinCode, "vinCode");
-	return manyFromIntermediateArray(con -> con.getTFByVIN(vinCode));
+	return cacheControl.put(domainClazz, manyFromIntermediateArray(con -> con.getTFByVIN(vinCode)));
     }
 
     // injected

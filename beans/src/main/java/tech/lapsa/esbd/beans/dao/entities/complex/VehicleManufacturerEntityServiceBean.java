@@ -47,11 +47,11 @@ public class VehicleManufacturerEntityServiceBean
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<VehicleManufacturerEntity> getByName(final String name) throws IllegalArgument {
 	MyStrings.requireNonEmpty(IllegalArgument::new, name, "name");
-	return manyFromIntermediateArray(con -> {
+	return cacheControl.put(domainClazz, manyFromIntermediateArray(con -> {
 	    final VOITUREMARK search = new VOITUREMARK();
 	    search.setNAME(name);
 	    return con.getVoitureMarks(search);
-	});
+	}));
     }
 
     // injected
