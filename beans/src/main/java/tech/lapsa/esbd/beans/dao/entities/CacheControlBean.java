@@ -3,6 +3,7 @@ package tech.lapsa.esbd.beans.dao.entities;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.Caching;
@@ -87,7 +88,14 @@ public class CacheControlBean {
 	manager = Caching.getCachingProvider().getCacheManager();
     }
 
+    @PreDestroy
+    public void closeCacheManager() {
+	if (manager != null && !manager.isClosed())
+	    manager.close();
+    }
+
     private <T extends AEntity> Cache<Integer, T> idCache(Class<T> entityClazz) {
+	assert entityClazz != null;
 	return CacheFactory.<Integer, T> of(manager)
 		.withKeyClass(Integer.class)
 		.withValueClass(entityClazz)
