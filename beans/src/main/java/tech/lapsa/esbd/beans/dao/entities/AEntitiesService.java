@@ -4,13 +4,13 @@ import tech.lapsa.esbd.beans.dao.AService;
 import tech.lapsa.esbd.beans.dao.Util;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.AEsbdAttributeConverter;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.AEsbdAttributeConverter.EsbdConversionException;
-import tech.lapsa.esbd.dao.entities.IEntitiesService.IEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.IEntitiesService.IEntityServiceRemote;
+import tech.lapsa.esbd.dao.entities.IEntitiesService.IEntitiesServiceLocal;
+import tech.lapsa.esbd.dao.entities.IEntitiesService.IEntitiesServiceRemote;
 import tech.lapsa.esbd.domain.AEntity;
 
 public abstract class AEntitiesService<DOMAIN extends AEntity, ESBD>
 	extends AService<DOMAIN>
-	implements IEntityServiceLocal<DOMAIN>, IEntityServiceRemote<DOMAIN> {
+	implements IEntitiesServiceLocal<DOMAIN>, IEntitiesServiceRemote<DOMAIN> {
 
     // constructor
 

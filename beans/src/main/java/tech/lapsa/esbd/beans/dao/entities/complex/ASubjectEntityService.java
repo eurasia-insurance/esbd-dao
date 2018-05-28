@@ -2,7 +2,6 @@ package tech.lapsa.esbd.beans.dao.entities.complex;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.Stream.Builder;
@@ -10,7 +9,7 @@ import java.util.stream.Stream.Builder;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import tech.lapsa.esbd.beans.dao.entities.AOndemandLoadedEntitiesService.AOndemandComplexIdBySingleService;
+import tech.lapsa.esbd.beans.dao.entities.AOndemandLoadedEntitiesService.AOndemandComplexViaSingleEntityService;
 import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.dao.entities.complex.ISubjectEntitiesService.ISubjectEntityServiceLocal;
@@ -24,12 +23,12 @@ import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.kz.taxpayer.TaxpayerNumber;
 
 public abstract class ASubjectEntityService<T extends SubjectEntity>
-	extends AOndemandComplexIdBySingleService<T, Client, ArrayOfClient>
+	extends AOndemandComplexViaSingleEntityService<T, Client, ArrayOfClient>
 	implements ISubjectEntityServiceLocal<T>, ISubjectEntityServiceRemote<T> {
 
     // static finals
 
-    private static final Function<ArrayOfClient, List<Client>> GET_LIST_FUNCTION = ArrayOfClient::getClient;
+    private static final Function<ArrayOfClient, List<Client>> INTERMEDIATE_TO_LIST_FUNCTION = ArrayOfClient::getClient;
     private static final Comparator<? super Client> CLIENT_BY_ID_COMPARATOR = (x1, x2) -> Integer.compare(x1.getID(),
 	    x2.getID());
 
@@ -41,9 +40,9 @@ public abstract class ASubjectEntityService<T extends SubjectEntity>
 
     protected ASubjectEntityService(final Class<?> serviceClazz,
 	    final Class<T> domainClass,
-	    final BiFunction<Connection, Integer, Client> getSingleById,
+	    final ESBDEntityLookupFunction<Client> getSingleById,
 	    final ClientType clientType) {
-	super(serviceClazz, domainClass, GET_LIST_FUNCTION, getSingleById);
+	super(serviceClazz, domainClass, INTERMEDIATE_TO_LIST_FUNCTION, getSingleById);
 	assert clientType != null;
 	this.clientType = clientType;
     }
@@ -54,14 +53,14 @@ public abstract class ASubjectEntityService<T extends SubjectEntity>
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<T> getByIdNumber(final TaxpayerNumber idNumber) throws IllegalArgument {
 	MyObjects.requireNonNull(IllegalArgument::new, idNumber, "idNumber");
-	return manyFromStream(criteriaByIdNumber(idNumber));
+	return cacheControl.put(domainClazz, manyFromStream(criteriaByIdNumber(idNumber)));
     }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public T getFirstByIdNumber(final TaxpayerNumber idNumber) throws IllegalArgument, NotFound {
 	MyObjects.requireNonNull(IllegalArgument::new, idNumber, "idNumber");
-	return firstFromStream(criteriaByIdNumber(idNumber));
+	return cacheControl.put(domainClazz, firstFromStream(criteriaByIdNumber(idNumber)));
     }
 
     // private & protected
@@ -91,7 +90,7 @@ public abstract class ASubjectEntityService<T extends SubjectEntity>
 		    search.setNaturalPersonBool(person);
 		    final ArrayOfClient intermediateArray = con.getClientsByKeyFields(search);
 		    MyOptionals.of(intermediateArray)
-			    .map(GET_LIST_FUNCTION)
+			    .map(INTERMEDIATE_TO_LIST_FUNCTION)
 			    .map(List::stream)
 			    .orElseGet(Stream::empty)
 			    .forEach(builder::accept);
