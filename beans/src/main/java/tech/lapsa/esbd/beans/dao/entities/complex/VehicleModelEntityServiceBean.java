@@ -1,7 +1,6 @@
 package tech.lapsa.esbd.beans.dao.entities.complex;
 
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import javax.ejb.EJB;
@@ -11,7 +10,6 @@ import javax.ejb.TransactionAttributeType;
 
 import tech.lapsa.esbd.beans.dao.entities.AOndemandLoadedEntitiesService.AOndemandComplexIdByIntermediateService;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.VehicleModelEntityEsbdConverterBean;
-import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService;
 import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService.VehicleModelEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService.VehicleModelEntityServiceRemote;
@@ -30,7 +28,7 @@ public class VehicleModelEntityServiceBean
 
     // static finals
 
-    private static final BiFunction<Connection, Integer, ArrayOfVOITUREMODEL> GET_BY_ID_FUNCTION = (con, id) -> {
+    private static final FetchESBDEntityByIdFunction<ArrayOfVOITUREMODEL> GET_BY_ID_FUNCTION = (con, id) -> {
 	final VOITUREMODEL param = new VOITUREMODEL();
 	param.setID(id.intValue());
 	return con.getVoitureModels(param);

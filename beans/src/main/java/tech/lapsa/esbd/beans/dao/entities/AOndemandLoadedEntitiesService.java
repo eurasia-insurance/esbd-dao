@@ -4,7 +4,6 @@ import static tech.lapsa.esbd.beans.dao.Util.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,84 +30,73 @@ public abstract class AOndemandLoadedEntitiesService<DOMAIN extends AEntity, ESB
 	extends AEntitiesService<DOMAIN, ESBD>
 	implements ICachableEntityServiceLocal<DOMAIN>, ICachableEntityServiceRemote<DOMAIN> {
 
+    @FunctionalInterface
+    public interface FetcheDomainEntityByIdFunction<T, R> {
+	R fetch(T t) throws NotFound;
+    }
+
+    @FunctionalInterface
+    public interface FetchESBDEntityByIdFunction<T> {
+	T fetch(Connection con, Integer id);
+    }
+
     public static abstract class AOndemandComplexIdByIntermediateService<DOMAIN extends AEntity, ESBD, INTERMEDIATE_ARRAY>
-	    extends AOndemandLoadedEntitiesService<DOMAIN, ESBD, INTERMEDIATE_ARRAY>
-	    implements ICachableEntityServiceLocal<DOMAIN>, ICachableEntityServiceRemote<DOMAIN> {
+	    extends AOndemandLoadedEntitiesService<DOMAIN, ESBD, INTERMEDIATE_ARRAY> {
 
 	// finals
 
-	protected final BiFunction<Connection, Integer, INTERMEDIATE_ARRAY> getIntermediateArrayById;
+	protected final FetchESBDEntityByIdFunction<INTERMEDIATE_ARRAY> esbdFunction;
 
 	// constructor
 
 	protected AOndemandComplexIdByIntermediateService(final Class<?> serviceClazz,
 		final Class<DOMAIN> domainClazz,
 		final Function<INTERMEDIATE_ARRAY, List<ESBD>> intermediateArrayToListConverter,
-		final BiFunction<Connection, Integer, INTERMEDIATE_ARRAY> getIntermediateArrayById) {
+		final FetchESBDEntityByIdFunction<INTERMEDIATE_ARRAY> esbdFunction) {
 	    super(serviceClazz, domainClazz, intermediateArrayToListConverter);
-	    assert getIntermediateArrayById != null;
-	    this.getIntermediateArrayById = getIntermediateArrayById;
+	    assert esbdFunction != null;
+	    this.esbdFunction = esbdFunction;
 	}
 
 	// public
 
-	@Override
-	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public DOMAIN getById(final Integer id) throws NotFound, IllegalArgument {
-	    MyNumbers.requireNonZero(IllegalArgument::new, id, "id");
-	    return cache.getOrFetchPutById(domainClazz, id,
-		    x -> singleFromIntermediateArray(con -> getIntermediateArrayById.apply(con, x)));
-	}
+	// private & protected
 
 	@Override
-	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public DOMAIN getByIdBypassCache(final Integer id) throws NotFound, IllegalArgument {
-	    MyNumbers.requireNonZero(IllegalArgument::new, id, "id");
-	    return cache.fetchAndPutById(domainClazz, id,
-		    x -> singleFromIntermediateArray(con -> getIntermediateArrayById.apply(con, x)));
+	protected final FetcheDomainEntityByIdFunction<Integer, DOMAIN> getFetcher() {
+	    return x -> singleFromIntermediateArray(con -> esbdFunction.fetch(con, x));
 	}
     }
 
     @EJB
-    protected CacheHolderBean cache;
+    protected CachedEntitiesBean cache;
 
     public static abstract class AOndemandComplexIdBySingleService<DOMAIN extends AEntity, ESBD, INTERMEDIATE_ARRAY>
-	    extends AOndemandLoadedEntitiesService<DOMAIN, ESBD, INTERMEDIATE_ARRAY>
-	    implements ICachableEntityServiceLocal<DOMAIN>, ICachableEntityServiceRemote<DOMAIN> {
+	    extends AOndemandLoadedEntitiesService<DOMAIN, ESBD, INTERMEDIATE_ARRAY> {
 
 	// finals
 
-	protected final BiFunction<Connection, Integer, ESBD> getSingleById;
+	protected final FetchESBDEntityByIdFunction<ESBD> esbdFunction;
 
 	// constructor
 
 	protected AOndemandComplexIdBySingleService(final Class<?> serviceClazz,
 		final Class<DOMAIN> domainClazz,
 		final Function<INTERMEDIATE_ARRAY, List<ESBD>> intermediateArrayToListConverter,
-		final BiFunction<Connection, Integer, ESBD> getSingleById) {
+		final FetchESBDEntityByIdFunction<ESBD> esbdFunction) {
 	    super(serviceClazz, domainClazz, intermediateArrayToListConverter);
-	    assert getSingleById != null;
-	    this.getSingleById = getSingleById;
+	    assert esbdFunction != null;
+	    this.esbdFunction = esbdFunction;
 	}
 
 	// public
 
-	@Override
-	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public DOMAIN getById(final Integer id) throws NotFound, IllegalArgument {
-	    MyNumbers.requireNonZero(IllegalArgument::new, id, "id");
-	    return cache.getOrFetchPutById(domainClazz, id,
-		    (x) -> singleFromSingle(con -> getSingleById.apply(con, x)));
-	}
+	// private & protected
 
 	@Override
-	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public DOMAIN getByIdBypassCache(final Integer id) throws NotFound, IllegalArgument {
-	    MyNumbers.requireNonZero(IllegalArgument::new, id, "id");
-	    return cache.fetchAndPutById(domainClazz, id,
-		    (x) -> singleFromSingle(con -> getSingleById.apply(con, x)));
+	protected FetcheDomainEntityByIdFunction<Integer, DOMAIN> getFetcher() {
+	    return x -> singleFromSingle(con -> esbdFunction.fetch(con, x));
 	}
-
     }
 
     // finals
@@ -125,7 +113,27 @@ public abstract class AOndemandLoadedEntitiesService<DOMAIN extends AEntity, ESB
 	this.intermediateArrayToListConverter = intermediateArrayToListConverter;
     }
 
+    // public
+
+    // public
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public DOMAIN getById(final Integer id) throws NotFound, IllegalArgument {
+	MyNumbers.requireNonZero(IllegalArgument::new, id, "id");
+	return cache.getOrFetchById(domainClazz, id, getFetcher());
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public DOMAIN getByIdBypassCache(final Integer id) throws NotFound, IllegalArgument {
+	MyNumbers.requireNonZero(IllegalArgument::new, id, "id");
+	return cache.fetchAndPutById(domainClazz, id, getFetcher());
+    }
+
     // private & protected
+
+    protected abstract FetcheDomainEntityByIdFunction<Integer, DOMAIN> getFetcher();
 
     // signle
 

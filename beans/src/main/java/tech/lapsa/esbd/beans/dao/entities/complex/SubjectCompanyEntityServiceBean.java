@@ -1,12 +1,9 @@
 package tech.lapsa.esbd.beans.dao.entities.complex;
 
-import java.util.function.BiFunction;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.SubjectCompanyEntityConverterBean;
-import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.dao.entities.complex.SubjectCompanyEntityService;
 import tech.lapsa.esbd.dao.entities.complex.SubjectCompanyEntityService.SubjectCompanyEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.SubjectCompanyEntityService.SubjectCompanyEntityServiceRemote;
@@ -20,7 +17,7 @@ public class SubjectCompanyEntityServiceBean
 
     // static finals
 
-    private static final BiFunction<Connection, Integer, Client> GET_BY_ID_FUNCTION = (con, id) -> {
+    private static final FetchESBDEntityByIdFunction<Client> GET_BY_ID_FUNCTION = (con, id) -> {
 	final Client source = con.getClientByID(id.intValue());
 	if (source == null)
 	    return null;

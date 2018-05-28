@@ -2,7 +2,6 @@ package tech.lapsa.esbd.beans.dao.entities.complex;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.Stream.Builder;
@@ -41,7 +40,7 @@ public abstract class ASubjectEntityService<T extends SubjectEntity>
 
     protected ASubjectEntityService(final Class<?> serviceClazz,
 	    final Class<T> domainClass,
-	    final BiFunction<Connection, Integer, Client> getSingleById,
+	    final FetchESBDEntityByIdFunction<Client> getSingleById,
 	    final ClientType clientType) {
 	super(serviceClazz, domainClass, GET_LIST_FUNCTION, getSingleById);
 	assert clientType != null;

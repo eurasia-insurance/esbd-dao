@@ -1,7 +1,6 @@
 package tech.lapsa.esbd.beans.dao.entities.complex;
 
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import javax.ejb.EJB;
@@ -9,7 +8,6 @@ import javax.ejb.Stateless;
 
 import tech.lapsa.esbd.beans.dao.entities.AOndemandLoadedEntitiesService.AOndemandComplexIdByIntermediateService;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.InsuranceAgentEntityEsbdConverterBean;
-import tech.lapsa.esbd.connection.Connection;
 import tech.lapsa.esbd.dao.entities.complex.InsuranceAgentEntityService;
 import tech.lapsa.esbd.dao.entities.complex.InsuranceAgentEntityService.InsuranceAgentEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.complex.InsuranceAgentEntityService.InsuranceAgentEntityServiceRemote;
@@ -24,7 +22,7 @@ public class InsuranceAgentEntityServiceBean
 
     // static finals
 
-    private static final BiFunction<Connection, Integer, ArrayOfMIDDLEMAN> GET_BY_ID_FUNCTION = (con, id) -> {
+    private static final FetchESBDEntityByIdFunction<ArrayOfMIDDLEMAN> GET_BY_ID_FUNCTION = (con, id) -> {
 	final MIDDLEMAN param = new MIDDLEMAN();
 	param.setMIDDLEMANID(id.intValue());
 	return con.getMiddlemenByKeyFields(param);

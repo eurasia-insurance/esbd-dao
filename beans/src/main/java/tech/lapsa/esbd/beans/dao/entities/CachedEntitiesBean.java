@@ -10,6 +10,7 @@ import javax.ejb.Startup;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+import tech.lapsa.esbd.beans.dao.entities.AOndemandLoadedEntitiesService.FetcheDomainEntityByIdFunction;
 import tech.lapsa.esbd.dao.NotFound;
 import tech.lapsa.esbd.domain.AEntity;
 import tech.lapsa.javax.caching.CacheFactory;
@@ -17,17 +18,12 @@ import tech.lapsa.javax.caching.CacheFactory;
 @Singleton
 @Startup
 @LocalBean
-public class CacheHolderBean {
-
-    @FunctionalInterface
-    public interface Fetcher<T, R> {
-	R fetch(T t) throws NotFound;
-    }
+public class CachedEntitiesBean {
 
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public <T extends AEntity> T getOrFetchPutById(final Class<T> entityClazz,
+    public <T extends AEntity> T getOrFetchById(final Class<T> entityClazz,
 	    final Integer id,
-	    final Fetcher<Integer, T> fetcher) throws NotFound {
+	    final FetcheDomainEntityByIdFunction<Integer, T> fetcher) throws NotFound {
 	final Cache<Integer, T> cache = idCache(entityClazz);
 	{
 	    final T entity = cache.get(id);
@@ -42,7 +38,7 @@ public class CacheHolderBean {
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public <T extends AEntity> T fetchAndPutById(final Class<T> entityClazz,
 	    final Integer id,
-	    final Fetcher<Integer, T> fetcher) throws NotFound {
+	    final FetcheDomainEntityByIdFunction<Integer, T> fetcher) throws NotFound {
 	final T entity = fetcher.fetch(id);
 	final Cache<Integer, T> cache = idCache(entityClazz);
 	cache.put(id, entity);
