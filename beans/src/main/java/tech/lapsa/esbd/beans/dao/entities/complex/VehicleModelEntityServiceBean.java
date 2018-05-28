@@ -8,7 +8,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import tech.lapsa.esbd.beans.dao.entities.AOndemandLoadedEntitiesService.AOndemandComplexIdByIntermediateService;
+import tech.lapsa.esbd.beans.dao.entities.AOndemandLoadedEntitiesService.AOndemandComplexViaIntermediateArrayService;
 import tech.lapsa.esbd.beans.dao.entities.complex.converter.VehicleModelEntityEsbdConverterBean;
 import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService;
 import tech.lapsa.esbd.dao.entities.complex.VehicleModelEntityService.VehicleModelEntityServiceLocal;
@@ -23,23 +23,23 @@ import tech.lapsa.java.commons.function.MyStrings;
 
 @Stateless(name = VehicleModelEntityService.BEAN_NAME)
 public class VehicleModelEntityServiceBean
-	extends AOndemandComplexIdByIntermediateService<VehicleModelEntity, VOITUREMODEL, ArrayOfVOITUREMODEL>
+	extends AOndemandComplexViaIntermediateArrayService<VehicleModelEntity, VOITUREMODEL, ArrayOfVOITUREMODEL>
 	implements VehicleModelEntityServiceLocal, VehicleModelEntityServiceRemote {
 
     // static finals
 
-    private static final FetchESBDEntityByIdFunction<ArrayOfVOITUREMODEL> GET_BY_ID_FUNCTION = (con, id) -> {
+    private static final ESBDEntityLookupFunction<ArrayOfVOITUREMODEL> ESBD_LOOKUP_FUNCTION = (con, id) -> {
 	final VOITUREMODEL param = new VOITUREMODEL();
 	param.setID(id.intValue());
 	return con.getVoitureModels(param);
     };
 
-    private static final Function<ArrayOfVOITUREMODEL, List<VOITUREMODEL>> GET_LIST_FUNCTION = ArrayOfVOITUREMODEL::getVOITUREMODEL;
+    private static final Function<ArrayOfVOITUREMODEL, List<VOITUREMODEL>> INTERMEDIATE_TO_LIST_FUNCTION = ArrayOfVOITUREMODEL::getVOITUREMODEL;
 
     // constructor
 
     protected VehicleModelEntityServiceBean() {
-	super(VehicleModelEntityService.class, VehicleModelEntity.class, GET_LIST_FUNCTION, GET_BY_ID_FUNCTION);
+	super(VehicleModelEntityService.class, VehicleModelEntity.class, INTERMEDIATE_TO_LIST_FUNCTION, ESBD_LOOKUP_FUNCTION);
     }
 
     // public

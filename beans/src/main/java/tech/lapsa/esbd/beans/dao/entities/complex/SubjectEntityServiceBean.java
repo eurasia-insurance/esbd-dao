@@ -17,12 +17,13 @@ public class SubjectEntityServiceBean
 
     // static finals
 
-    private static final FetchESBDEntityByIdFunction<Client> GET_BY_ID_FUNCTION = (con, id) -> con.getClientByID(id.intValue());
+    private static final ESBDEntityLookupFunction<Client> ESBD_LOOKUP_FUNCTION = (con, id) -> con
+	    .getClientByID(id.intValue());
 
     // constructor
 
     public SubjectEntityServiceBean() {
-	super(SubjectEntityService.class, SubjectEntity.class, GET_BY_ID_FUNCTION, ClientType.BOTH);
+	super(SubjectEntityService.class, SubjectEntity.class, ESBD_LOOKUP_FUNCTION, ClientType.BOTH);
     }
 
     // injected
