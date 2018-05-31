@@ -28,12 +28,18 @@ public class PolicyEntityServiceBean
     // static finals
 
     private static final ESBDEntityLookupFunction<Policy> ESBD_LOOKUP_FUNCTION = (con, id) -> con.getPolicyByID(id);
+    private static final ESBDEntityStoreFunction<Policy> ESBD_STORE_FUNCTION = (con, e) -> con.setPolicy(e);
+
     private static final Function<ArrayOfPolicy, List<Policy>> INTERMEDIATE_TO_LIST_FUNCTION = ArrayOfPolicy::getPolicy;
 
     // constructor
 
     public PolicyEntityServiceBean() {
-	super(PolicyEntityService.class, PolicyEntity.class, INTERMEDIATE_TO_LIST_FUNCTION, ESBD_LOOKUP_FUNCTION);
+	super(PolicyEntityService.class,
+		PolicyEntity.class,
+		INTERMEDIATE_TO_LIST_FUNCTION,
+		ESBD_LOOKUP_FUNCTION,
+		ESBD_STORE_FUNCTION);
     }
 
     // public

@@ -28,12 +28,18 @@ public class InsuranceAgentEntityServiceBean
 	return con.getMiddlemenByKeyFields(param);
     };
 
+    private static final ESBDEntityStoreFunction<MIDDLEMAN> ESBD_STORE_FUNCTION = (con, e) -> con.setMiddleman(e);
+
     private static final Function<ArrayOfMIDDLEMAN, List<MIDDLEMAN>> INTERMEDIATE_TO_LIST_FUNCTION = ArrayOfMIDDLEMAN::getMIDDLEMAN;
 
     // constructor
 
     protected InsuranceAgentEntityServiceBean() {
-	super(InsuranceAgentEntityService.class, InsuranceAgentEntity.class, INTERMEDIATE_TO_LIST_FUNCTION, ESBD_LOOKUP_FUNCTION);
+	super(InsuranceAgentEntityService.class,
+		InsuranceAgentEntity.class,
+		INTERMEDIATE_TO_LIST_FUNCTION,
+		ESBD_LOOKUP_FUNCTION,
+		ESBD_STORE_FUNCTION);
     }
 
     // injected

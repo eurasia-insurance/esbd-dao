@@ -34,13 +34,18 @@ public class VehicleModelEntityServiceBean
 	return con.getVoitureModels(param);
     };
 
+    private static final ESBDEntityStoreFunction<VOITUREMODEL> ESBD_STORE_FUNCTION = (con, e) -> con.setVoitureModel(e);
+
     private static final Function<ArrayOfVOITUREMODEL, List<VOITUREMODEL>> INTERMEDIATE_TO_LIST_FUNCTION = ArrayOfVOITUREMODEL::getVOITUREMODEL;
 
     // constructor
 
     protected VehicleModelEntityServiceBean() {
-	super(VehicleModelEntityService.class, VehicleModelEntity.class, INTERMEDIATE_TO_LIST_FUNCTION,
-		ESBD_LOOKUP_FUNCTION);
+	super(VehicleModelEntityService.class,
+		VehicleModelEntity.class,
+		INTERMEDIATE_TO_LIST_FUNCTION,
+		ESBD_LOOKUP_FUNCTION,
+		ESBD_STORE_FUNCTION);
     }
 
     // public

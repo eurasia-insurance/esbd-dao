@@ -110,4 +110,16 @@ public final class TemporalUtil {
 	    return null;
 	return localDate.format(ESBD_DATE_FORMATTER);
     }
+
+    public static String instantToDate(final Instant instant) {
+	if (instant == null)
+	    return null;
+	return ESBD_DATE_FORMATTER.format(instant);
+    }
+
+    public static String instantToDateTime(final Instant instant) {
+	if (instant == null)
+	    return null;
+	return ESBD_DATETIME_FORMATTER.format(instant);
+    }
 }

@@ -32,4 +32,12 @@ public abstract class AEntitiesService<DOMAIN extends AEntity, ESBD>
 	    throw Util.esbdConversionExceptionToEJBException(e);
 	}
     }
+
+    protected ESBD conversion(DOMAIN source) {
+	try {
+	    return getConverter().convertToEsbdValue(source);
+	} catch (EsbdConversionException e) {
+	    throw Util.esbdConversionExceptionToEJBException(e);
+	}
+    }
 }

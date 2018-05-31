@@ -32,13 +32,18 @@ public class VehicleManufacturerEntityServiceBean
 	return con.getVoitureMarks(param);
     };
 
+    private static final ESBDEntityStoreFunction<VOITUREMARK> ESBD_STORE_FUNCTION = (con, e) -> con.setVoitureMark(e);
+
     private static final Function<ArrayOfVOITUREMARK, List<VOITUREMARK>> INTERMEDIATE_TO_LIST_FUNCTION = ArrayOfVOITUREMARK::getVOITUREMARK;
 
     // constructor
 
     protected VehicleManufacturerEntityServiceBean() {
-	super(VehicleManufacturerEntityService.class, VehicleManufacturerEntity.class, INTERMEDIATE_TO_LIST_FUNCTION,
-		ESBD_LOOKUP_FUNCTION);
+	super(VehicleManufacturerEntityService.class,
+		VehicleManufacturerEntity.class,
+		INTERMEDIATE_TO_LIST_FUNCTION,
+		ESBD_LOOKUP_FUNCTION,
+		ESBD_STORE_FUNCTION);
     }
 
     // public

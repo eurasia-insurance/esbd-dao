@@ -28,6 +28,8 @@ public abstract class ASubjectEntityService<T extends SubjectEntity>
 
     // static finals
 
+    private static final ESBDEntityStoreFunction<Client> ESBD_STORE_FUNCTION = (con, e) -> con.setClient(e);
+
     private static final Function<ArrayOfClient, List<Client>> INTERMEDIATE_TO_LIST_FUNCTION = ArrayOfClient::getClient;
     private static final Comparator<? super Client> CLIENT_BY_ID_COMPARATOR = (x1, x2) -> Integer.compare(x1.getID(),
 	    x2.getID());
@@ -42,7 +44,7 @@ public abstract class ASubjectEntityService<T extends SubjectEntity>
 	    final Class<T> domainClass,
 	    final ESBDEntityLookupFunction<Client> getSingleById,
 	    final ClientType clientType) {
-	super(serviceClazz, domainClass, INTERMEDIATE_TO_LIST_FUNCTION, getSingleById);
+	super(serviceClazz, domainClass, INTERMEDIATE_TO_LIST_FUNCTION, getSingleById, ESBD_STORE_FUNCTION);
 	assert clientType != null;
 	this.clientType = clientType;
     }

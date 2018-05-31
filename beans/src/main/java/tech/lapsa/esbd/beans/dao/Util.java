@@ -2,6 +2,8 @@ package tech.lapsa.esbd.beans.dao;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import javax.ejb.EJBException;
@@ -69,6 +71,25 @@ public final class Util {
     @FunctionalInterface
     public interface ThrowingFunction<T, R> {
 	R apply(T value) throws Exception;
+    }
+
+    public static <ENTITY, ID, E extends Exception> Optional<ENTITY> optSaveProperty(final Optional<ENTITY> entity,
+	    final ThrowingFunction<ENTITY, ENTITY> entitySaver,
+	    final Function<ENTITY, ID> entityIdGeter,
+	    final Consumer<ID> properyIdSeter) {
+
+	if (!entity.isPresent())
+	    return Optional.empty();
+
+	final ENTITY saved;
+	try {
+	    saved = entitySaver.apply(entity.get());
+	} catch (Exception e) {
+	    throw new IllegalStateException("Error during saving", e);
+	}
+
+	properyIdSeter.accept(entityIdGeter.apply(saved));
+	return MyOptionals.of(saved);
     }
 
     // optField
