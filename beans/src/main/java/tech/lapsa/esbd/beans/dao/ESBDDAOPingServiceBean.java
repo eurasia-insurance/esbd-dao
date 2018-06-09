@@ -27,7 +27,7 @@ public class ESBDDAOPingServiceBean implements ESBDDAOPingServiceLocal, ESBDDAOP
     public void ping() throws IllegalState {
 	try (Connection con = pool.getConnection()) {
 	} catch (final ConnectionException ce) {
-	    throw MyExceptions.illegalStateFormat(ce.getMessage());
+	    throw MyExceptions.format(IllegalState::new, "Can't gen connection to ESBD with message %1$s", ce.getMessage());
 	}
 
     }
