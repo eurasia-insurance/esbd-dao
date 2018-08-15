@@ -4,7 +4,7 @@ import static com.lapsa.insurance.elements.VehicleClass.*;
 
 import com.lapsa.insurance.elements.VehicleClass;
 
-public final class VehicleClassMapping extends AbsMapping<Integer, VehicleClass> {
+public final class VehicleClassMapping extends AElementsMapping<Integer, VehicleClass> {
 
     private static final class SingletonHolder {
 	private static final VehicleClassMapping HOLDER_INSTANCE = new VehicleClassMapping();

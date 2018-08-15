@@ -4,7 +4,7 @@ import static com.lapsa.kz.economic.KZEconomicSector.*;
 
 import com.lapsa.kz.economic.KZEconomicSector;
 
-public class KZEconomicSectorMapping extends AbsMapping<Integer, KZEconomicSector> {
+public class KZEconomicSectorMapping extends AElementsMapping<Integer, KZEconomicSector> {
 
     private static final class SingletonHolder {
 	private static final KZEconomicSectorMapping HOLDER_INSTANCE = new KZEconomicSectorMapping();
