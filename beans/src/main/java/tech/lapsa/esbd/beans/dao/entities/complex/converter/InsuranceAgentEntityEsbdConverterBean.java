@@ -45,8 +45,99 @@ public class InsuranceAgentEntityEsbdConverterBean
 
     @Override
     public MIDDLEMAN convertToEsbdValue(InsuranceAgentEntity source) throws EsbdConversionException {
-	// TODO Auto-generated method stub
-	return null;
+
+	final MIDDLEMAN target = new MIDDLEMAN();
+
+	{
+	    MyOptionals.of(source.getId())
+		    .map(Integer::intValue)
+		    .ifPresent(target::setMIDDLEMANID);
+	}
+
+	{
+	    // CONTRACT_DATE s:string дата договора посредника
+	    // CONTRACT_NUMBER s:string номер договора посредника
+	    final Optional<ContractInfo> optContract = MyOptionals.of(source.getContract());
+	    if (optContract.isPresent()) {
+		optContract.map(ContractInfo::getDateOf)
+			.map(TemporalUtil::localDateToDate)
+			.ifPresent(target::setCONTRACTDATE);
+
+		optContract.map(ContractInfo::getNumber)
+			.ifPresent(target::setCONTRACTNUMBER);
+	    }
+	}
+
+	{
+	    MyOptionals.of(source.getLetterOfAttorneyNumber())
+		    .ifPresent(target::setLETTEROFATTORNEYNUMBER);
+	}
+
+	{
+	    // BRANCH_ID s:int идентификатор регионального подразделения
+	    optSaveProperty(MyOptionals.of(source.getBranch()),
+		    branchService::save,
+		    BranchEntity::getId,
+		    target::setBRANCHID);
+	}
+
+	{
+	    // USER_ID s:int идентификатор пользователя
+	    optSaveProperty(MyOptionals.of(source.getOwner()),
+		    userService::save,
+		    UserEntity::getId,
+		    target::setUSERID);
+	}
+
+	{
+	    // CLIENT_ID s:int идентификатор клиента
+	    optSaveProperty(MyOptionals.of(source.getSubject()),
+		    subjectService::save,
+		    SubjectEntity::getId,
+		    target::setCLIENTID);
+
+	}
+
+	{
+	    optSaveProperty(MyOptionals.of(source.getInsurer()),
+		    insuranceCompanyService::save,
+		    InsuranceCompanyEntity::getId,
+		    target::setSYSTEMDELIMITERID);
+	}
+
+	{
+	    final Optional<RecordOperationInfo> optCreated = MyOptionals.of(source.getCreated());
+	    if (optCreated.isPresent()) {
+
+		optCreated.map(RecordOperationInfo::getInstant)
+			.map(TemporalUtil::instantToDateTime)
+			.ifPresent(target::setINPUTDATE);
+
+		optSaveProperty(optCreated.map(RecordOperationInfo::getAuthor),
+			userService::save,
+			UserEntity::getId,
+			target::setCREATEDBYUSERID);
+
+	    }
+	}
+
+	{
+	    final Optional<RecordOperationInfo> optModified = MyOptionals.of(source.getModified());
+	    if (optModified.isPresent()) {
+
+		optModified.map(RecordOperationInfo::getInstant)
+			.map(TemporalUtil::instantToDateTime)
+			.ifPresent(target::setRECORDCHANGEDAT);
+
+		optSaveProperty(optModified.map(RecordOperationInfo::getAuthor),
+			userService::save,
+			UserEntity::getId,
+			target::setCHANGEDBYUSERID);
+
+	    }
+	}
+
+	return target;
     }
 
     @Override
@@ -76,13 +167,6 @@ public class InsuranceAgentEntityEsbdConverterBean
 			.ifPresent(b1::withNumber);
 
 		b1.buildTo(builder::withContract);
-	    }
-
-	    {
-		// LETTER_OF_ATTORNEY_NUMBER s:string номер доверенности
-		// посредника
-		MyOptionals.of(source.getLETTEROFATTORNEYNUMBER())
-			.ifPresent(builder::withLetterOfAttorneyNumber);
 	    }
 
 	    {
@@ -116,6 +200,23 @@ public class InsuranceAgentEntityEsbdConverterBean
 			SubjectEntity.class,
 			MyOptionals.of(source.getCLIENTID()))
 				.ifPresent(builder::withSubject);
+	    }
+
+	    {
+		optField(InsuranceAgentEntity.class,
+			id,
+			insuranceCompanyService::getById,
+			"insurer",
+			InsuranceCompanyEntity.class,
+			MyOptionals.of(source.getSYSTEMDELIMITERID()))
+				.ifPresent(builder::withInsurer);
+	    }
+
+	    {
+		// LETTER_OF_ATTORNEY_NUMBER s:string номер доверенности
+		// посредника
+		MyOptionals.of(source.getLETTEROFATTORNEYNUMBER())
+			.ifPresent(builder::withLetterOfAttorneyNumber);
 	    }
 
 	    {
@@ -160,16 +261,6 @@ public class InsuranceAgentEntityEsbdConverterBean
 
 		    b1.buildTo(builder::withModified);
 		}
-	    }
-
-	    {
-		optField(InsuranceAgentEntity.class,
-			id,
-			insuranceCompanyService::getById,
-			"insurer",
-			InsuranceCompanyEntity.class,
-			MyOptionals.of(source.getSYSTEMDELIMITERID()))
-				.ifPresent(builder::withInsurer);
 	    }
 
 	    return builder.build();

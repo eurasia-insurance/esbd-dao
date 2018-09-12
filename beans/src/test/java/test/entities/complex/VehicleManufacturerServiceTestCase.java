@@ -45,19 +45,14 @@ public class VehicleManufacturerServiceTestCase extends ArquillianBaseTestCase {
     public void testGetByName() throws IllegalArgument {
 	final List<VehicleManufacturerEntity> list = service.getByName(VALID_NAME);
 	assertThat(list, allOf(not(nullValue()), not(empty())));
-	for (final VehicleManufacturerEntity e : list)
-	    assertThat(e, not(nullValue()));
     }
 
-    private static final String INVALID_NAME = "QQQ";
+    private static final String INVALID_NAME = "QQQXXAA";
 
     @Test
     public void testGetByName_empty() throws IllegalArgument {
 	final List<VehicleManufacturerEntity> list = service.getByName(INVALID_NAME);
-	// TODO DEBUG : Need to debug
-	assertThat(list, allOf(not(nullValue()), not(empty())));
-	for (final VehicleManufacturerEntity e : list)
-	    assertThat(e, not(nullValue()));
+	assertThat(list, allOf(not(nullValue()), empty()));
     }
 
 }

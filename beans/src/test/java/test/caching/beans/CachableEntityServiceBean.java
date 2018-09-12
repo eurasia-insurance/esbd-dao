@@ -13,8 +13,11 @@ public class CachableEntityServiceBean
 	extends AOndemandComplexViaSingleEntityService<CachableEntity, CachableESBDEntity, ArrayOfCachableESBDEntity> {
 
     protected CachableEntityServiceBean() {
-	super(CachableEntityServiceBean.class, CachableEntity.class, ArrayOfCachableESBDEntity::getList,
-		CachableEntityServiceBean::getSingleById);
+	super(CachableEntityServiceBean.class,
+		CachableEntity.class,
+		ArrayOfCachableESBDEntity::getList,
+		CachableEntityServiceBean::getSingleById,
+		null);
     }
 
     private static final AEsbdAttributeConverter<CachableEntity, CachableESBDEntity> converter = new CachableEntityAttributeConverter();

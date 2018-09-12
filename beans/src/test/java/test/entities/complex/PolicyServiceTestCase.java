@@ -22,8 +22,12 @@ public class PolicyServiceTestCase extends ArquillianBaseTestCase {
 
     @Test
     public void testGetByNumber() throws IllegalArgument, NotFound {
-	PolicyEntity value = service.getByNumber(VALID_NUMBER);
-	assertThat(value, not(nullValue()));
+	try {
+	    PolicyEntity value = service.getByNumber(VALID_NUMBER);
+	    assertThat(value, not(nullValue()));
+	} catch (final NotFound e) {
+	    fail(e.getMessage());
+	}
     }
 
     private static final Integer INVALID_ID = 1;

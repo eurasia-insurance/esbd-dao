@@ -34,12 +34,18 @@ public class VehicleEntityServiceBean
 	return con.getTFByKeyFields(param);
     };
 
+    private static final ESBDEntityStoreFunction<TF> ESBD_STORE_FUNCTION = (con, e) -> con.setTF(e);
+
     private static final Function<ArrayOfTF, List<TF>> INTERMEDIATE_TO_LIST_FUNCTION = ArrayOfTF::getTF;
 
     // constructor
 
     protected VehicleEntityServiceBean() {
-	super(VehicleEntityService.class, VehicleEntity.class, INTERMEDIATE_TO_LIST_FUNCTION, ESBD_LOOKUP_FUNCTION);
+	super(VehicleEntityService.class,
+		VehicleEntity.class,
+		INTERMEDIATE_TO_LIST_FUNCTION,
+		ESBD_LOOKUP_FUNCTION,
+		ESBD_STORE_FUNCTION);
     }
 
     // public

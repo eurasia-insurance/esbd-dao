@@ -42,16 +42,12 @@ public class VehicleServiceTestCase extends ArquillianBaseTestCase {
 	service.getById(INVALID_ID);
     }
 
-    private static final String VALID_VIN_CODE = "JN1TANS51U0303376"; // Vadims
-								      // Car
-								      // Infiniti
-								      // FX
-								      // 35
+    private static final String VALID_VIN_CODE = "JN1TANS51U0303376";
 
     @Test
     public void testGetByVIN() throws IllegalArgument {
 	final List<VehicleEntity> entities = service.getByVINCode(VALID_VIN_CODE);
-	assertThat(entities, not(allOf(nullValue(), empty())));
+	assertThat(entities, allOf(not(nullValue()), not(empty())));
 	entities.forEach(System.out::println);
     }
 
@@ -60,25 +56,7 @@ public class VehicleServiceTestCase extends ArquillianBaseTestCase {
     @Test
     public void testGetByRegNumber1() throws IllegalArgument {
 	final List<VehicleEntity> entities = service.getByRegNumber(VALID_REG_NUMBER1);
-	assertThat(entities, not(allOf(nullValue(), empty())));
-	entities.forEach(System.out::println);
-    }
-
-    private static final VehicleRegNumber VALID_REG_NUMBER2 = VehicleRegNumber.of("A105YRO");
-
-    @Test
-    public void testGetByRegNumber2() throws IllegalArgument {
-	final List<VehicleEntity> entities = service.getByRegNumber(VALID_REG_NUMBER2);
-	assertThat(entities, not(allOf(nullValue(), empty())));
-	entities.forEach(System.out::println);
-    }
-
-    private static final VehicleRegNumber VALID_REG_NUMBER3 = VehicleRegNumber.of("357ONA02");
-
-    @Test
-    public void testGetByRegNumber3() throws IllegalArgument {
-	final List<VehicleEntity> entities = service.getByRegNumber(VALID_REG_NUMBER3);
-	assertThat(entities, not(allOf(nullValue(), empty())));
+	assertThat(entities, allOf(not(nullValue()), not(empty())));
 	entities.forEach(System.out::println);
     }
 }

@@ -47,8 +47,6 @@ public class VehicleModelServiceTestCase extends ArquillianBaseTestCase {
     public void testGetByName() throws IllegalArgument {
 	final List<VehicleModelEntity> list = service.getByName(VALID_NAME);
 	assertThat(list, allOf(not(nullValue()), not(empty())));
-	for (final VehicleModelEntity e : list)
-	    assertThat(e, not(nullValue()));
     }
 
     @Inject
@@ -59,9 +57,7 @@ public class VehicleModelServiceTestCase extends ArquillianBaseTestCase {
     @Test
     public void testGetByManufacturer() throws NotFound, IllegalArgument {
 	final VehicleManufacturerEntity validManufacturer = manufacturers.getById(VALID_MANUFACTURER_ID);
-	final List<VehicleModelEntity> list = service.getByManufacturer(validManufacturer);
-	assertThat(list, allOf(not(nullValue()), not(empty())));
-	for (final VehicleModelEntity e : list)
-	    assertThat(e, not(nullValue()));
+	final List<VehicleModelEntity> entities = service.getByManufacturer(validManufacturer);
+	assertThat(entities, allOf(not(nullValue()), not(empty())));
     }
 }

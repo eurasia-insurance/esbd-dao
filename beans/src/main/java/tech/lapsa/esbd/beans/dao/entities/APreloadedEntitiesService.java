@@ -76,6 +76,21 @@ public abstract class APreloadedEntitiesService<DOMAIN extends AEntity, ESBD>
 	}
     }
 
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public DOMAIN save(DOMAIN entity) throws IllegalArgument {
+	try {
+	    return _save(entity);
+	} catch (final IllegalArgumentException e) {
+	    throw new IllegalArgument(e);
+	} catch (final EJBException e) {
+	    throw e;
+	} catch (final RuntimeException e) {
+	    logger.WARN.log(e);
+	    throw new EJBException(e.getMessage());
+	}
+    }
+
     @PostConstruct
     @Schedule(dayOfWeek = "*")
     public void reload() {

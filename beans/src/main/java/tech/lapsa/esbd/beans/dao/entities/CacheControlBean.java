@@ -36,10 +36,12 @@ public class CacheControlBean {
 	    {
 		final T entity = cache.get(id);
 		if (entity != null)
-		    return entity;
+		    // returns copy of the cached entity
+		    return entity.clone(entityClazz);
 	    }
 	    final T entity = supplier.supplyById(id);
-	    cache.put(id, entity);
+	    // puting copy to the cache
+	    putCopyToCache(entityClazz, cache, entity);
 	    return entity;
 	}
     }
@@ -53,7 +55,8 @@ public class CacheControlBean {
 	MyObjects.requireNonNull(supplier, "supplier");
 	final T entity = supplier.supplyById(id);
 	try (final Cache<Integer, T> cache = idCache(entityClazz)) {
-	    cache.put(id, entity);
+	    // puting copy to the cache
+	    putCopyToCache(entityClazz, cache, entity);
 	}
 	return entity;
     }
@@ -63,7 +66,8 @@ public class CacheControlBean {
 	MyObjects.requireNonNull(entityClazz, "entityClazz");
 	MyObjects.requireNonNull(entity, "entity");
 	try (final Cache<Integer, T> cache = idCache(entityClazz)) {
-	    cache.put(entity.getId(), entity);
+	    // puting copy to the cache
+	    putCopyToCache(entityClazz, cache, entity);
 	}
 	return entity;
     }
@@ -74,7 +78,8 @@ public class CacheControlBean {
 	MyObjects.requireNonNull(entityClazz, "entityClazz");
 	try (Cache<Integer, T> cache = idCache(entityClazz)) {
 	    MyStreams.orEmptyOf(entitiesList)
-		    .forEach(x -> cache.put(x.getId(), x));
+		    // puting copy to the cache
+		    .forEach(x -> putCopyToCache(entityClazz, cache, x));
 	}
 	return entitiesList;
     }
@@ -101,5 +106,13 @@ public class CacheControlBean {
 		.withValueClass(entityClazz)
 		.withName("idCache")
 		.buildOrGet();
+    }
+
+    private <T extends AEntity> void putCopyToCache(final Class<T> entityClazz, final Cache<Integer, T> cache,
+	    final T entity) {
+	assert entityClazz != null && entity.getId() != null;
+	assert entity != null;
+	assert cache != null;
+	cache.put(entity.getId(), entity.clone(entityClazz));
     }
 }

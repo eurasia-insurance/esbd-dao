@@ -40,6 +40,11 @@ public abstract class AOndemandLoadedEntitiesService<DOMAIN extends AEntity, ESB
 	T fetchFromESBDById(Connection con, Integer id);
     }
 
+    @FunctionalInterface
+    public interface ESBDEntityStoreFunction<T> {
+	T storeToESBD(Connection con, T e);
+    }
+
     public static abstract class AOndemandComplexViaIntermediateArrayService<DOMAIN extends AEntity, ESBD, INTERMEDIATE_ARRAY>
 	    extends AOndemandLoadedEntitiesService<DOMAIN, ESBD, INTERMEDIATE_ARRAY> {
 
@@ -52,8 +57,9 @@ public abstract class AOndemandLoadedEntitiesService<DOMAIN extends AEntity, ESB
 	protected AOndemandComplexViaIntermediateArrayService(final Class<?> serviceClazz,
 		final Class<DOMAIN> domainClazz,
 		final Function<INTERMEDIATE_ARRAY, List<ESBD>> intermediateArrayToListConverter,
-		final ESBDEntityLookupFunction<INTERMEDIATE_ARRAY> lookupEsbd) {
-	    super(serviceClazz, domainClazz, intermediateArrayToListConverter);
+		final ESBDEntityLookupFunction<INTERMEDIATE_ARRAY> lookupEsbd,
+		final ESBDEntityStoreFunction<ESBD> storeEsbd) {
+	    super(serviceClazz, domainClazz, intermediateArrayToListConverter, storeEsbd);
 	    assert lookupEsbd != null;
 	    this.lookupEsbd = lookupEsbd;
 	}
@@ -83,8 +89,9 @@ public abstract class AOndemandLoadedEntitiesService<DOMAIN extends AEntity, ESB
 	protected AOndemandComplexViaSingleEntityService(final Class<?> serviceClazz,
 		final Class<DOMAIN> domainClazz,
 		final Function<INTERMEDIATE_ARRAY, List<ESBD>> intermediateArrayToListConverter,
-		final ESBDEntityLookupFunction<ESBD> lookupEsbd) {
-	    super(serviceClazz, domainClazz, intermediateArrayToListConverter);
+		final ESBDEntityLookupFunction<ESBD> lookupEsbd,
+		final ESBDEntityStoreFunction<ESBD> storeEsbd) {
+	    super(serviceClazz, domainClazz, intermediateArrayToListConverter, storeEsbd);
 	    assert lookupEsbd != null;
 	    this.lookupEsbd = lookupEsbd;
 	}
@@ -103,14 +110,19 @@ public abstract class AOndemandLoadedEntitiesService<DOMAIN extends AEntity, ESB
 
     protected final Function<INTERMEDIATE_ARRAY, List<ESBD>> intermediateArrayToListConverter;
 
+    protected final ESBDEntityStoreFunction<ESBD> storeEsbd;
+
     // constructor
 
     private AOndemandLoadedEntitiesService(final Class<?> serviceClazz,
 	    final Class<DOMAIN> domainClazz,
-	    final Function<INTERMEDIATE_ARRAY, List<ESBD>> intermediateArrayToListConverter) {
+	    final Function<INTERMEDIATE_ARRAY, List<ESBD>> intermediateArrayToListConverter,
+	    final ESBDEntityStoreFunction<ESBD> storeEsbd) {
 	super(serviceClazz, domainClazz);
 	assert intermediateArrayToListConverter != null;
 	this.intermediateArrayToListConverter = intermediateArrayToListConverter;
+	assert storeEsbd != null;
+	this.storeEsbd = storeEsbd;
     }
 
     // public
@@ -131,7 +143,43 @@ public abstract class AOndemandLoadedEntitiesService<DOMAIN extends AEntity, ESB
 	return cacheControl.supplyAndPut(domainClazz, id, getEntitySupplier());
     }
 
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public DOMAIN save(final DOMAIN source) throws IllegalArgument {
+	return _save(source);
+    }
+
     // private & protected
+
+    private DOMAIN _save(final DOMAIN source) throws IllegalArgument {
+	MyObjects.requireNonNull(IllegalArgument::new, source, "source");
+	if (source.getId() != null)
+	    // в "нашей" сущности задан ID, поэтому нужно сравнить "нашу"
+	    // сущность с "базовой"
+	    try {
+		final DOMAIN fetched = getByIdBypassCache(source.getId());
+		if (source.equals(fetched)) {
+		    // если "базовая" не отличается от "нашей" то
+		    // пересохранения в базу не делать
+		    return fetched;
+		}
+	    } catch (Exception e) {
+		// в БД нет такой сущности
+	    }
+
+	final ESBD esbdSource = conversion(source);
+
+	final ESBD esbdTarget;
+	try (Connection con = pool.getConnection()) {
+	    esbdTarget = storeEsbd.storeToESBD(con, esbdSource);
+	} catch (ConnectionException e) {
+	    throw new IllegalStateException(e.getMessage());
+	}
+
+	final DOMAIN target = conversion(esbdTarget);
+	cacheControl.put(domainClazz, target);
+	return target;
+    }
 
     protected abstract DomainEntitySupplier<DOMAIN> getEntitySupplier();
 
