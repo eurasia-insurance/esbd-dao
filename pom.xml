@@ -30,6 +30,12 @@
 		<esbd-dao-client.version>2.2.1-SNAPSHOT</esbd-dao-client.version>
 		<!-- ASB -->
 		<asb.keystore.path>${env.ASB_PATH}</asb.keystore.path>
+		<asb.keystore.file>${env.ASB_PATH}/keystore.jks</asb.keystore.file>
+		<asb.keystore.type>JKS</asb.keystore.type>
+		<asb.keystore.password>${env.ASB_KEYSTORE_PASSWORD}</asb.keystore.password>
+		<asb.truststore.file>${env.ASB_PATH}/cacerts.jks</asb.truststore.file>
+		<asb.truststore.password>${env.ASB_TRUSTSTORE_PASSWORD}</asb.truststore.password>
+		<asb.truststore.type>JKS</asb.truststore.type>
 	</properties>
 
 	<dependencyManagement>
