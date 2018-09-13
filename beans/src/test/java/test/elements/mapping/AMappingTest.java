@@ -35,7 +35,7 @@ public abstract class AMappingTest<T extends Enum<T>> {
     final String dictionary;
     final Class<T> entityClazz;
 
-    AMappingTest(ElementsMapping<Integer, T> mapping, String dictionary, Class<T> entityClazz) {
+    protected AMappingTest(ElementsMapping<Integer, T> mapping, String dictionary, Class<T> entityClazz) {
 	this.mapping = mapping;
 	this.dictionary = dictionary;
 	this.entityClazz = entityClazz;
@@ -45,9 +45,10 @@ public abstract class AMappingTest<T extends Enum<T>> {
     public void testAllMapped() {
 	final ArrayOfItem items = soap.getItems(sessionId, dictionary);
 	assertThat(items, not(nullValue()));
-	
-	items.getItem().stream().map(x -> x.getID() + " " + x.getCode() + " " + x.getName()).forEach(System.out::println);
-	
+
+	items.getItem().stream().map(x -> x.getID() + " " + x.getCode() + " " + x.getName())
+		.forEach(System.out::println);
+
 	final Iterator<Item> i = items.getItem().iterator();
 	while (i.hasNext()) {
 	    final Item item = i.next();

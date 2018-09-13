@@ -1,36 +1,49 @@
 package tech.lapsa.esbd.beans.dao.elements.mapping;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.stream.Stream;
 
-public abstract class ElementsMapping<T, E> {
+public abstract class ElementsMapping<ID extends Comparable<ID>, T extends Enum<T>> {
 
-    private final Map<T, E> mapping = new HashMap<>();
-    private final Set<T> exceptions = new HashSet<>(0);
+    private final Map<ID, T> mapping = new TreeMap<>();
+    private final Set<ID> exceptions = new TreeSet<>();
 
-    protected final void addMap(final E entity, final T id) {
-	if (mapping.containsKey(id))
-	    throw new RuntimeException(String.format("Already has mapping for ID = '%s'", id));
-	mapping.put(id, entity);
+    @SafeVarargs
+    final void addMap(final T entity, final ID id, final ID... ids) {
+	Stream.concat(Stream.of(id), Stream.of(ids))
+		.forEach(x -> {
+		    if (mapping.containsKey(x) || exceptions.contains(x))
+			throw new RuntimeException(String.format("Already mapped ID = '%s'", x));
+		    if (mapping.containsKey(x))
+			throw new RuntimeException(String.format("Already has mapping for ID = '%s'", x));
+		    mapping.put(x, entity);
+		});
     }
 
-    protected final void addException(final T id) {
-	if (exceptions.contains(id))
-	    throw new RuntimeException(String.format("Already has exception for ID = '%s'", id));
-	exceptions.add(id);
+    @SafeVarargs
+    final void addException(final ID id, final ID... ids) {
+	Stream.concat(Stream.of(id), Stream.of(ids))
+		.forEach(x -> {
+		    if (mapping.containsKey(x) || exceptions.contains(x))
+			throw new RuntimeException(String.format("Already mapped ID = '%s'", x));
+		    if (exceptions.contains(x))
+			throw new RuntimeException(String.format("Already has exception for ID = '%s'", x));
+		    exceptions.add(x);
+		});
     }
 
-    public final E forId(final T id) {
+    public final T forId(final ID id) {
 	return mapping.get(id);
     }
 
-    public final boolean isException(final T id) {
+    public final boolean isException(final ID id) {
 	return exceptions.contains(id);
     }
 
-    public final Set<T> getAllIds() {
+    public final Set<ID> getAllIds() {
 	return mapping.keySet();
     }
 }

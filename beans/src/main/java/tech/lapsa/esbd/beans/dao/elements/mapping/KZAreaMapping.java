@@ -15,23 +15,26 @@ public class KZAreaMapping extends ElementsMapping<Integer, KZArea> {
     }
 
     private KZAreaMapping() {
-	addMap(GAST, 16);
+	addMap(OALM, 1);
+	addMap(OTRK, 20);
+	addMap(OTRK, 2);
+	addMap(OVK, 3);
+	addMap(OKST, 4);
+	addMap(OKGD, 5);
+	addMap(OSK, 6);
+	addMap(OAKM, 7);
+	addMap(OPVL, 8);
+	addMap(OZHM, 9);
+	addMap(OAKT, 10);
+	addMap(OZK, 11);
+	addMap(OKZL, 12);
+	addMap(OATY, 13);
+	addMap(OMNG, 14);
 	addMap(GALM, 15);
+	addMap(GAST, 16);
+
 	addMap(GALM, 17);
 	addMap(GALM, 18);
-	addMap(OAKM, 7);
-	addMap(OAKT, 10);
-	addMap(OALM, 1);
-	addMap(OATY, 13);
-	addMap(OZK, 11);
-	addMap(OZHM, 9);
-	addMap(OKGD, 5);
-	addMap(OKST, 4);
-	addMap(OKZL, 12);
-	addMap(OMNG, 14);
-	addMap(OUK, 2);
-	addMap(OPVL, 8);
-	addMap(OSK, 6);
-	addMap(OVK, 3);
+	addMap(GSHM, 19);
     }
 }
