@@ -4,7 +4,7 @@ import static com.lapsa.insurance.elements.InsuredAgeAndExpirienceClass.*;
 
 import com.lapsa.insurance.elements.InsuredAgeAndExpirienceClass;
 
-public final class InsuredAgeAndExpirienceClassMapping extends AbsMapping<Integer, InsuredAgeAndExpirienceClass> {
+public final class InsuredAgeAndExpirienceClassMapping extends ElementsMapping<Integer, InsuredAgeAndExpirienceClass> {
 
     private static final class SingletonHolder {
 	private static final InsuredAgeAndExpirienceClassMapping HOLDER_INSTANCE = new InsuredAgeAndExpirienceClassMapping();

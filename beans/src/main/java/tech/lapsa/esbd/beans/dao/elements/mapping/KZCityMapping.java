@@ -4,7 +4,7 @@ import static com.lapsa.kz.country.KZCity.*;
 
 import com.lapsa.kz.country.KZCity;
 
-public class KZCityMapping extends AbsMapping<Integer, KZCity> {
+public class KZCityMapping extends ElementsMapping<Integer, KZCity> {
 
     private static final class SingletonHolder {
 	private static final KZCityMapping HOLDER_INSTANCE = new KZCityMapping();

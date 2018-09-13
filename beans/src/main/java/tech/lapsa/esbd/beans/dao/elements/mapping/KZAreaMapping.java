@@ -4,7 +4,7 @@ import static com.lapsa.kz.country.KZArea.*;
 
 import com.lapsa.kz.country.KZArea;
 
-public class KZAreaMapping extends AbsMapping<Integer, KZArea> {
+public class KZAreaMapping extends ElementsMapping<Integer, KZArea> {
 
     private static final class SingletonHolder {
 	private static final KZAreaMapping HOLDER_INSTANCE = new KZAreaMapping();
