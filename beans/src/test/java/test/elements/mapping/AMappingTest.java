@@ -15,13 +15,13 @@ import tech.lapsa.esbd.jaxws.wsimport.IICWebServiceSoap;
 import tech.lapsa.esbd.jaxws.wsimport.Item;
 import tech.lapsa.esbd.jaxws.wsimport.User;
 
-public abstract class BaseTestCase<T extends Enum<T>> {
+public abstract class AMappingTest<T extends Enum<T>> {
 
     private static final String ESBD_WS_USER_NAME = System.getenv("ASB_USER");
     private static final String ESBD_WS_USER_PASSWORD = System.getenv("ASB_PASSWORD");
 
-    private static IICWebServiceSoap soap;
-    private static String sessionId;
+    static IICWebServiceSoap soap;
+    static String sessionId;
 
     @BeforeClass
     public static void createSession() {
@@ -31,11 +31,11 @@ public abstract class BaseTestCase<T extends Enum<T>> {
 	sessionId = user.getSessionID();
     }
 
-    private final ElementsMapping<Integer, T> mapping;
-    private final String dictionary;
-    private final Class<T> entityClazz;
+    final ElementsMapping<Integer, T> mapping;
+    final String dictionary;
+    final Class<T> entityClazz;
 
-    BaseTestCase(ElementsMapping<Integer, T> mapping, String dictionary, Class<T> entityClazz) {
+    AMappingTest(ElementsMapping<Integer, T> mapping, String dictionary, Class<T> entityClazz) {
 	this.mapping = mapping;
 	this.dictionary = dictionary;
 	this.entityClazz = entityClazz;
@@ -52,6 +52,19 @@ public abstract class BaseTestCase<T extends Enum<T>> {
 	while (i.hasNext()) {
 	    final Item item = i.next();
 	    final T dict = mapping.forId(item.getID());
+
+	    if (mapping.isException(item.getID())) {
+		if (dict != null)
+		    fail(String.format(
+			    "ESBD dictionary '%1$s' name = '%2$s' with code '%3$s' and id = '%4$s' exceptions vs real values exception",
+			    dictionary, // 1
+			    item.getName(), // 2
+			    item.getCode(), // 3
+			    item.getID() // 4
+		    ));
+		continue;
+	    }
+
 	    assertThat(String.format(
 		    "ESBD  dictionary '%1$s' name = '%2$s' with code = '%3$s' and id = '%4$s' present, but %5$s enum variable is missing",
 		    dictionary, // 1
