@@ -2,9 +2,8 @@
 <!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
 <resources>
 
-	<custom-resource
-		factory-class="org.glassfish.resources.custom.factory.PropertiesFactory"
-		res-type="java.util.Properties" jndi-name="esbd/resource/Configuration">
+	<custom-resource factory-class="org.glassfish.resources.custom.factory.PropertiesFactory" res-type="java.util.Properties"
+		jndi-name="esbd/resource/Configuration">
 		<property name="esbd.user.name" value="EUR.SSL.EVSYUKOVD" />
 		<property name="esbd.user.password" value="1qazxcvbnm" />
 
@@ -12,10 +11,10 @@
 		<property name="esbd.timeout.request.milis" value="100000" />
 		<property name="esbd.timeout.re-check.milis" value="500" />
 
-		<property name="esbd.wsdl-location.0" value="https://web.mkb.kz/IICWebservice.asmx?wsdl" />
-		<property name="disabled.esbd.wsdl-location.1" value="https://web1.mkb.kz/IICWebservice.asmx?wsdl" />
-		<property name="disabled.esbd.wsdl-location.2" value="https://web2.mkb.kz/IICWebservice.asmx?wsdl" />
-		<property name="disabled.esbd.wsdl-location.3" value="https://web3.mkb.kz/IICWebservice.asmx?wsdl" />
+		<!-- <property name="esbd.wsdl-location.0" value="https://web.mkb.kz/IICWebservice.asmx?wsdl" /> -->
+		<property name="esbd.wsdl-location.1" value="https://web1.mkb.kz/IICWebservice.asmx?wsdl" />
+		<property name="esbd.wsdl-location.2" value="https://web2.mkb.kz/IICWebservice.asmx?wsdl" />
+		<property name="esbd.wsdl-location.3" value="https://web3.mkb.kz/IICWebservice.asmx?wsdl" />
 	</custom-resource>
 
 </resources>
