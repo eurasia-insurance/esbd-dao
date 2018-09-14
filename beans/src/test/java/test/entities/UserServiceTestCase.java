@@ -4,8 +4,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static test.entities.TestConstants.*;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import org.junit.Test;
@@ -21,25 +19,23 @@ public class UserServiceTestCase extends ArquillianBaseTestCase {
     @Inject
     private UserEntityServiceLocal service;
 
-    @Test
-    public void testGetAll() {
-	final List<UserEntity> all = service.getAll();
-	assertThat(all,
-		allOf(
-			not(nullValue()),
-			not(empty())));
-    }
+    // @Test
+    // public void testGetAll() {
+    // final List<UserEntity> all = service.getAll();
+    // assertThat(all,
+    // allOf(
+    // not(nullValue()),
+    // not(empty())));
+    // }
 
     @Test
     public void testGetById() throws IllegalArgument {
-	final List<UserEntity> list = service.getAll();
-	for (final UserEntity i : list)
-	    try {
-		final UserEntity res = service.getById(i.getId());
-		assertThat(res, allOf(not(nullValue()), is(i)));
-	    } catch (final NotFound e) {
-		fail(e.getMessage());
-	    }
+	try {
+	    UserEntity u = service.getById(14539);
+	    assertThat(u, not(nullValue()));
+	} catch (final NotFound e) {
+	    fail(e.getMessage());
+	}
     }
 
     @Test(expected = NotFound.class)
