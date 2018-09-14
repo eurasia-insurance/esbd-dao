@@ -8,7 +8,7 @@ import java.util.Iterator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import tech.lapsa.esbd.beans.dao.elements.mapping.ElementsMapping;
+import tech.lapsa.esbd.beans.dao.elements.mapping.AElementsMapping;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfItem;
 import tech.lapsa.esbd.jaxws.wsimport.IICWebService;
 import tech.lapsa.esbd.jaxws.wsimport.IICWebServiceSoap;
@@ -31,11 +31,11 @@ public abstract class AMappingTest<T extends Enum<T>> {
 	sessionId = user.getSessionID();
     }
 
-    final ElementsMapping<Integer, T> mapping;
+    final AElementsMapping<Integer, T> mapping;
     final String dictionary;
     final Class<T> entityClazz;
 
-    protected AMappingTest(ElementsMapping<Integer, T> mapping, String dictionary, Class<T> entityClazz) {
+    protected AMappingTest(AElementsMapping<Integer, T> mapping, String dictionary, Class<T> entityClazz) {
 	this.mapping = mapping;
 	this.dictionary = dictionary;
 	this.entityClazz = entityClazz;

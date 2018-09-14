@@ -4,7 +4,7 @@ import static com.lapsa.insurance.elements.CancelationReason.*;
 
 import com.lapsa.insurance.elements.CancelationReason;
 
-public final class CancelationReasonMapping extends ElementsMapping<Integer, CancelationReason> {
+public final class CancelationReasonMapping extends AElementsMapping<Integer, CancelationReason> {
 
     private static final class SingletonHolder {
 	private static final CancelationReasonMapping HOLDER_INSTANCE = new CancelationReasonMapping();
