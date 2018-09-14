@@ -9,7 +9,7 @@
 		<property name="esbd.user.password" value="1qazxcvbnm" />
 
 		<property name="esbd.timeout.connect.milis" value="3000" />
-		<property name="esbd.timeout.request.milis" value="5000" />
+		<property name="esbd.timeout.request.milis" value="15000" />
 		<property name="esbd.timeout.re-check.milis" value="500" />
 
 		<property name="esbd.wsdl-location.0" value="https://web.mkb.kz/IICWebservice.asmx?wsdl" />
