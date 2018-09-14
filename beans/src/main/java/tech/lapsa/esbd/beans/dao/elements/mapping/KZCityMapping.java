@@ -23,16 +23,13 @@ public class KZCityMapping extends AElementsMapping<Integer, KZCity> {
 	addMap(AKTOBE, 2);
 	addMap(AKTOBE, 8);
 	addMap(ALGA, -5);
-	addMap(ALM, 13);
-	addMap(ALM, 16);
-	addMap(ALM, 40);
+	addMap(ALM, 13, 16, 40);
 	addMap(ARAL, -6);
 	addMap(ARKAL, -7);
 	addMap(ARYS, -8);
 	addMap(AST, 7);
 	addMap(ATB, -9);
-	addMap(ATY, 3);
-	addMap(ATY, 4);
+	addMap(ATY, 3, 4);
 	addMap(AYAG, -10);
 	addMap(BAIKON, -11);
 	addMap(BALH, -12);

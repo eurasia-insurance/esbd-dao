@@ -85,6 +85,12 @@
 						<java.util.logging.config.file>${project.build.testOutputDirectory}/logging.properties</java.util.logging.config.file>
 						<derby.stream.error.file>${project.build.directory}/derby.log</derby.stream.error.file>
 						<glassfish.embedded.tmpdir>${project.build.directory}</glassfish.embedded.tmpdir>
+						<javax.net.ssl.keyStore>${asb.keystore.file}</javax.net.ssl.keyStore>
+						<javax.net.ssl.keyStorePassword>${asb.keystore.password}</javax.net.ssl.keyStorePassword>
+						<javax.net.ssl.keyStoreType>${asb.keystore.type}</javax.net.ssl.keyStoreType>
+						<javax.net.ssl.trustStore>${asb.truststore.file}</javax.net.ssl.trustStore>
+						<javax.net.ssl.trustStorePassword>${asb.truststore.password}</javax.net.ssl.trustStorePassword>
+						<javax.net.ssl.trustStoreType>${asb.truststore.type}</javax.net.ssl.trustStoreType>
 					</systemPropertyVariables>
 				</configuration>
 			</plugin>
