@@ -11,8 +11,8 @@ import javax.inject.Inject;
 import org.junit.Test;
 
 import tech.lapsa.esbd.dao.NotFound;
-import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntity;
 import tech.lapsa.esbd.dao.dict.InsuranceCompanyEntityService.InsuranceCompanyEntityServiceLocal;
+import tech.lapsa.esbd.domain.dict.InsuranceCompanyEntity;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
 import test.ArquillianBaseTestCase;
 

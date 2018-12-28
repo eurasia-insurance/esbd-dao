@@ -2,10 +2,10 @@ package tech.lapsa.esbd.beans.dao.dict;
 
 import javax.ejb.Stateless;
 
-import tech.lapsa.esbd.dao.dict.CompanyActivityKindEntity;
 import tech.lapsa.esbd.dao.dict.CompanyActivityKindEntityService;
 import tech.lapsa.esbd.dao.dict.CompanyActivityKindEntityService.CompanyActivityKindEntityServiceLocal;
 import tech.lapsa.esbd.dao.dict.CompanyActivityKindEntityService.CompanyActivityKindEntityServiceRemote;
+import tech.lapsa.esbd.domain.dict.CompanyActivityKindEntity;
 
 @Stateless(name = CompanyActivityKindEntityService.BEAN_NAME)
 public class CompanyActivityKindEntityServiceBean
