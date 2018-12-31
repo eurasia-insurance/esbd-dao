@@ -98,9 +98,4 @@
 		<tag>v2.2.7</tag>
 	</scm>
 
-	<issueManagement>
-		<system>gitlab</system>
-		<url>https://gitlab.lapsa.tech/lapsa/insurance/dao/issues</url>
-	</issueManagement>
-
 </project>
