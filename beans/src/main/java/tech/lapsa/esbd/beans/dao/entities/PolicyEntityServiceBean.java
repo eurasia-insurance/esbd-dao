@@ -435,12 +435,12 @@ public class PolicyEntityServiceBean
 
 	    {
 		// HOUSEHOLD_POSITION_ID s:int Идентификатор семейного положения
-		builder.withMaritalStatus(Util.reqField(InsuredDriverEntity.class,
+		builder.withMaritalStatus(Util.optField(InsuredDriverEntity.class,
 			id,
 			maritalStatusService::getById,
 			"maritalStatus",
 			MaritalStatus.class,
-			source.getHOUSEHOLDPOSITIONID()));
+			MyOptionals.of(source.getHOUSEHOLDPOSITIONID())));
 	    }
 
 	    {
