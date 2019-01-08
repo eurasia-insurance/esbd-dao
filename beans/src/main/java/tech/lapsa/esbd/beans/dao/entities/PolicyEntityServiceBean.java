@@ -388,13 +388,16 @@ public class PolicyEntityServiceBean
 			    .buildTo(builder::withModified);
 	    }
 
-	    // ScheduledPayments tns:ArrayOfSCHEDULED_PAYMENT Плановые
-	    // платежи
-	    // по
-	    // полису
+	    // ScheduledPayments tns:ArrayOfSCHEDULED_PAYMENT Плановые платежи
+	    // по полису
 	    // PAYMENT_ORDER_TYPE_ID s:int Порядок оплаты (Идентификатор)
 	    // PAYMENT_ORDER_TYPE s:string Порядок оплаты
-	    // PAYMENT_DATE s:string Дата оплаты
+	    {
+		// PAYMENT_DATE s:string Дата оплаты
+		builder.withPaymentDate(MyOptionals.of(source.getPAYMENTDATE())
+			.map(ESBDDates::convertESBDDateToLocalDate));
+	    }
+
 	    // MIDDLEMAN_ID s:int Посредник (Идентификатор)
 	    // MIDDLEMAN_CONTRACT_NUMBER s:string Номер договора посредника
 	    // CLIENT_FORM_ID s:int Форма клиента (справочник CLIENT_FORMS)
