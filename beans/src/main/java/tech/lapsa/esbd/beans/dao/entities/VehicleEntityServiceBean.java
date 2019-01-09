@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
+import javax.cache.annotation.CacheKey;
+import javax.cache.annotation.CacheResult;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -49,7 +51,8 @@ public class VehicleEntityServiceBean
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public List<VehicleEntity> getByRegNumber(final VehicleRegNumber regNumber) throws IllegalArgument {
+    @CacheResult
+    public List<VehicleEntity> getByRegNumber(@CacheKey final VehicleRegNumber regNumber) throws IllegalArgument {
 	try {
 	    return _getByRegNumber(regNumber);
 	} catch (final IllegalArgumentException e) {
@@ -62,7 +65,8 @@ public class VehicleEntityServiceBean
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public VehicleEntity getById(final Integer id) throws NotFound, IllegalArgument {
+    @CacheResult
+    public VehicleEntity getById(@CacheKey final Integer id) throws NotFound, IllegalArgument {
 	try {
 	    return _getById(id);
 	} catch (final IllegalArgumentException e) {
@@ -75,7 +79,8 @@ public class VehicleEntityServiceBean
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public List<VehicleEntity> getByVINCode(final String vinCode) throws IllegalArgument {
+    @CacheResult
+    public List<VehicleEntity> getByVINCode(@CacheKey final String vinCode) throws IllegalArgument {
 	try {
 	    return _getByVINCode(vinCode);
 	} catch (final IllegalArgumentException e) {

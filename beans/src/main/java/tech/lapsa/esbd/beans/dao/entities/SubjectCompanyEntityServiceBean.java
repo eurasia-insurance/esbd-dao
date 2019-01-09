@@ -3,6 +3,8 @@ package tech.lapsa.esbd.beans.dao.entities;
 import java.util.List;
 import java.util.stream.Stream;
 
+import javax.cache.annotation.CacheKey;
+import javax.cache.annotation.CacheResult;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -37,7 +39,8 @@ public class SubjectCompanyEntityServiceBean
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public SubjectCompanyEntity getById(final Integer id) throws NotFound, IllegalArgument {
+    @CacheResult
+    public SubjectCompanyEntity getById(@CacheKey final Integer id) throws NotFound, IllegalArgument {
 	try {
 	    return _getById(id);
 	} catch (final IllegalArgumentException e) {
@@ -50,7 +53,8 @@ public class SubjectCompanyEntityServiceBean
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public List<SubjectCompanyEntity> getByIdNumber(final TaxpayerNumber taxpayerNumber) throws IllegalArgument {
+    @CacheResult
+    public List<SubjectCompanyEntity> getByIdNumber(@CacheKey final TaxpayerNumber taxpayerNumber) throws IllegalArgument {
 	try {
 	    return _getByIdNumber(taxpayerNumber);
 	} catch (final IllegalArgumentException e) {
@@ -63,7 +67,8 @@ public class SubjectCompanyEntityServiceBean
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public SubjectCompanyEntity getFirstByIdNumber(final TaxpayerNumber taxpayerNumber)
+    @CacheResult
+    public SubjectCompanyEntity getFirstByIdNumber(@CacheKey final TaxpayerNumber taxpayerNumber)
 	    throws IllegalArgument, NotFound {
 	try {
 	    return _getFirstByIdNumber(taxpayerNumber);
