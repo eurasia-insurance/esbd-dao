@@ -21,13 +21,13 @@
 
 	<properties>
 		<!-- BOMS -->
-		<javax-javaee-bom.version>20190110</javax-javaee-bom.version>
-		<java-commons.version>20190110</java-commons.version>
+		<javax-javaee-bom.version>CURRENT-SNAPSHOT</javax-javaee-bom.version>
+		<java-commons.version>CURRENT-SNAPSHOT</java-commons.version>
 		<!-- tech -->
-		<lapsa-arquillian-test.version>20190110</lapsa-arquillian-test.version>
+		<lapsa-arquillian-test.version>CURRENT-SNAPSHOT</lapsa-arquillian-test.version>
 		<!-- EJB clients -->
-		<esbd-connection.version>20190110</esbd-connection.version>
-		<esbd-dao-client.version>20190110</esbd-dao-client.version>
+		<esbd-connection.version>CURRENT-SNAPSHOT</esbd-connection.version>
+		<esbd-dao-client.version>CURRENT-SNAPSHOT</esbd-dao-client.version>
 		<!-- ASB -->
 		<asb.keystore.path>${env.ASB_PATH}</asb.keystore.path>
 		<asb.keystore.file>${env.ASB_PATH}/keystore.jks</asb.keystore.file>
