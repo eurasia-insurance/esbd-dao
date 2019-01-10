@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
+import javax.cache.annotation.CacheKey;
+import javax.cache.annotation.CacheResult;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -40,7 +42,8 @@ public class VehicleManufacturerEntityServiceBean
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public VehicleManufacturerEntity getById(final Integer id) throws NotFound, IllegalArgument {
+    @CacheResult
+    public VehicleManufacturerEntity getById(@CacheKey final Integer id) throws NotFound, IllegalArgument {
 	try {
 	    return _getById(id);
 	} catch (final IllegalArgumentException e) {
@@ -53,7 +56,8 @@ public class VehicleManufacturerEntityServiceBean
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public List<VehicleManufacturerEntity> getByName(final String name) throws IllegalArgument {
+    @CacheResult
+    public List<VehicleManufacturerEntity> getByName(@CacheKey final String name) throws IllegalArgument {
 	try {
 	    return _getByName(name);
 	} catch (final IllegalArgumentException e) {

@@ -5,6 +5,8 @@ import static tech.lapsa.esbd.beans.dao.ESBDDates.*;
 import java.util.List;
 import java.util.stream.Stream;
 
+import javax.cache.annotation.CacheKey;
+import javax.cache.annotation.CacheResult;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -46,9 +48,12 @@ import tech.lapsa.esbd.domain.entities.DriverLicenseInfo;
 import tech.lapsa.esbd.domain.entities.GPWParticipantInfo;
 import tech.lapsa.esbd.domain.entities.HandicappedInfo;
 import tech.lapsa.esbd.domain.entities.InsuredDriverEntity;
+import tech.lapsa.esbd.domain.entities.InsuredDriverEntity.InsuredDriverEntityBuilder;
 import tech.lapsa.esbd.domain.entities.InsuredVehicleEntity;
+import tech.lapsa.esbd.domain.entities.InsuredVehicleEntity.InsuredVehicleEntityBuilder;
 import tech.lapsa.esbd.domain.entities.PensionerInfo;
 import tech.lapsa.esbd.domain.entities.PolicyEntity;
+import tech.lapsa.esbd.domain.entities.PolicyEntity.PolicyEntityBuilder;
 import tech.lapsa.esbd.domain.entities.PrivilegerInfo;
 import tech.lapsa.esbd.domain.entities.RecordOperationInfo;
 import tech.lapsa.esbd.domain.entities.SubjectEntity;
@@ -56,9 +61,6 @@ import tech.lapsa.esbd.domain.entities.SubjectPersonEntity;
 import tech.lapsa.esbd.domain.entities.UserEntity;
 import tech.lapsa.esbd.domain.entities.VehicleCertificateInfo;
 import tech.lapsa.esbd.domain.entities.VehicleEntity;
-import tech.lapsa.esbd.domain.entities.InsuredDriverEntity.InsuredDriverEntityBuilder;
-import tech.lapsa.esbd.domain.entities.InsuredVehicleEntity.InsuredVehicleEntityBuilder;
-import tech.lapsa.esbd.domain.entities.PolicyEntity.PolicyEntityBuilder;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfDriver;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfPoliciesTF;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfPolicy;
@@ -83,7 +85,8 @@ public class PolicyEntityServiceBean
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public PolicyEntity getById(final Integer id) throws NotFound, IllegalArgument {
+    @CacheResult
+    public PolicyEntity getById(@CacheKey final Integer id) throws NotFound, IllegalArgument {
 	try {
 	    return _getById(id);
 	} catch (final IllegalArgumentException e) {
@@ -96,7 +99,8 @@ public class PolicyEntityServiceBean
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public PolicyEntity getByNumber(final String number) throws NotFound, IllegalArgument {
+    @CacheResult
+    public PolicyEntity getByNumber(@CacheKey final String number) throws NotFound, IllegalArgument {
 	try {
 	    return _getByNumber(number);
 	} catch (final IllegalArgumentException e) {
@@ -109,7 +113,8 @@ public class PolicyEntityServiceBean
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public List<PolicyEntity> getByInternalNumber(final String internalNumber) throws IllegalArgument {
+    @CacheResult
+    public List<PolicyEntity> getByInternalNumber(@CacheKey final String internalNumber) throws IllegalArgument {
 	try {
 	    return _getByInternalNumber(internalNumber);
 	} catch (final IllegalArgumentException e) {
@@ -166,6 +171,7 @@ public class PolicyEntityServiceBean
 
     private PolicyEntity _getById(final Integer id) throws IllegalArgumentException, NotFound {
 	MyNumbers.requireNonZero(id, "id");
+
 	final Policy source;
 	try (Connection con = pool.getConnection()) {
 	    source = con.getPolicyByID(id);
@@ -174,6 +180,7 @@ public class PolicyEntityServiceBean
 	}
 	if (source == null)
 	    throw new NotFound(PolicyEntity.class.getSimpleName() + " not found with ID = '" + id + "'");
+
 	return convertToBuilder(source).build();
     }
 
@@ -188,6 +195,7 @@ public class PolicyEntityServiceBean
 	}
 	if (MyObjects.isNull(source))
 	    throw new NotFound(PolicyEntity.class.getSimpleName() + " not found with NUMBER = '" + number + "'");
+
 	return convertToBuilder(source).build();
     }
 
