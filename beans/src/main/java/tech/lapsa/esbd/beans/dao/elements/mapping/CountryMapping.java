@@ -94,7 +94,7 @@ public final class CountryMapping extends ElementsMapping<Integer, Country> {
 	addMap(Country.GHA, 59);
 	addMap(Country.GIB, 63);
 	addMap(Country.GIN, 61);
-	addMap(Country.GLP, -312);
+	addMap(Country.GLP, 217, -312);
 	addMap(Country.GMB, 58);
 	addMap(Country.GNB, 62);
 	addMap(Country.GNQ, 202);
@@ -105,7 +105,7 @@ public final class CountryMapping extends ElementsMapping<Integer, Country> {
 	addMap(Country.GUF, -254);
 	addMap(Country.GUM, 69);
 	addMap(Country.GUY, 57);
-	addMap(Country.HKG, -344);
+	addMap(Country.HKG, 218, -344);
 	addMap(Country.HND, 64);
 	addMap(Country.HRV, 193);
 	addMap(Country.HTI, 56);
@@ -143,13 +143,13 @@ public final class CountryMapping extends ElementsMapping<Integer, Country> {
 	addMap(Country.LTU, 112);
 	addMap(Country.LUX, 213);
 	addMap(Country.LVA, 107);
-	addMap(Country.MAC, -446);
+	addMap(Country.MAC, 222, -446);
 	addMap(Country.MAF, 214);
 	addMap(Country.MAR, 130);
 	addMap(Country.MCO, 127);
 	addMap(Country.MDA, 126);
 	addMap(Country.MDG, 115);
-	addMap(Country.MDV, -462);
+	addMap(Country.MDV, 215, -462);
 	addMap(Country.MEX, 123);
 	addMap(Country.MHL, 122);
 	addMap(Country.MKD, 116);
@@ -161,12 +161,12 @@ public final class CountryMapping extends ElementsMapping<Integer, Country> {
 	addMap(Country.MNG, 128);
 	addMap(Country.MNP, 121);
 	addMap(Country.MOZ, 125);
-	addMap(Country.MRT, -478);
+	addMap(Country.MRT, 220, -478);
 	addMap(Country.MSR, 129);
 	addMap(Country.MUS, 114);
 	addMap(Country.MWI, 117);
 	addMap(Country.MYS, 118);
-	addMap(Country.MYT, -175);
+	addMap(Country.MYT, 221, -175);
 	addMap(Country.NAM, 132);
 	addMap(Country.NCL, -540);
 	addMap(Country.NER, 135);
@@ -190,7 +190,7 @@ public final class CountryMapping extends ElementsMapping<Integer, Country> {
 	addMap(Country.PNG, 147);
 	addMap(Country.PNG, 148);
 	addMap(Country.POL, 152);
-	addMap(Country.PRI, -630);
+	addMap(Country.PRI, 225, -630);
 	addMap(Country.PRK, 100);
 	addMap(Country.PRT, 153);
 	addMap(Country.PRY, 149);
@@ -248,7 +248,7 @@ public final class CountryMapping extends ElementsMapping<Integer, Country> {
 	addMap(Country.VGB, 51);
 	addMap(Country.VIR, 52);
 	addMap(Country.VNM, 54);
-	addMap(Country.VUT, -548);
+	addMap(Country.VUT, 216, -548);
 	addMap(Country.WLF, 187);
 	addMap(Country.WSM, 53);
 	addMap(Country.YEM, 85);
@@ -256,5 +256,8 @@ public final class CountryMapping extends ElementsMapping<Integer, Country> {
 	addMap(Country.ZAF, 206);
 	addMap(Country.ZMB, 74);
 	addMap(Country.ZWE, 76);
+	addMap(Country.ESH, 219);
+	addMap(Country.MTQ, 223);
+	addException(224);
     }
 }
