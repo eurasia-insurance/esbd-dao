@@ -7,40 +7,33 @@
 		<version>CURRENT-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>esbd-dao-app</artifactId>
-	<packaging>ear</packaging>
+	<artifactId>esbd-dao-webapp</artifactId>
+	<packaging>war</packaging>
 
-	<name>ESBD Lib : DAO : EAR</name>
+	<name>ESBD Lib : DAO : Webapp</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>tech.lapsa.esbd</groupId>
-			<artifactId>esbd-dao</artifactId>
-			<type>ejb</type>
+			<artifactId>esbd-dao-client</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>tech.lapsa.esbd</groupId>
-			<artifactId>esbd-dao-webapp</artifactId>
-			<type>war</type>
+			<artifactId>esbd-dao</artifactId>
+			<type>ejb</type>
+			<scope>provided</scope>
+		</dependency>
+		<!-- JavaEE -->
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.ejb</groupId>
+			<artifactId>javax.ejb-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-ear-plugin</artifactId>
-				<configuration>
-					<modules>
-						<webModule>
-							<groupId>${project.groupId}</groupId>
-							<artifactId>esbd-dao-webapp</artifactId>
-							<contextRoot>/esbd-dao</contextRoot>
-						</webModule>
-					</modules>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
 </project>
