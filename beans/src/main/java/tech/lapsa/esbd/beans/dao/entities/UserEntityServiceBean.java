@@ -41,7 +41,7 @@ import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.logging.MyLogger;
 
 @Singleton(name = UserEntityService.BEAN_NAME)
-@Startup
+//@Startup
 public class UserEntityServiceBean
 	implements UserEntityServiceLocal, UserEntityServiceRemote {
 
