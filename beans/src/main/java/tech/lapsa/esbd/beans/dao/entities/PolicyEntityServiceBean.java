@@ -396,6 +396,12 @@ public class PolicyEntityServiceBean
 			    .buildTo(builder::withModified);
 	    }
 
+	    {
+		builder.withPolicyDate(MyOptionals.of(source.getPOLICYDATE())
+			.map(ESBDDates::convertESBDDateToLocalDate));
+	    }
+
+
 	    // ScheduledPayments tns:ArrayOfSCHEDULED_PAYMENT Плановые платежи
 	    // по полису
 	    // PAYMENT_ORDER_TYPE_ID s:int Порядок оплаты (Идентификатор)
