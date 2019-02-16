@@ -1,6 +1,6 @@
 package tech.lapsa.esbd.beans.dao.entities;
 
-import static tech.lapsa.esbd.beans.dao.ESBDDates.*;
+import static tech.lapsa.esbd.beans.dao.ESBDDates.convertESBDDateToLocalDate;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -39,7 +39,6 @@ import tech.lapsa.esbd.dao.entities.PolicyEntityService;
 import tech.lapsa.esbd.dao.entities.PolicyEntityService.PolicyEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.PolicyEntityService.PolicyEntityServiceRemote;
 import tech.lapsa.esbd.dao.entities.SubjectEntityService.SubjectEntityServiceLocal;
-import tech.lapsa.esbd.dao.entities.SubjectPersonEntityService.SubjectPersonEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.UserEntityService.UserEntityServiceLocal;
 import tech.lapsa.esbd.dao.entities.VehicleEntityService.VehicleEntityServiceLocal;
 import tech.lapsa.esbd.domain.dict.BranchEntity;
@@ -57,7 +56,6 @@ import tech.lapsa.esbd.domain.entities.PolicyEntity.PolicyEntityBuilder;
 import tech.lapsa.esbd.domain.entities.PrivilegerInfo;
 import tech.lapsa.esbd.domain.entities.RecordOperationInfo;
 import tech.lapsa.esbd.domain.entities.SubjectEntity;
-import tech.lapsa.esbd.domain.entities.SubjectPersonEntity;
 import tech.lapsa.esbd.domain.entities.UserEntity;
 import tech.lapsa.esbd.domain.entities.VehicleCertificateInfo;
 import tech.lapsa.esbd.domain.entities.VehicleEntity;
@@ -144,9 +142,6 @@ public class PolicyEntityServiceBean
 
     @EJB
     private InsuranceClassTypeServiceLocal insuranceClassTypeService;
-
-    @EJB
-    private SubjectPersonEntityServiceLocal subjectPersonService;
 
     @EJB
     private MaritalStatusServiceLocal maritalStatusService;
@@ -442,11 +437,11 @@ public class PolicyEntityServiceBean
 
 	    {
 		// CLIENT_ID s:int Идентификатор клиента (обязательно)
-		builder.withInsuredPerson(Util.reqField(InsuredDriverEntity.class,
+		builder.withInsured(Util.reqField(InsuredDriverEntity.class,
 			id,
-			subjectPersonService::getById,
-			"insuredPerson",
-			SubjectPersonEntity.class,
+			subjectService::getById,
+			"insured",
+			SubjectEntity.class,
 			source.getCLIENTID()));
 	    }
 
