@@ -29,87 +29,82 @@ import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.function.MyStrings;
 import tech.lapsa.java.commons.logging.MyLogger;
 
-public abstract class ADictionaryEntityService<T extends DictionaryEntity>
-	implements DictionaryEntityService<T> {
+public abstract class ADictionaryEntityService<T extends DictionaryEntity> implements DictionaryEntityService<T> {
 
-    private final MyLogger logger;
-    private final String dictionaryName;
-    private final Supplier<DictionaryEntityBuilder<T>> newBuilderSupplier;
+	private final MyLogger logger;
+	private final String dictionaryName;
+	private final Supplier<DictionaryEntityBuilder<T>> newBuilderSupplier;
 
-    protected ADictionaryEntityService(final Class<?> serviceClazz,
-	    final String dictionaryName,
-	    final Supplier<DictionaryEntityBuilder<T>> newBuilderSupplier) {
-	this.logger = MyLogger.newBuilder() //
-		.withNameOf(MyObjects.requireNonNull(serviceClazz, "serviceClazz")) //
-		.build();
-	this.dictionaryName = MyStrings.requireNonEmpty(dictionaryName, "dictionaryName");
-	this.newBuilderSupplier = MyObjects.requireNonNull(newBuilderSupplier, "newBuilderSupplier");
-    }
-
-    @EJB
-    private ConnectionPool pool;
-
-    private Map<Integer, T> allMap;
-
-    @PostConstruct
-    public void loadDictionary() {
-	final ArrayOfItem items;
-	try (Connection con = pool.getConnection()) {
-	    items = con.getItems(dictionaryName);
-	} catch (ConnectionException e) {
-	    throw new IllegalStateException(e.getMessage());
+	protected ADictionaryEntityService(final Class<?> serviceClazz, final String dictionaryName,
+	        final Supplier<DictionaryEntityBuilder<T>> newBuilderSupplier) {
+		this.logger = MyLogger.newBuilder() //
+		        .withNameOf(MyObjects.requireNonNull(serviceClazz, "serviceClazz")) //
+		        .build();
+		this.dictionaryName = MyStrings.requireNonEmpty(dictionaryName, "dictionaryName");
+		this.newBuilderSupplier = MyObjects.requireNonNull(newBuilderSupplier, "newBuilderSupplier");
 	}
-	this.allMap = MyOptionals.of(items) //
-		.map(ArrayOfItem::getItem) //
-		.map(List::stream) //
-		.orElseGet(Stream::empty) //
-		.map(this::convert) //
-		.collect(MyCollectors.unmodifiableMap(DictionaryEntity::getId, Function.identity()));
-    }
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public List<T> getAll() {
-	try {
-	    return allMap.entrySet() //
-		    .stream() //
-		    .map(Map.Entry::getValue) //
-		    .collect(MyCollectors.unmodifiableList());
-	} catch (final RuntimeException e) {
-	    logger.WARN.log(e);
-	    throw new EJBException(e.getMessage());
+	@EJB
+	private ConnectionPool pool;
+
+	private Map<Integer, T> allMap;
+
+	@PostConstruct
+	public void loadDictionary() {
+		final ArrayOfItem items;
+		try (Connection con = pool.getConnection()) {
+			items = con.getItems(dictionaryName);
+		} catch (ConnectionException e) {
+			throw new IllegalStateException(e.getMessage());
+		}
+		this.allMap = MyOptionals.of(items) //
+		        .map(ArrayOfItem::getItem) //
+		        .map(List::stream) //
+		        .orElseGet(Stream::empty) //
+		        .map(this::convert) //
+		        .collect(MyCollectors.unmodifiableMap(DictionaryEntity::getId, Function.identity()));
 	}
-    }
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public T getById(final Integer id) throws IllegalArgument, NotFound {
-	try {
-	    return _getById(id);
-	} catch (final IllegalArgumentException e) {
-	    throw new IllegalArgument(e);
-	} catch (final RuntimeException e) {
-	    logger.WARN.log(e);
-	    throw new EJBException(e.getMessage());
+	@Override
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public List<T> getAll() {
+		try {
+			return allMap.entrySet() //
+			        .stream() //
+			        .map(Map.Entry::getValue) //
+			        .collect(MyCollectors.unmodifiableList());
+		} catch (final RuntimeException e) {
+			logger.WARN.log(e);
+			throw new EJBException(e.getMessage());
+		}
 	}
-    }
 
-    // PRIVATE
+	@Override
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public T getById(final Integer id) throws IllegalArgument, NotFound {
+		try {
+			return _getById(id);
+		} catch (final IllegalArgumentException e) {
+			throw new IllegalArgument(e);
+		} catch (final RuntimeException e) {
+			logger.WARN.log(e);
+			throw new EJBException(e.getMessage());
+		}
+	}
 
-    private T _getById(final Integer id) throws IllegalArgumentException, NotFound {
-	MyNumbers.requireNonZero(id, "id");
-	final T res = allMap.get(id);
-	if (res == null)
-	    throw new NotFound(String.format("Dictionary entity with id = '%1$s' is not found", id));
-	return res;
-    }
+	// PRIVATE
 
-    protected T convert(final Item source) {
-	return newBuilderSupplier.get()
-		.withId(MyOptionals.of(source.getID()).orElse(null))
-		.withCode(source.getCode())
-		.withName(source.getName())
-		.build();
-    }
+	private T _getById(final Integer id) throws IllegalArgumentException, NotFound {
+		MyNumbers.requireNonZero(id, "id");
+		final T res = allMap.get(id);
+		if (res == null)
+			throw new NotFound(String.format("Dictionary entity with id = '%1$s' is not found", id));
+		return res;
+	}
+
+	protected T convert(final Item source) {
+		return newBuilderSupplier.get().withId(MyOptionals.of(source.getID()).orElse(null)).withCode(source.getCode())
+		        .withName(source.getName()).build();
+	}
 
 }

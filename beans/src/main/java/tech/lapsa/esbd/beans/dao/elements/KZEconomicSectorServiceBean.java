@@ -10,11 +10,10 @@ import tech.lapsa.esbd.dao.elements.KZEconomicSectorService.KZEconomicSectorServ
 import tech.lapsa.esbd.dao.elements.KZEconomicSectorService.KZEconomicSectorServiceRemote;
 
 @Singleton(name = KZEconomicSectorService.BEAN_NAME)
-public class KZEconomicSectorServiceBean
-	extends AElementsService<KZEconomicSector>
-	implements KZEconomicSectorServiceLocal, KZEconomicSectorServiceRemote {
+public class KZEconomicSectorServiceBean extends AElementsService<KZEconomicSector>
+        implements KZEconomicSectorServiceLocal, KZEconomicSectorServiceRemote {
 
-    public KZEconomicSectorServiceBean() {
-	super(KZEconomicSectorService.class, KZEconomicSectorMapping.getInstance()::forId, KZEconomicSector.class);
-    }
+	public KZEconomicSectorServiceBean() {
+		super(KZEconomicSectorService.class, KZEconomicSectorMapping.getInstance()::forId, KZEconomicSector.class);
+	}
 }

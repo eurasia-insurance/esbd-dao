@@ -10,11 +10,10 @@ import tech.lapsa.esbd.dao.elements.MaritalStatusService.MaritalStatusServiceLoc
 import tech.lapsa.esbd.dao.elements.MaritalStatusService.MaritalStatusServiceRemote;
 
 @Singleton(name = MaritalStatusService.BEAN_NAME)
-public class MaritalStatusServiceBean
-	extends AElementsService<MaritalStatus>
-	implements MaritalStatusServiceLocal, MaritalStatusServiceRemote {
+public class MaritalStatusServiceBean extends AElementsService<MaritalStatus>
+        implements MaritalStatusServiceLocal, MaritalStatusServiceRemote {
 
-    public MaritalStatusServiceBean() {
-	super(MaritalStatusService.class, MaritalStatusMapping.getInstance()::forId, MaritalStatus.class);
-    }
+	public MaritalStatusServiceBean() {
+		super(MaritalStatusService.class, MaritalStatusMapping.getInstance()::forId, MaritalStatus.class);
+	}
 }

@@ -42,192 +42,179 @@ import tech.lapsa.java.commons.logging.MyLogger;
 import tech.lapsa.kz.vehicle.VehicleRegNumber;
 
 @Stateless(name = VehicleEntityService.BEAN_NAME)
-public class VehicleEntityServiceBean
-	implements VehicleEntityServiceLocal, VehicleEntityServiceRemote {
+public class VehicleEntityServiceBean implements VehicleEntityServiceLocal, VehicleEntityServiceRemote {
 
-    private final MyLogger logger = MyLogger.newBuilder() //
-	    .withNameOf(VehicleEntityService.class) //
-	    .build();
+	private final MyLogger logger = MyLogger.newBuilder() //
+	        .withNameOf(VehicleEntityService.class) //
+	        .build();
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    @CacheResult
-    public List<VehicleEntity> getByRegNumber(@CacheKey final VehicleRegNumber regNumber) throws IllegalArgument {
-	try {
-	    return _getByRegNumber(regNumber);
-	} catch (final IllegalArgumentException e) {
-	    throw new IllegalArgument(e);
-	} catch (final RuntimeException e) {
-	    logger.WARN.log(e);
-	    throw new EJBException(e.getMessage());
+	@Override
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@CacheResult
+	public List<VehicleEntity> getByRegNumber(@CacheKey final VehicleRegNumber regNumber) throws IllegalArgument {
+		try {
+			return _getByRegNumber(regNumber);
+		} catch (final IllegalArgumentException e) {
+			throw new IllegalArgument(e);
+		} catch (final RuntimeException e) {
+			logger.WARN.log(e);
+			throw new EJBException(e.getMessage());
+		}
 	}
-    }
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    @CacheResult
-    public VehicleEntity getById(@CacheKey final Integer id) throws NotFound, IllegalArgument {
-	try {
-	    return _getById(id);
-	} catch (final IllegalArgumentException e) {
-	    throw new IllegalArgument(e);
-	} catch (final RuntimeException e) {
-	    logger.WARN.log(e);
-	    throw new EJBException(e.getMessage());
+	@Override
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@CacheResult
+	public VehicleEntity getById(@CacheKey final Integer id) throws NotFound, IllegalArgument {
+		try {
+			return _getById(id);
+		} catch (final IllegalArgumentException e) {
+			throw new IllegalArgument(e);
+		} catch (final RuntimeException e) {
+			logger.WARN.log(e);
+			throw new EJBException(e.getMessage());
+		}
 	}
-    }
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    @CacheResult
-    public List<VehicleEntity> getByVINCode(@CacheKey final String vinCode) throws IllegalArgument {
-	try {
-	    return _getByVINCode(vinCode);
-	} catch (final IllegalArgumentException e) {
-	    throw new IllegalArgument(e);
-	} catch (final RuntimeException e) {
-	    logger.WARN.log(e);
-	    throw new EJBException(e.getMessage());
+	@Override
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@CacheResult
+	public List<VehicleEntity> getByVINCode(@CacheKey final String vinCode) throws IllegalArgument {
+		try {
+			return _getByVINCode(vinCode);
+		} catch (final IllegalArgumentException e) {
+			throw new IllegalArgument(e);
+		} catch (final RuntimeException e) {
+			logger.WARN.log(e);
+			throw new EJBException(e.getMessage());
+		}
 	}
-    }
 
-    // PRIVATE
+	// PRIVATE
 
-    @EJB
-    private VehicleClassServiceLocal vehicleClassService;
+	@EJB
+	private VehicleClassServiceLocal vehicleClassService;
 
-    @EJB
-    private VehicleModelEntityServiceLocal vehicleModelService;
+	@EJB
+	private VehicleModelEntityServiceLocal vehicleModelService;
 
-    @EJB
-    private ConnectionPool pool;
+	@EJB
+	private ConnectionPool pool;
 
-    private List<VehicleEntity> _getByRegNumber(final VehicleRegNumber regNumber) throws IllegalArgumentException {
-	MyObjects.requireNonNull(regNumber, "regNumber"); //
+	private List<VehicleEntity> _getByRegNumber(final VehicleRegNumber regNumber) throws IllegalArgumentException {
+		MyObjects.requireNonNull(regNumber, "regNumber"); //
 
-	final ArrayOfTF vehicles;
-	try (Connection con = pool.getConnection()) {
-	    vehicles = con.getTFByNumber(regNumber.getNumber());
-	} catch (ConnectionException e) {
-	    throw new IllegalStateException(e.getMessage());
+		final ArrayOfTF vehicles;
+		try (Connection con = pool.getConnection()) {
+			vehicles = con.getTFByNumber(regNumber.getNumber());
+		} catch (ConnectionException e) {
+			throw new IllegalStateException(e.getMessage());
+		}
+		return MyOptionals.of(vehicles) //
+		        .map(ArrayOfTF::getTF) //
+		        .map(Collection::stream) //
+		        .orElseGet(Stream::empty) //
+		        .map(this::convertToBuilder) //
+		        .peek(x -> x.withRegNum(regNumber)).map(VehicleEntityBuilder::build)
+		        .collect(MyCollectors.unmodifiableList());
 	}
-	return MyOptionals.of(vehicles) //
-		.map(ArrayOfTF::getTF) //
-		.map(Collection::stream) //
-		.orElseGet(Stream::empty) //
-		.map(this::convertToBuilder) //
-		.peek(x -> x.withRegNum(regNumber))
-		.map(VehicleEntityBuilder::build)
-		.collect(MyCollectors.unmodifiableList());
-    }
 
-    private VehicleEntity _getById(final Integer id) throws IllegalArgumentException, NotFound {
-	MyNumbers.requireNonZero(id, "id");
-	final ArrayOfTF vehicles;
-	try (Connection con = pool.getConnection()) {
-	    final TF search = new TF();
-	    search.setTFID(id.intValue());
-	    vehicles = con.getTFByKeyFields(search);
-	} catch (ConnectionException e) {
-	    throw new IllegalStateException(e.getMessage());
+	private VehicleEntity _getById(final Integer id) throws IllegalArgumentException, NotFound {
+		MyNumbers.requireNonZero(id, "id");
+		final ArrayOfTF vehicles;
+		try (Connection con = pool.getConnection()) {
+			final TF search = new TF();
+			search.setTFID(id.intValue());
+			vehicles = con.getTFByKeyFields(search);
+		} catch (ConnectionException e) {
+			throw new IllegalStateException(e.getMessage());
+		}
+		final List<TF> list = MyOptionals.of(vehicles) //
+		        .map(ArrayOfTF::getTF) //
+		        .filter(MyCollections::nonEmpty).orElseThrow(MyExceptions.supplier(NotFound::new,
+		                "%1$s not found with ID = '%2$s'", VehicleEntity.class.getSimpleName(), id));
+		final TF source = Util.requireSingle(list, VehicleEntity.class, "ID", id);
+		return convertToBuilder(source).build();
 	}
-	final List<TF> list = MyOptionals.of(vehicles) //
-		.map(ArrayOfTF::getTF) //
-		.filter(MyCollections::nonEmpty)
-		.orElseThrow(MyExceptions.supplier(NotFound::new, "%1$s not found with ID = '%2$s'",
-			VehicleEntity.class.getSimpleName(), id));
-	final TF source = Util.requireSingle(list, VehicleEntity.class, "ID", id);
-	return convertToBuilder(source).build();
-    }
 
-    private List<VehicleEntity> _getByVINCode(final String vinCode) throws IllegalArgumentException {
-	MyStrings.requireNonEmpty(vinCode, "vinCode");
-	final ArrayOfTF vehicles;
-	try (Connection con = pool.getConnection()) {
-	    vehicles = con.getTFByVIN(vinCode);
-	} catch (ConnectionException e) {
-	    throw new IllegalStateException(e.getMessage());
+	private List<VehicleEntity> _getByVINCode(final String vinCode) throws IllegalArgumentException {
+		MyStrings.requireNonEmpty(vinCode, "vinCode");
+		final ArrayOfTF vehicles;
+		try (Connection con = pool.getConnection()) {
+			vehicles = con.getTFByVIN(vinCode);
+		} catch (ConnectionException e) {
+			throw new IllegalStateException(e.getMessage());
+		}
+		return MyOptionals.of(vehicles) //
+		        .map(ArrayOfTF::getTF) //
+		        .map(Collection::stream) //
+		        .orElseGet(Stream::empty) //
+		        .map(this::convertToBuilder) //
+		        .map(VehicleEntityBuilder::build).collect(MyCollectors.unmodifiableList());
 	}
-	return MyOptionals.of(vehicles) //
-		.map(ArrayOfTF::getTF) //
-		.map(Collection::stream) //
-		.orElseGet(Stream::empty) //
-		.map(this::convertToBuilder) //
-		.map(VehicleEntityBuilder::build)
-		.collect(MyCollectors.unmodifiableList());
-    }
 
-    VehicleEntityBuilder convertToBuilder(final TF source) {
-	try {
+	VehicleEntityBuilder convertToBuilder(final TF source) {
+		try {
 
-	    final VehicleEntityBuilder builder = VehicleEntity.builder();
+			final VehicleEntityBuilder builder = VehicleEntity.builder();
 
-	    final int id = source.getTFID();
+			final int id = source.getTFID();
 
-	    {
-		// TF_ID s:int Идентификатор ТС
-		builder.withId(MyOptionals.of(id).orElse(null));
-	    }
+			{
+				// TF_ID s:int Идентификатор ТС
+				builder.withId(MyOptionals.of(id).orElse(null));
+			}
 
-	    {
-		// TF_TYPE_ID s:int Тип ТС (справочник TF_TYPES)
-		builder.withVehicleClass(Util.reqField(VehicleEntity.class,
-			id,
-			vehicleClassService::getById,
-			"VehicleClass",
-			VehicleClass.class,
-			source.getTFTYPEID()));
-	    }
+			{
+				// TF_TYPE_ID s:int Тип ТС (справочник TF_TYPES)
+				builder.withVehicleClass(Util.reqField(VehicleEntity.class, id, vehicleClassService::getById,
+				        "VehicleClass", VehicleClass.class, source.getTFTYPEID()));
+			}
 
-	    {
-		// VIN s:string VIN код (номер кузова) (обязательно)
-		builder.withVinCode(source.getVIN());
-	    }
+			{
+				// VIN s:string VIN код (номер кузова) (обязательно)
+				builder.withVinCode(source.getVIN());
+			}
 
-	    {
-		// MODEL_ID s:int Марка\Модель (справочник VOITURE_MODELS)
-		// (обязательно)
-		builder.withVehicleModel(Util.reqField(VehicleEntity.class,
-			id,
-			vehicleModelService::getById,
-			"vehicleModel",
-			VehicleModelEntity.class,
-			source.getMODELID()));
-	    }
+			{
+				// MODEL_ID s:int Марка\Модель (справочник VOITURE_MODELS)
+				// (обязательно)
+				builder.withVehicleModel(Util.reqField(VehicleEntity.class, id, vehicleModelService::getById,
+				        "vehicleModel", VehicleModelEntity.class, source.getMODELID()));
+			}
 
-	    {
-		// RIGHT_HAND_DRIVE_BOOL s:int Признак расположения руля (0 -
-		// слева;
-		// 1 -
-		// справа)
-		builder.withSteeringWheelLocation(source.getRIGHTHANDDRIVEBOOL() == 0
-			? SteeringWheelLocation.LEFT_SIDE
-			: SteeringWheelLocation.RIGHT_SIDE);
-	    }
+			{
+				// RIGHT_HAND_DRIVE_BOOL s:int Признак расположения руля (0 -
+				// слева;
+				// 1 -
+				// справа)
+				builder.withSteeringWheelLocation(source.getRIGHTHANDDRIVEBOOL() == 0 ? SteeringWheelLocation.LEFT_SIDE
+				        : SteeringWheelLocation.RIGHT_SIDE);
+			}
 
-	    {
-		// ENGINE_VOLUME s:int Объем двигателя (куб.см.)
-		// ENGINE_NUMBER s:string Номер двигателя
-		// ENGINE_POWER s:int Мощность двигателя (квт.)
-		builder.withEngine(source.getENGINENUMBER(), source.getENGINEVOLUME(), source.getENGINEPOWER());
-	    }
+			{
+				// ENGINE_VOLUME s:int Объем двигателя (куб.см.)
+				// ENGINE_NUMBER s:string Номер двигателя
+				// ENGINE_POWER s:int Мощность двигателя (квт.)
+				builder.withEngine(source.getENGINENUMBER(), source.getENGINEVOLUME(), source.getENGINEPOWER());
+			}
 
-	    {
-		// COLOR s:string Цвет ТС
-		builder.withColor(source.getCOLOR());
-	    }
+			{
+				// COLOR s:string Цвет ТС
+				builder.withColor(source.getCOLOR());
+			}
 
-	    {
-		// BORN s:string Год выпуска (обязательно)
-		// BORN_MONTH s:int Месяц выпуска ТС
-		builder.withRealeaseDate(ESBDDates.fromESBDYearMonth(source.getBORN(), source.getBORNMONTH()));
-	    }
+			{
+				// BORN s:string Год выпуска (обязательно)
+				// BORN_MONTH s:int Месяц выпуска ТС
+				builder.withRealeaseDate(ESBDDates.fromESBDYearMonth(source.getBORN(), source.getBORNMONTH()));
+			}
 
-	    return builder;
+			return builder;
 
-	} catch (final IllegalArgumentException e) {
-	    // it should not happens
-	    throw new EJBException(e.getMessage());
+		} catch (final IllegalArgumentException e) {
+			// it should not happens
+			throw new EJBException(e.getMessage());
+		}
 	}
-    }
 }
