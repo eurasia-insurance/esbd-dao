@@ -56,6 +56,7 @@ import tech.lapsa.esbd.domain.entities.PolicyEntity.PolicyEntityBuilder;
 import tech.lapsa.esbd.domain.entities.PrivilegerInfo;
 import tech.lapsa.esbd.domain.entities.RecordOperationInfo;
 import tech.lapsa.esbd.domain.entities.SubjectEntity;
+import tech.lapsa.esbd.domain.entities.SubjectPersonEntity;
 import tech.lapsa.esbd.domain.entities.UserEntity;
 import tech.lapsa.esbd.domain.entities.VehicleCertificateInfo;
 import tech.lapsa.esbd.domain.entities.VehicleEntity;
@@ -400,8 +401,16 @@ public class PolicyEntityServiceBean implements PolicyEntityServiceLocal, Policy
 
 			{
 				// CLIENT_ID s:int Идентификатор клиента (обязательно)
-				builder.withInsured(Util.reqField(InsuredDriverEntity.class, id, subjectService::getById, "insured",
-				        SubjectEntity.class, source.getCLIENTID()));
+				final SubjectEntity insured = Util.reqField(InsuredDriverEntity.class, id, subjectService::getById, "insured",
+				        SubjectEntity.class, source.getCLIENTID());
+				builder.withInsured(insured);
+
+				// getClassId
+				if (insured instanceof SubjectPersonEntity) {
+					builder.withInsuraceClassType(
+					        Util.reqField(InsuredDriverEntity.class, id, insuranceClassTypeService::getById,
+					                "insuraceClassType", InsuranceClassType.class, source.getClassId()));
+				}
 			}
 
 			{
@@ -430,13 +439,6 @@ public class PolicyEntityServiceBean implements PolicyEntityServiceLocal, Policy
 				        .withDateOfIssue(convertESBDDateToLocalDate(source.getDRIVERCERTIFICATEDATE())) //
 				        .withNumber(source.getDRIVERCERTIFICATE()) //
 				        .buildTo(builder::withDriverLicense);
-			}
-
-			{
-				// getClassId
-				builder.withInsuraceClassType(
-				        Util.reqField(InsuredDriverEntity.class, id, insuranceClassTypeService::getById,
-				                "insuraceClassType", InsuranceClassType.class, source.getClassId()));
 			}
 
 			{
