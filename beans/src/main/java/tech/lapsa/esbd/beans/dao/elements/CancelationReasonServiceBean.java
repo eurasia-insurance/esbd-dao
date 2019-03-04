@@ -10,11 +10,10 @@ import tech.lapsa.esbd.dao.elements.CancelationReasonService.CancelationReasonSe
 import tech.lapsa.esbd.dao.elements.CancelationReasonService.CancelationReasonServiceRemote;
 
 @Singleton(name = CancelationReasonService.BEAN_NAME)
-public class CancelationReasonServiceBean
-	extends AElementsService<CancelationReason>
-	implements CancelationReasonServiceLocal, CancelationReasonServiceRemote {
+public class CancelationReasonServiceBean extends AElementsService<CancelationReason>
+        implements CancelationReasonServiceLocal, CancelationReasonServiceRemote {
 
-    public CancelationReasonServiceBean() {
-	super(CancelationReasonService.class, CancelationReasonMapping.getInstance()::forId, CancelationReason.class);
-    }
+	public CancelationReasonServiceBean() {
+		super(CancelationReasonService.class, CancelationReasonMapping.getInstance()::forId, CancelationReason.class);
+	}
 }

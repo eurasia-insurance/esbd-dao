@@ -17,19 +17,20 @@ import tech.lapsa.java.commons.function.MyExceptions;
 @Stateless(name = ESBDDAOPingService.BEAN_NAME)
 public class ESBDDAOPingServiceBean implements ESBDDAOPingServiceLocal, ESBDDAOPingServiceRemote {
 
-    // PRIVATE
+	// PRIVATE
 
-    @EJB
-    private ConnectionPool pool;
+	@EJB
+	private ConnectionPool pool;
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void ping() throws IllegalState {
-	try (Connection con = pool.getConnection()) {
-	} catch (final ConnectionException ce) {
-	    throw MyExceptions.format(IllegalState::new, "Can't gen connection to ESBD with message %1$s", ce.getMessage());
+	@Override
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	public void ping() throws IllegalState {
+		try (Connection con = pool.getConnection()) {
+		} catch (final ConnectionException ce) {
+			throw MyExceptions.format(IllegalState::new, "Can't gen connection to ESBD with message %1$s",
+			        ce.getMessage());
+		}
+
 	}
-
-    }
 
 }

@@ -10,11 +10,9 @@ import tech.lapsa.esbd.dao.elements.GenderService.GenderServiceLocal;
 import tech.lapsa.esbd.dao.elements.GenderService.GenderServiceRemote;
 
 @Singleton(name = GenderService.BEAN_NAME)
-public class GenderServiceBean
-	extends AElementsService<Sex>
-	implements GenderServiceLocal, GenderServiceRemote {
+public class GenderServiceBean extends AElementsService<Sex> implements GenderServiceLocal, GenderServiceRemote {
 
-    public GenderServiceBean() {
-	super(GenderService.class, SexMapping.getInstance()::forId, Sex.class);
-    }
+	public GenderServiceBean() {
+		super(GenderService.class, SexMapping.getInstance()::forId, Sex.class);
+	}
 }

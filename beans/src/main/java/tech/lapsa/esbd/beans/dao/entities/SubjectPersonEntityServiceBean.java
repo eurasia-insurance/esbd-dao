@@ -27,95 +27,93 @@ import tech.lapsa.java.commons.logging.MyLogger;
 import tech.lapsa.kz.taxpayer.TaxpayerNumber;
 
 @Stateless(name = SubjectPersonEntityService.BEAN_NAME)
-public class SubjectPersonEntityServiceBean
-	extends ASubjectEntityService<SubjectPersonEntity>
-	implements SubjectPersonEntityServiceLocal, SubjectPersonEntityServiceRemote {
+public class SubjectPersonEntityServiceBean extends ASubjectEntityService<SubjectPersonEntity>
+        implements SubjectPersonEntityServiceLocal, SubjectPersonEntityServiceRemote {
 
-    private final MyLogger logger = MyLogger.newBuilder() //
-	    .withNameOf(SubjectPersonEntityService.class) //
-	    .build();
+	private final MyLogger logger = MyLogger.newBuilder() //
+	        .withNameOf(SubjectPersonEntityService.class) //
+	        .build();
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    @CacheResult
-    public SubjectPersonEntity getById(@CacheKey final Integer id) throws NotFound, IllegalArgument {
-	try {
-	    return _getById(id);
-	} catch (final IllegalArgumentException e) {
-	    throw new IllegalArgument(e);
-	} catch (final RuntimeException e) {
-	    logger.WARN.log(e);
-	    throw new EJBException(e.getMessage());
+	@Override
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@CacheResult
+	public SubjectPersonEntity getById(@CacheKey final Integer id) throws NotFound, IllegalArgument {
+		try {
+			return _getById(id);
+		} catch (final IllegalArgumentException e) {
+			throw new IllegalArgument(e);
+		} catch (final RuntimeException e) {
+			logger.WARN.log(e);
+			throw new EJBException(e.getMessage());
+		}
 	}
-    }
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    @CacheResult
-    public List<SubjectPersonEntity> getByIdNumber(@CacheKey final TaxpayerNumber taxpayerNumber) throws IllegalArgument {
-	try {
-	    return _getByIdNumber(taxpayerNumber);
-	} catch (final IllegalArgumentException e) {
-	    throw new IllegalArgument(e);
-	} catch (final RuntimeException e) {
-	    logger.WARN.log(e);
-	    throw new EJBException(e.getMessage());
+	@Override
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@CacheResult
+	public List<SubjectPersonEntity> getByIdNumber(@CacheKey final TaxpayerNumber taxpayerNumber)
+	        throws IllegalArgument {
+		try {
+			return _getByIdNumber(taxpayerNumber);
+		} catch (final IllegalArgumentException e) {
+			throw new IllegalArgument(e);
+		} catch (final RuntimeException e) {
+			logger.WARN.log(e);
+			throw new EJBException(e.getMessage());
+		}
 	}
-    }
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    @CacheResult
-    public SubjectPersonEntity getFirstByIdNumber(@CacheKey final TaxpayerNumber taxpayerNumber)
-	    throws IllegalArgument, NotFound {
-	try {
-	    return _getFirstByIdNumber(taxpayerNumber);
-	} catch (final IllegalArgumentException e) {
-	    throw new IllegalArgument(e);
-	} catch (final RuntimeException e) {
-	    logger.WARN.log(e);
-	    throw new EJBException(e.getMessage());
+	@Override
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@CacheResult
+	public SubjectPersonEntity getFirstByIdNumber(@CacheKey final TaxpayerNumber taxpayerNumber)
+	        throws IllegalArgument, NotFound {
+		try {
+			return _getFirstByIdNumber(taxpayerNumber);
+		} catch (final IllegalArgumentException e) {
+			throw new IllegalArgument(e);
+		} catch (final RuntimeException e) {
+			logger.WARN.log(e);
+			throw new EJBException(e.getMessage());
+		}
 	}
-    }
 
-    // PRIVATE
+	// PRIVATE
 
-    private SubjectPersonEntity _getById(final Integer id) throws IllegalArgumentException, NotFound {
-	MyNumbers.requireNonZero(id, "id");
-	try (Connection con = pool.getConnection()) {
-	    final Client source = con.getClientByID(id.intValue());
-	    if (source == null)
-		throw new NotFound(SubjectPersonEntity.class.getSimpleName() + " not found with ID = '" + id + "'");
-	    final boolean isPerson = source.getNaturalPersonBool() == 1;
-	    if (!isPerson)
-		throw new NotFound(SubjectPersonEntity.class.getSimpleName() + " not found with ID = '" + id
-			+ "'. It was a " + SubjectPersonEntity.class.getName());
-	    return convert(source);
-	} catch (ConnectionException e) {
-	    throw new IllegalStateException(e.getMessage());
+	private SubjectPersonEntity _getById(final Integer id) throws IllegalArgumentException, NotFound {
+		MyNumbers.requireNonZero(id, "id");
+		try (Connection con = pool.getConnection()) {
+			final Client source = con.getClientByID(id.intValue());
+			if (source == null)
+				throw new NotFound(SubjectPersonEntity.class.getSimpleName() + " not found with ID = '" + id + "'");
+			final boolean isPerson = source.getNaturalPersonBool() == 1;
+			if (!isPerson)
+				throw new NotFound(SubjectPersonEntity.class.getSimpleName() + " not found with ID = '" + id
+				        + "'. It was a " + SubjectPersonEntity.class.getName());
+			return convert(source);
+		} catch (ConnectionException e) {
+			throw new IllegalStateException(e.getMessage());
+		}
 	}
-    }
 
-    private List<SubjectPersonEntity> _getByIdNumber(final TaxpayerNumber taxpayerNumber)
-	    throws IllegalArgumentException {
-	return _getByIdNumber(taxpayerNumber, true, false);
-    }
+	private List<SubjectPersonEntity> _getByIdNumber(final TaxpayerNumber taxpayerNumber)
+	        throws IllegalArgumentException {
+		return _getByIdNumber(taxpayerNumber, true, false);
+	}
 
-    private SubjectPersonEntity _getFirstByIdNumber(final TaxpayerNumber taxpayerNumber)
-	    throws IllegalArgumentException, NotFound {
-	return MyOptionals.of(_getByIdNumber(taxpayerNumber))
-		.map(List::stream)
-		.flatMap(Stream::findFirst)
-		.orElseThrow(MyExceptions.supplier(NotFound::new, "%1$s not found with IIN = %2$s",
-			SubjectPersonEntity.class.getSimpleName(), taxpayerNumber));
-    }
+	private SubjectPersonEntity _getFirstByIdNumber(final TaxpayerNumber taxpayerNumber)
+	        throws IllegalArgumentException, NotFound {
+		return MyOptionals.of(_getByIdNumber(taxpayerNumber)).map(List::stream).flatMap(Stream::findFirst)
+		        .orElseThrow(MyExceptions.supplier(NotFound::new, "%1$s not found with IIN = %2$s",
+		                SubjectPersonEntity.class.getSimpleName(), taxpayerNumber));
+	}
 
-    @Override
-    SubjectPersonEntity convert(final Client source) {
-	if (source.getNaturalPersonBool() != 1)
-	    throw MyExceptions.format(EJBException::new, "Client is not a natural person");
-	final SubjectPersonEntityBuilder builder = SubjectPersonEntity.builder();
-	fillValues(source, builder);
-	return builder.build();
-    }
+	@Override
+	SubjectPersonEntity convert(final Client source) {
+		if (source.getNaturalPersonBool() != 1)
+			throw MyExceptions.format(EJBException::new, "Client is not a natural person");
+		final SubjectPersonEntityBuilder builder = SubjectPersonEntity.builder();
+		fillValues(source, builder);
+		return builder.build();
+	}
 }
