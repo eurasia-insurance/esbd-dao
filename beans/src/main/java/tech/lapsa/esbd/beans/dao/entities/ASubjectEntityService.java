@@ -1,6 +1,8 @@
 package tech.lapsa.esbd.beans.dao.entities;
 
-import static tech.lapsa.esbd.beans.dao.ESBDDates.*;
+import static tech.lapsa.esbd.beans.dao.ESBDDates.convertESBDDateToLocalDate;
+import static tech.lapsa.esbd.beans.dao.entities.Util.optField;
+import static tech.lapsa.esbd.beans.dao.entities.Util.optFieldIgnoreFieldNotFound;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -34,10 +36,10 @@ import tech.lapsa.esbd.domain.entities.IdentityCardInfo;
 import tech.lapsa.esbd.domain.entities.OriginInfo;
 import tech.lapsa.esbd.domain.entities.PersonalInfo;
 import tech.lapsa.esbd.domain.entities.SubjectCompanyEntity;
-import tech.lapsa.esbd.domain.entities.SubjectEntity;
-import tech.lapsa.esbd.domain.entities.SubjectPersonEntity;
 import tech.lapsa.esbd.domain.entities.SubjectCompanyEntity.SubjectCompanyEntityBuilder;
+import tech.lapsa.esbd.domain.entities.SubjectEntity;
 import tech.lapsa.esbd.domain.entities.SubjectEntity.SubjectEntityBuilder;
+import tech.lapsa.esbd.domain.entities.SubjectPersonEntity;
 import tech.lapsa.esbd.domain.entities.SubjectPersonEntity.SubjectPersonEntityBuilder;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfClient;
 import tech.lapsa.esbd.jaxws.wsimport.Client;
@@ -119,7 +121,9 @@ public abstract class ASubjectEntityService<T extends SubjectEntity>
                 // Middle_Name s:string Отчество (для физ. лица)
                 // Born s:string Дата рождения
                 // Sex_ID s:int Пол (справочник SEX)
-                PersonalInfo.builder().withName(source.getFirstName()).withSurename(source.getLastName())
+                PersonalInfo.builder()
+                        .withName(source.getFirstName())
+                        .withSurename(source.getLastName())
                         .withPatronymic(source.getMiddleName())
                         .withDayOfBirth(convertESBDDateToLocalDate(source.getBorn()))
                         .withGender(Util.optField(SubjectPersonEntity.class, id, genders::getById, "personal.gender",
@@ -170,7 +174,7 @@ public abstract class ASubjectEntityService<T extends SubjectEntity>
             {
                 // ACTIVITY_KIND_ID s:int Вид деятельности (справочник
                 // ACTIVITY_KINDS)
-                builder.withCompanyActivityKind(Util.optFieldIgnoreFieldNotFound(SubjectCompanyEntity.class, id,
+                builder.withCompanyActivityKind(optFieldIgnoreFieldNotFound(SubjectCompanyEntity.class, id,
                         companyActivityKinds::getById, "companyActivityKind", CompanyActivityKindEntity.class,
                         MyOptionals.of(source.getACTIVITYKINDID())));
             }
@@ -196,9 +200,9 @@ public abstract class ASubjectEntityService<T extends SubjectEntity>
                 // SETTLEMENT_ID s:int Населенный пункт (справочник SETTLEMENTS)
                 OriginInfo.builder() //
                         .withResident(source.getRESIDENTBOOL() == 1)
-                        .withCountry(Util.optField(SubjectEntity.class, id, countries::getById, "origin.country",
+                        .withCountry(optField(SubjectEntity.class, id, countries::getById, "origin.country",
                                 Country.class, MyOptionals.of(source.getCOUNTRYID())))
-                        .withCity(Util.optField(SubjectEntity.class, id, cityies::getById, "origin.city", KZCity.class,
+                        .withCity(optField(SubjectEntity.class, id, cityies::getById, "origin.city", KZCity.class,
                                 MyOptionals.of(source.getSETTLEMENTID())))
                         .buildTo(builder::withOrigin);
             }
@@ -238,7 +242,7 @@ public abstract class ASubjectEntityService<T extends SubjectEntity>
             {
                 // ECONOMICS_SECTOR_ID s:int Сектор экономики (справочник
                 // ECONOMICS_SECTORS)
-                builder.withEconomicsSector(Util.optField(SubjectEntity.class, id, economicsSectors::getById,
+                builder.withEconomicsSector(optField(SubjectEntity.class, id, economicsSectors::getById,
                         "EconomicsSector", KZEconomicSector.class, MyOptionals.of(source.getECONOMICSSECTORID())));
             }
 

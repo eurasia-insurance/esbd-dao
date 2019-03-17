@@ -14,7 +14,7 @@ import tech.lapsa.java.commons.function.MyOptionals;
 import tech.lapsa.java.commons.function.MyStrings;
 import tech.lapsa.java.commons.logging.MyLogger.MyLevel;
 
-final class Util {
+public final class Util {
 
     private Util() {
     }

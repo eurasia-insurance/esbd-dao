@@ -10,7 +10,6 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
-import javax.ejb.Startup;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.xml.datatype.XMLGregorianCalendar;

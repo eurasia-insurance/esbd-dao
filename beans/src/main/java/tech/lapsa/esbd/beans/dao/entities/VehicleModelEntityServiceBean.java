@@ -1,5 +1,7 @@
 package tech.lapsa.esbd.beans.dao.entities;
 
+import static tech.lapsa.esbd.beans.dao.entities.Util.reqField;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
@@ -106,8 +108,9 @@ public class VehicleModelEntityServiceBean implements VehicleModelEntityServiceL
 
         final List<VOITUREMODEL> list = MyOptionals.of(models) //
                 .map(ArrayOfVOITUREMODEL::getVOITUREMODEL) //
-                .filter(MyCollections::nonEmpty).orElseThrow(MyExceptions.supplier(NotFound::new,
-                        "%1$s not found with ID = '%2$s'", VehicleManufacturerEntity.class.getSimpleName(), id));
+                .filter(MyCollections::nonEmpty)
+                .orElseThrow(MyExceptions.supplier(NotFound::new, "%1$s not found with ID = '%2$s'",
+                        VehicleManufacturerEntity.class.getSimpleName(), id));
         final VOITUREMODEL source = Util.requireSingle(list, VehicleModelEntity.class, "ID", id);
         return convert(source);
     }
@@ -169,7 +172,7 @@ public class VehicleModelEntityServiceBean implements VehicleModelEntityServiceL
             {
                 // VOITURE_MARK_ID s:int Идентификатор марки ТС
                 builder.withManufacturer(
-                        Util.reqField(VehicleModelEntity.class, id, vehicleManufacturerService::getById, "manufacturer",
+                        reqField(VehicleModelEntity.class, id, vehicleManufacturerService::getById, "manufacturer",
                                 VehicleManufacturerEntity.class, source.getVOITUREMARKID()));
             }
 

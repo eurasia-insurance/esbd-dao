@@ -1,5 +1,7 @@
 package tech.lapsa.esbd.beans.dao.entities;
 
+import static tech.lapsa.esbd.beans.dao.entities.Util.reqField;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
@@ -26,8 +28,8 @@ import tech.lapsa.esbd.dao.entities.VehicleEntityService.VehicleEntityServiceLoc
 import tech.lapsa.esbd.dao.entities.VehicleEntityService.VehicleEntityServiceRemote;
 import tech.lapsa.esbd.dao.entities.VehicleModelEntityService.VehicleModelEntityServiceLocal;
 import tech.lapsa.esbd.domain.entities.VehicleEntity;
-import tech.lapsa.esbd.domain.entities.VehicleModelEntity;
 import tech.lapsa.esbd.domain.entities.VehicleEntity.VehicleEntityBuilder;
+import tech.lapsa.esbd.domain.entities.VehicleModelEntity;
 import tech.lapsa.esbd.jaxws.wsimport.ArrayOfTF;
 import tech.lapsa.esbd.jaxws.wsimport.TF;
 import tech.lapsa.java.commons.exceptions.IllegalArgument;
@@ -167,7 +169,7 @@ public class VehicleEntityServiceBean implements VehicleEntityServiceLocal, Vehi
 
             {
                 // TF_TYPE_ID s:int Тип ТС (справочник TF_TYPES)
-                builder.withVehicleClass(Util.reqField(VehicleEntity.class, id, vehicleClassService::getById,
+                builder.withVehicleClass(reqField(VehicleEntity.class, id, vehicleClassService::getById,
                         "VehicleClass", VehicleClass.class, source.getTFTYPEID()));
             }
 
@@ -179,7 +181,7 @@ public class VehicleEntityServiceBean implements VehicleEntityServiceLocal, Vehi
             {
                 // MODEL_ID s:int Марка\Модель (справочник VOITURE_MODELS)
                 // (обязательно)
-                builder.withVehicleModel(Util.reqField(VehicleEntity.class, id, vehicleModelService::getById,
+                builder.withVehicleModel(reqField(VehicleEntity.class, id, vehicleModelService::getById,
                         "vehicleModel", VehicleModelEntity.class, source.getMODELID()));
             }
 

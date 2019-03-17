@@ -1,6 +1,9 @@
 package tech.lapsa.esbd.beans.dao.entities;
 
 import static tech.lapsa.esbd.beans.dao.ESBDDates.convertESBDDateToLocalDate;
+import static tech.lapsa.esbd.beans.dao.entities.Util.optField;
+import static tech.lapsa.esbd.beans.dao.entities.Util.optFieldIgnoreFieldNotFound;
+import static tech.lapsa.esbd.beans.dao.entities.Util.reqField;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -209,7 +212,8 @@ public class PolicyEntityServiceBean implements PolicyEntityServiceLocal, Policy
                 .map(List::stream) //
                 .orElseGet(Stream::empty) //
                 .map(this::convertToBuilder) //
-                .map(PolicyEntityBuilder::build).collect(MyCollectors.unmodifiableList());
+                .map(PolicyEntityBuilder::build)
+                .collect(MyCollectors.unmodifiableList());
     }
 
     PolicyEntityBuilder convertToBuilder(final Policy source) throws EJBException {
@@ -258,13 +262,13 @@ public class PolicyEntityServiceBean implements PolicyEntityServiceLocal, Policy
 
             {
                 // SYSTEM_DELIMITER_ID s:int Идентификатор страховой компании
-                builder.withInsurer(Util.reqField(PolicyEntity.class, id, insuranceCompanyService::getById, "insurer",
+                builder.withInsurer(reqField(PolicyEntity.class, id, insuranceCompanyService::getById, "insurer",
                         InsuranceCompanyEntity.class, source.getSYSTEMDELIMITERID()));
             }
 
             {
                 // CLIENT_ID s:int Идентификатор страхователя (обязательно)
-                builder.withInsurant(Util.reqField(PolicyEntity.class, id, subjectService::getById, "insurant",
+                builder.withInsurant(reqField(PolicyEntity.class, id, subjectService::getById, "insurant",
                         SubjectEntity.class, source.getCLIENTID()));
             }
 
@@ -279,13 +283,13 @@ public class PolicyEntityServiceBean implements PolicyEntityServiceLocal, Policy
                 if (MyStrings.nonEmpty(source.getRESCINDINGDATE())
                         || MyNumbers.positive(source.getRESCINDINGREASONID()))
                     builder.withCancelation(ESBDDates.convertESBDDateToLocalDate(source.getRESCINDINGDATE()),
-                            Util.reqField(PolicyEntity.class, id, cancelationReasonTypeService::getById,
+                            reqField(PolicyEntity.class, id, cancelationReasonTypeService::getById,
                                     "cancelationReasonType", CancelationReason.class, source.getRESCINDINGREASONID()));
             }
 
             {
                 // BRANCH_ID s:int Филиал (обязательно)
-                builder.withBranch(Util.reqField(PolicyEntity.class, id, branchService::getById, "branch",
+                builder.withBranch(reqField(PolicyEntity.class, id, branchService::getById, "branch",
                         BranchEntity.class, source.getBRANCHID()));
             }
 
@@ -336,8 +340,9 @@ public class PolicyEntityServiceBean implements PolicyEntityServiceLocal, Policy
                 // создавшего
                 // полис
                 // INPUT_DATE s:string Дата\время ввода полиса в систему
-                RecordOperationInfo.builder().withDate(convertESBDDateToLocalDate(source.getINPUTDATE()))
-                        .withAuthor(Util.reqField(PolicyEntity.class, id, userService::getById, "created.author",
+                RecordOperationInfo.builder()
+                        .withDate(convertESBDDateToLocalDate(source.getINPUTDATE()))
+                        .withAuthor(reqField(PolicyEntity.class, id, userService::getById, "created.author",
                                 UserEntity.class, source.getCREATEDBYUSERID()))
                         .buildTo(builder::withCreated);
             }
@@ -350,8 +355,9 @@ public class PolicyEntityServiceBean implements PolicyEntityServiceLocal, Policy
                 // изменившего
                 // полис
                 if (MyStrings.nonEmpty(source.getRECORDCHANGEDAT()))
-                    RecordOperationInfo.builder().withDate(convertESBDDateToLocalDate(source.getRECORDCHANGEDAT()))
-                            .withAuthor(Util.reqField(PolicyEntity.class, id, userService::getById, "modified.author",
+                    RecordOperationInfo.builder()
+                            .withDate(convertESBDDateToLocalDate(source.getRECORDCHANGEDAT()))
+                            .withAuthor(reqField(PolicyEntity.class, id, userService::getById, "modified.author",
                                     UserEntity.class, source.getCHANGEDBYUSERID()))
                             .buildTo(builder::withModified);
             }
@@ -401,27 +407,27 @@ public class PolicyEntityServiceBean implements PolicyEntityServiceLocal, Policy
 
             {
                 // CLIENT_ID s:int Идентификатор клиента (обязательно)
-                final SubjectEntity insured = Util.reqField(InsuredDriverEntity.class, id, subjectService::getById,
+                final SubjectEntity insured = reqField(InsuredDriverEntity.class, id, subjectService::getById,
                         "insured", SubjectEntity.class, source.getCLIENTID());
                 builder.withInsured(insured);
 
                 // getClassId
                 if (insured instanceof SubjectPersonEntity) {
                     builder.withInsuraceClassType(
-                            Util.reqField(InsuredDriverEntity.class, id, insuranceClassTypeService::getById,
+                            reqField(InsuredDriverEntity.class, id, insuranceClassTypeService::getById,
                                     "insuraceClassType", InsuranceClassType.class, source.getClassId()));
                 }
             }
 
             {
                 // HOUSEHOLD_POSITION_ID s:int Идентификатор семейного положения
-                builder.withMaritalStatus(Util.optField(InsuredDriverEntity.class, id, maritalStatusService::getById,
+                builder.withMaritalStatus(optField(InsuredDriverEntity.class, id, maritalStatusService::getById,
                         "maritalStatus", MaritalStatus.class, MyOptionals.of(source.getHOUSEHOLDPOSITIONID())));
             }
 
             {
                 // AGE_EXPERIENCE_ID s:int Идентификатор возраста\стажа вождения
-                builder.withInsuredAgeExpirienceClass(Util.reqField(InsuredDriverEntity.class, id,
+                builder.withInsuredAgeExpirienceClass(reqField(InsuredDriverEntity.class, id,
                         driverExpirienceClassificationService::getById, "insuredAgeExpirienceClass",
                         InsuredAgeAndExpirienceClass.class, source.getAGEEXPERIENCEID()));
             }
@@ -510,8 +516,9 @@ public class PolicyEntityServiceBean implements PolicyEntityServiceLocal, Policy
                 // создавшего
                 // запись
                 // INPUT_DATE s:string Дата\время ввода записи в систему
-                RecordOperationInfo.builder().withDate(convertESBDDateToLocalDate(source.getINPUTDATE()))
-                        .withAuthor(Util.reqField(InsuredDriverEntity.class, id, userService::getById, "created.author",
+                RecordOperationInfo.builder()
+                        .withDate(convertESBDDateToLocalDate(source.getINPUTDATE()))
+                        .withAuthor(reqField(InsuredDriverEntity.class, id, userService::getById, "created.author",
                                 UserEntity.class, source.getCREATEDBYUSERID()))
                         .buildTo(builder::withCreated);
             }
@@ -521,16 +528,17 @@ public class PolicyEntityServiceBean implements PolicyEntityServiceLocal, Policy
                 // CHANGED_BY_USER_ID s:int Идентификатор пользователя,
                 // изменившего
                 // запись
-                RecordOperationInfo.builder().withDate(convertESBDDateToLocalDate(source.getRECORDCHANGEDAT()))
-                        .withAuthor(Util.reqField(InsuredDriverEntity.class, id, userService::getById,
-                                "modified.author", UserEntity.class, source.getCHANGEDBYUSERID()))
+                RecordOperationInfo.builder()
+                        .withDate(convertESBDDateToLocalDate(source.getRECORDCHANGEDAT()))
+                        .withAuthor(reqField(InsuredDriverEntity.class, id, userService::getById, "modified.author",
+                                UserEntity.class, source.getCHANGEDBYUSERID()))
                         .buildTo(builder::withModified);
             }
 
             {
                 // SYSTEM_DELIMITER_ID s:int Идентификатор страховой компании
-                builder.withInsurer(Util.reqField(InsuredDriverEntity.class, id, insuranceCompanyService::getById,
-                        "insurer", InsuranceCompanyEntity.class, source.getSYSTEMDELIMITERID()));
+                builder.withInsurer(reqField(InsuredDriverEntity.class, id, insuranceCompanyService::getById, "insurer",
+                        InsuranceCompanyEntity.class, source.getSYSTEMDELIMITERID()));
             }
             return builder;
 
@@ -558,22 +566,20 @@ public class PolicyEntityServiceBean implements PolicyEntityServiceLocal, Policy
 
             {
                 // TF_ID s:int Идентификатор ТС
-                builder.withVehicle(
-                        Util.optFieldIgnoreFieldNotFound(InsuredVehicleEntity.class, id, vehicleService::getById,
-                                "vehicle", VehicleEntity.class, MyOptionals.of(source.getTFID()), logger.WARN));
+                builder.withVehicle(optFieldIgnoreFieldNotFound(InsuredVehicleEntity.class, id, vehicleService::getById,
+                        "vehicle", VehicleEntity.class, MyOptionals.of(source.getTFID()), logger.WARN));
             }
 
             {
                 // TF_TYPE_ID s:int Идентификатор типа ТС (обязательно)
-                builder.withVehicleClass(Util.reqField(InsuredVehicleEntity.class, id, vehicleClassService::getById,
+                builder.withVehicleClass(reqField(InsuredVehicleEntity.class, id, vehicleClassService::getById,
                         "vehicleClass", VehicleClass.class, source.getTFTYPEID()));
             }
 
             {
                 // TF_AGE_ID s:int Идентификатор возраста ТС (обязательно)
-                builder.withVehicleAgeClass(
-                        Util.reqField(InsuredVehicleEntity.class, id, vehicleAgeClassService::getById,
-                                "vehicleAgeClass", VehicleAgeClass.class, source.getTFAGEID()));
+                builder.withVehicleAgeClass(reqField(InsuredVehicleEntity.class, id, vehicleAgeClassService::getById,
+                        "vehicleAgeClass", VehicleAgeClass.class, source.getTFAGEID()));
             }
 
             {
@@ -588,9 +594,8 @@ public class PolicyEntityServiceBean implements PolicyEntityServiceLocal, Policy
                         .withCertificateNumber(source.getTFREGISTRATIONCERTIFICATE())
                         .withDateOfIssue(convertESBDDateToLocalDate(source.getGIVEDATE()))
                         .withRegistrationMajorCity(source.getBIGCITYBOOL() == 1)
-                        .withRegistrationRegion(
-                                Util.reqField(InsuredVehicleEntity.class, id, countryRegionService::getById,
-                                        "certificate.registrationRegion", KZArea.class, source.getREGIONID()))
+                        .withRegistrationRegion(reqField(InsuredVehicleEntity.class, id, countryRegionService::getById,
+                                "certificate.registrationRegion", KZArea.class, source.getREGIONID()))
                         .withRegistrationNumber(source.getTFNUMBER()).buildTo(builder::withCertificate);
             }
 
@@ -609,9 +614,10 @@ public class PolicyEntityServiceBean implements PolicyEntityServiceLocal, Policy
                 // создавшего
                 // запись
                 // INPUT_DATE s:string Дата\время ввода записи в систему
-                RecordOperationInfo.builder().withDate(convertESBDDateToLocalDate(source.getINPUTDATE()))
-                        .withAuthor(Util.reqField(InsuredVehicleEntity.class, id, userService::getById,
-                                "created.author", UserEntity.class, source.getCREATEDBYUSERID()))
+                RecordOperationInfo.builder()
+                        .withDate(convertESBDDateToLocalDate(source.getINPUTDATE()))
+                        .withAuthor(reqField(InsuredVehicleEntity.class, id, userService::getById, "created.author",
+                                UserEntity.class, source.getCREATEDBYUSERID()))
                         .buildTo(builder::withCreated);
             }
 
@@ -621,15 +627,16 @@ public class PolicyEntityServiceBean implements PolicyEntityServiceLocal, Policy
                 // изменившего
                 // запись
                 if (MyStrings.nonEmpty(source.getRECORDCHANGEDAT()))
-                    RecordOperationInfo.builder().withDate(convertESBDDateToLocalDate(source.getRECORDCHANGEDAT()))
-                            .withAuthor(Util.reqField(InsuredVehicleEntity.class, id, userService::getById,
+                    RecordOperationInfo.builder()
+                            .withDate(convertESBDDateToLocalDate(source.getRECORDCHANGEDAT()))
+                            .withAuthor(reqField(InsuredVehicleEntity.class, id, userService::getById,
                                     "modified.author", UserEntity.class, source.getCHANGEDBYUSERID()))
                             .buildTo(builder::withModified);
             }
 
             {
                 // SYSTEM_DELIMITER_ID s:int Идентификатор страховой компании
-                builder.withInsurer(Util.reqField(InsuredVehicleEntity.class, id, insuranceCompanyService::getById,
+                builder.withInsurer(reqField(InsuredVehicleEntity.class, id, insuranceCompanyService::getById,
                         "insurer", InsuranceCompanyEntity.class, source.getSYSTEMDELIMITERID()));
             }
 

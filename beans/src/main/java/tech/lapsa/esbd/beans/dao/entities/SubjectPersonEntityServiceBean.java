@@ -103,7 +103,9 @@ public class SubjectPersonEntityServiceBean extends ASubjectEntityService<Subjec
 
     private SubjectPersonEntity _getFirstByIdNumber(final TaxpayerNumber taxpayerNumber)
             throws IllegalArgumentException, NotFound {
-        return MyOptionals.of(_getByIdNumber(taxpayerNumber)).map(List::stream).flatMap(Stream::findFirst)
+        return MyOptionals.of(_getByIdNumber(taxpayerNumber))
+                .map(List::stream)
+                .flatMap(Stream::findFirst)
                 .orElseThrow(MyExceptions.supplier(NotFound::new, "%1$s not found with IIN = %2$s",
                         SubjectPersonEntity.class.getSimpleName(), taxpayerNumber));
     }
