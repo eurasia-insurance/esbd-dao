@@ -13,7 +13,7 @@ import tech.lapsa.esbd.dao.elements.MaritalStatusService.MaritalStatusServiceRem
 public class MaritalStatusServiceBean extends AElementsService<MaritalStatus>
         implements MaritalStatusServiceLocal, MaritalStatusServiceRemote {
 
-	public MaritalStatusServiceBean() {
-		super(MaritalStatusService.class, MaritalStatusMapping.getInstance()::forId, MaritalStatus.class);
-	}
+    public MaritalStatusServiceBean() {
+        super(MaritalStatusService.class, MaritalStatusMapping.getInstance()::forId, MaritalStatus.class);
+    }
 }

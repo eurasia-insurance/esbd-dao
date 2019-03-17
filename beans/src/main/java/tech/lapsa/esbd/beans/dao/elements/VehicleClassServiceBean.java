@@ -13,7 +13,7 @@ import tech.lapsa.esbd.dao.elements.VehicleClassService.VehicleClassServiceRemot
 public class VehicleClassServiceBean extends AElementsService<VehicleClass>
         implements VehicleClassServiceLocal, VehicleClassServiceRemote {
 
-	public VehicleClassServiceBean() {
-		super(VehicleClassService.class, VehicleClassMapping.getInstance()::forId, VehicleClass.class);
-	}
+    public VehicleClassServiceBean() {
+        super(VehicleClassService.class, VehicleClassMapping.getInstance()::forId, VehicleClass.class);
+    }
 }

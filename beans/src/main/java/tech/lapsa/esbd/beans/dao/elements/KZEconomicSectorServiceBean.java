@@ -13,7 +13,7 @@ import tech.lapsa.esbd.dao.elements.KZEconomicSectorService.KZEconomicSectorServ
 public class KZEconomicSectorServiceBean extends AElementsService<KZEconomicSector>
         implements KZEconomicSectorServiceLocal, KZEconomicSectorServiceRemote {
 
-	public KZEconomicSectorServiceBean() {
-		super(KZEconomicSectorService.class, KZEconomicSectorMapping.getInstance()::forId, KZEconomicSector.class);
-	}
+    public KZEconomicSectorServiceBean() {
+        super(KZEconomicSectorService.class, KZEconomicSectorMapping.getInstance()::forId, KZEconomicSector.class);
+    }
 }

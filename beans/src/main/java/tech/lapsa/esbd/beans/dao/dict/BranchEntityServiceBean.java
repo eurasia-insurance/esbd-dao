@@ -11,9 +11,9 @@ import tech.lapsa.esbd.domain.dict.BranchEntity;
 public class BranchEntityServiceBean extends ADictionaryEntityService<BranchEntity>
         implements BranchEntityServiceLocal, BranchEntityServiceRemote {
 
-	private static final String DICT_NAME = "BRANCHES";
+    private static final String DICT_NAME = "BRANCHES";
 
-	public BranchEntityServiceBean() {
-		super(BranchEntityService.class, DICT_NAME, BranchEntity::builder);
-	}
+    public BranchEntityServiceBean() {
+        super(BranchEntityService.class, DICT_NAME, BranchEntity::builder);
+    }
 }

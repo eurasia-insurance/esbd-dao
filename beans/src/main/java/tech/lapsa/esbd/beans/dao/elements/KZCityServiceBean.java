@@ -12,7 +12,7 @@ import tech.lapsa.esbd.dao.elements.KZCityService.KZCityServiceRemote;
 @Singleton(name = KZCityService.BEAN_NAME)
 public class KZCityServiceBean extends AElementsService<KZCity> implements KZCityServiceLocal, KZCityServiceRemote {
 
-	public KZCityServiceBean() {
-		super(KZCityService.class, KZCityMapping.getInstance()::forId, KZCity.class);
-	}
+    public KZCityServiceBean() {
+        super(KZCityService.class, KZCityMapping.getInstance()::forId, KZCity.class);
+    }
 }

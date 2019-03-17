@@ -11,9 +11,9 @@ import tech.lapsa.esbd.domain.dict.CompanyActivityKindEntity;
 public class CompanyActivityKindEntityServiceBean extends ADictionaryEntityService<CompanyActivityKindEntity>
         implements CompanyActivityKindEntityServiceLocal, CompanyActivityKindEntityServiceRemote {
 
-	private static final String DICT_NAME = "ACTIVITY_KINDS";
+    private static final String DICT_NAME = "ACTIVITY_KINDS";
 
-	public CompanyActivityKindEntityServiceBean() {
-		super(CompanyActivityKindEntityService.class, DICT_NAME, CompanyActivityKindEntity::builder);
-	}
+    public CompanyActivityKindEntityServiceBean() {
+        super(CompanyActivityKindEntityService.class, DICT_NAME, CompanyActivityKindEntity::builder);
+    }
 }
