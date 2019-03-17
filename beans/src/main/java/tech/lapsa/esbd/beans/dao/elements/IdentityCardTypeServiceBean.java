@@ -13,7 +13,7 @@ import tech.lapsa.esbd.dao.elements.IdentityCardTypeService.IdentityCardTypeServ
 public class IdentityCardTypeServiceBean extends AElementsService<IdentityCardType>
         implements IdentityCardTypeServiceLocal, IdentityCardTypeServiceRemote {
 
-	public IdentityCardTypeServiceBean() {
-		super(IdentityCardTypeService.class, IdentityCardTypeMapping.getInstance()::forId, IdentityCardType.class);
-	}
+    public IdentityCardTypeServiceBean() {
+        super(IdentityCardTypeService.class, IdentityCardTypeMapping.getInstance()::forId, IdentityCardType.class);
+    }
 }

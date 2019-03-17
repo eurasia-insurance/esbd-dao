@@ -13,7 +13,7 @@ import tech.lapsa.esbd.dao.elements.CancelationReasonService.CancelationReasonSe
 public class CancelationReasonServiceBean extends AElementsService<CancelationReason>
         implements CancelationReasonServiceLocal, CancelationReasonServiceRemote {
 
-	public CancelationReasonServiceBean() {
-		super(CancelationReasonService.class, CancelationReasonMapping.getInstance()::forId, CancelationReason.class);
-	}
+    public CancelationReasonServiceBean() {
+        super(CancelationReasonService.class, CancelationReasonMapping.getInstance()::forId, CancelationReason.class);
+    }
 }

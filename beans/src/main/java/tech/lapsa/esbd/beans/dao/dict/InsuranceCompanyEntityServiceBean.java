@@ -11,9 +11,9 @@ import tech.lapsa.esbd.domain.dict.InsuranceCompanyEntity;
 public class InsuranceCompanyEntityServiceBean extends ADictionaryEntityService<InsuranceCompanyEntity>
         implements InsuranceCompanyEntityServiceLocal, InsuranceCompanyEntityServiceRemote {
 
-	private static final String DICT_NAME = "INSURANCE_COMPANIES";
+    private static final String DICT_NAME = "INSURANCE_COMPANIES";
 
-	public InsuranceCompanyEntityServiceBean() {
-		super(InsuranceCompanyEntityService.class, DICT_NAME, InsuranceCompanyEntity::builder);
-	}
+    public InsuranceCompanyEntityServiceBean() {
+        super(InsuranceCompanyEntityService.class, DICT_NAME, InsuranceCompanyEntity::builder);
+    }
 }

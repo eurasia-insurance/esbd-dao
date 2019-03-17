@@ -20,29 +20,29 @@ import tech.lapsa.java.commons.logging.MyLogger;
 public class InsuredAgeAndExpirienceClassServiceBean
         implements InsuredAgeAndExpirienceClassServiceLocal, InsuredAgeAndExpirienceClassServiceRemote {
 
-	private final MyLogger logger = MyLogger.newBuilder() //
-	        .withNameOf(InsuredAgeAndExpirienceClassService.class) //
-	        .build();
+    private final MyLogger logger = MyLogger.newBuilder() //
+            .withNameOf(InsuredAgeAndExpirienceClassService.class) //
+            .build();
 
-	@Override
-	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public InsuredAgeAndExpirienceClass getById(final Integer id) throws NotFound, IllegalArgument {
-		try {
-			return _getById(id);
-		} catch (final IllegalArgumentException e) {
-			throw new IllegalArgument(e);
-		} catch (final RuntimeException e) {
-			logger.WARN.log(e);
-			throw new EJBException(e.getMessage());
-		}
-	}
+    @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public InsuredAgeAndExpirienceClass getById(final Integer id) throws NotFound, IllegalArgument {
+        try {
+            return _getById(id);
+        } catch (final IllegalArgumentException e) {
+            throw new IllegalArgument(e);
+        } catch (final RuntimeException e) {
+            logger.WARN.log(e);
+            throw new EJBException(e.getMessage());
+        }
+    }
 
-	private InsuredAgeAndExpirienceClass _getById(final Integer id) throws IllegalArgumentException, NotFound {
-		MyNumbers.requireNonZero(id, "id");
-		final InsuredAgeAndExpirienceClass result = InsuredAgeAndExpirienceClassMapping.getInstance().forId(id);
-		if (result == null)
-			throw new NotFound(
-			        InsuredAgeAndExpirienceClass.class.getSimpleName() + " not found with ID = '" + id + "'");
-		return result;
-	}
+    private InsuredAgeAndExpirienceClass _getById(final Integer id) throws IllegalArgumentException, NotFound {
+        MyNumbers.requireNonZero(id, "id");
+        final InsuredAgeAndExpirienceClass result = InsuredAgeAndExpirienceClassMapping.getInstance().forId(id);
+        if (result == null)
+            throw new NotFound(
+                    InsuredAgeAndExpirienceClass.class.getSimpleName() + " not found with ID = '" + id + "'");
+        return result;
+    }
 }

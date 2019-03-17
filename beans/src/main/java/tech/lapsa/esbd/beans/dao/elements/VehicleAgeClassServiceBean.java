@@ -13,7 +13,7 @@ import tech.lapsa.esbd.dao.elements.VehicleAgeClassService.VehicleAgeClassServic
 public class VehicleAgeClassServiceBean extends AElementsService<VehicleAgeClass>
         implements VehicleAgeClassServiceLocal, VehicleAgeClassServiceRemote {
 
-	public VehicleAgeClassServiceBean() {
-		super(VehicleAgeClassService.class, VehicleAgeClassMapping.getInstance()::forId, VehicleAgeClass.class);
-	}
+    public VehicleAgeClassServiceBean() {
+        super(VehicleAgeClassService.class, VehicleAgeClassMapping.getInstance()::forId, VehicleAgeClass.class);
+    }
 }
